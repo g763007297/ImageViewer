@@ -9,15 +9,30 @@
 #import "ImageViewer.h"
 #import "PhotoTableView.h"
 
-static ImageViewer  *_imageViewer;
+@interface ImageViewer()
+
+@property (nonatomic, assign) BOOL isVisible;
+
+@end
 
 @implementation ImageViewer
 
-- (id)init{
-    self = [super init];
-    if (self) {
-        _imageViewer = self;
-    }
+__strong static ImageViewer *imageViewerManager;
+
++ (ImageViewer *)sharedInstance {
+    static dispatch_once_t onceToken = 0;
+    
+    dispatch_once(&onceToken, ^{
+        imageViewerManager = [[super allocWithZone:nil] init];
+    });
+    return imageViewerManager;
+}
+
++ (id)allocWithZone:(NSZone *)zone {
+    return [self sharedInstance];
+}
+
+- (id)copyWithZone:(NSZone*)zone {
     return self;
 }
 
@@ -65,6 +80,11 @@ static ImageViewer  *_imageViewer;
 }
 
 - (void)showView:(UIViewController *)viewController{
+    if (_isVisible) {
+        return;
+    }else{
+        _isVisible = YES;
+    }
     CGRect rect;
     
     UIView *showView = viewController.navigationController.view?viewController.navigationController.view:viewController.view;
@@ -84,17 +104,17 @@ static ImageViewer  *_imageViewer;
                      }];
 }
 
-+ (ImageViewer *)getSelf{
-    return _imageViewer;
-}
-
 - (void)dissMiss{
     [UIView animateWithDuration:0.3
                      animations:^{
                          self.frame = CGRectMake(0, CGRectGetMaxY(self.frame), CGRectGetMaxX(self.frame), CGRectGetMaxY(self.frame));
                      } completion:^(BOOL finished) {
+                         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                         self.frame = CGRectZero;
                          [self removeFromSuperview];
+                         _isVisible = NO;
                      }];
 }
+
 
 @end

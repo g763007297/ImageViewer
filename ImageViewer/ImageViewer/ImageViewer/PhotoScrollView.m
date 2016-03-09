@@ -74,7 +74,7 @@
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     if (tap.numberOfTapsRequired == 1) {
-        [[ImageViewer getSelf] dissMiss];
+        [[ImageViewer sharedInstance] dissMiss];
     }
     else if(tap.numberOfTapsRequired == 2) {
         if (self.zoomScale > 1) {

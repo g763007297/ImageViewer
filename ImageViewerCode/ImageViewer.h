@@ -11,8 +11,8 @@
 @interface ImageViewer : UIView
 
 /*
-    显示PageControl传yes
-    显示label就传no
+ 显示PageControl传yes
+ 显示label就传no
  */
 @property (nonatomic, assign) BOOL pageControl;
 
@@ -24,7 +24,7 @@
 /*显示ImageViewer到指定控制器上*/
 - (void)showView:(UIViewController *)viewController;
 
-+ (ImageViewer *)getSelf;
++ (ImageViewer *)sharedInstance;
 
 - (void)dissMiss;
 

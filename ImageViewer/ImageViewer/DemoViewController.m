@@ -58,11 +58,10 @@
                                       @"http://a.hiphotos.baidu.com/image/pic/item/7af40ad162d9f2d30f78d8c9acec8a136327ccaf.jpg",
                                       @"http://a.hiphotos.baidu.com/image/pic/item/c8177f3e6709c93d8087f2d19a3df8dcd100549b.jpg",
                                       @"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"]];
-    ImageViewer *imageViewer = [[ImageViewer alloc] init];
-    imageViewer.imageArray = imageArray;
-    imageViewer.pageControl = YES;
-    imageViewer.index = 5;
-    [imageViewer showView:self];
+    [[ImageViewer sharedInstance] setImageArray:imageArray];
+    [ImageViewer sharedInstance].pageControl = YES;
+    [ImageViewer sharedInstance].index = 5;
+    [[ImageViewer sharedInstance] showView:self];
 }
 
 - (void)didReceiveMemoryWarning {

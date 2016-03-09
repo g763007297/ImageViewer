@@ -24,7 +24,7 @@
 /*显示ImageViewer到指定控制器上*/
 - (void)showView:(UIViewController *)viewController;
 
-+ (ImageViewer *)getSelf;
++ (ImageViewer *)sharedInstance;
 
 - (void)dissMiss;
 
