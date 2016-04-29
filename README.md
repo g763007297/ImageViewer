@@ -5,11 +5,11 @@
 
 1.将ImageViewer文件夹加入到工程中。如果你的工程中有SDWebImage就不需要再添加，如果没有则需要将SDWebImage加入。
 
-2.在需要使用的图片查看器的控制器中#import "ImageViewer.h"。
+2.在需要使用的图片查看器的控制器中#import "GQImageViewer.h"。
 
 3.在需要触发查看器的地方添加以下代码:
 
-  ImageViewer *imageViewer = [[ImageViewer alloc] init];//初始化
+  GQImageViewer *imageViewer = [[GQImageViewer alloc] init];//初始化
   
   imageViewer.imageArray = @[] //可以是NSURL，UIImage，UIImageView，NSString，如果是string类型的话必须是未格式化的url
   
