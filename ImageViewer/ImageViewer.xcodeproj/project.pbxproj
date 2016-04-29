@@ -12,7 +12,7 @@
 		DF0255C81C34BCCD001E65C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF0255C71C34BCCD001E65C2 /* Assets.xcassets */; };
 		DF0255D61C34BCCD001E65C2 /* ImageViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255D51C34BCCD001E65C2 /* ImageViewerTests.m */; };
 		DF0255E21C34BD89001E65C2 /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255E11C34BD89001E65C2 /* DemoViewController.m */; };
-		DF0255E61C34BDC9001E65C2 /* ImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255E51C34BDC9001E65C2 /* ImageViewer.m */; };
+		DF0255E61C34BDC9001E65C2 /* GQImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255E51C34BDC9001E65C2 /* GQImageViewer.m */; };
 		DF0255ED1C34BDE1001E65C2 /* BasePictureTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255E81C34BDE1001E65C2 /* BasePictureTableView.m */; };
 		DF0255EE1C34BDE1001E65C2 /* PhotoScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255EA1C34BDE1001E65C2 /* PhotoScrollView.m */; };
 		DF0255EF1C34BDE1001E65C2 /* PhotoTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255EC1C34BDE1001E65C2 /* PhotoTableView.m */; };
@@ -63,8 +63,8 @@
 		DF0255D71C34BCCD001E65C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF0255E01C34BD89001E65C2 /* DemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewController.h; sourceTree = "<group>"; };
 		DF0255E11C34BD89001E65C2 /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
-		DF0255E41C34BDC9001E65C2 /* ImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewer.h; sourceTree = "<group>"; };
-		DF0255E51C34BDC9001E65C2 /* ImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewer.m; sourceTree = "<group>"; };
+		DF0255E41C34BDC9001E65C2 /* GQImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViewer.h; sourceTree = "<group>"; };
+		DF0255E51C34BDC9001E65C2 /* GQImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageViewer.m; sourceTree = "<group>"; };
 		DF0255E71C34BDE1001E65C2 /* BasePictureTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasePictureTableView.h; sourceTree = "<group>"; };
 		DF0255E81C34BDE1001E65C2 /* BasePictureTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasePictureTableView.m; sourceTree = "<group>"; };
 		DF0255E91C34BDE1001E65C2 /* PhotoScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoScrollView.h; sourceTree = "<group>"; };
@@ -183,8 +183,8 @@
 		DF0255E31C34BDAA001E65C2 /* ImageViewer */ = {
 			isa = PBXGroup;
 			children = (
-				DF0255E41C34BDC9001E65C2 /* ImageViewer.h */,
-				DF0255E51C34BDC9001E65C2 /* ImageViewer.m */,
+				DF0255E41C34BDC9001E65C2 /* GQImageViewer.h */,
+				DF0255E51C34BDC9001E65C2 /* GQImageViewer.m */,
 				DF0255E91C34BDE1001E65C2 /* PhotoScrollView.h */,
 				DF0255EA1C34BDE1001E65C2 /* PhotoScrollView.m */,
 				DF0255E71C34BDE1001E65C2 /* BasePictureTableView.h */,
@@ -367,7 +367,7 @@
 				DF0256461C34C876001E65C2 /* NSData+ImageContentType.m in Sources */,
 				DF0256431C34C85A001E65C2 /* UIImage+WebP.m in Sources */,
 				DF0256181C34C23A001E65C2 /* SDWebImageDownloader.m in Sources */,
-				DF0255E61C34BDC9001E65C2 /* ImageViewer.m in Sources */,
+				DF0255E61C34BDC9001E65C2 /* GQImageViewer.m in Sources */,
 				DF0255BD1C34BCCD001E65C2 /* AppDelegate.m in Sources */,
 				DF0255BA1C34BCCD001E65C2 /* main.m in Sources */,
 				DF02561A1C34C23A001E65C2 /* SDWebImageManager.m in Sources */,
@@ -545,6 +545,7 @@
 				DF0255DC1C34BCCD001E65C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DF0255DD1C34BCCD001E65C2 /* Build configuration list for PBXNativeTarget "ImageViewerTests" */ = {
 			isa = XCConfigurationList;
@@ -553,6 +554,7 @@
 				DF0255DF1C34BCCD001E65C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

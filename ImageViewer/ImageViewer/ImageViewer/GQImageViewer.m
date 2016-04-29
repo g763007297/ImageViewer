@@ -6,20 +6,20 @@
 //  Copyright © 2015年 tusm. All rights reserved.
 //
 
-#import "ImageViewer.h"
+#import "GQImageViewer.h"
 #import "PhotoTableView.h"
 
-@interface ImageViewer()
+@interface GQImageViewer()
 
 @property (nonatomic, assign) BOOL isVisible;
 
 @end
 
-@implementation ImageViewer
+@implementation GQImageViewer
 
-__strong static ImageViewer *imageViewerManager;
+__strong static GQImageViewer *imageViewerManager;
 
-+ (ImageViewer *)sharedInstance {
++ (GQImageViewer *)sharedInstance {
     static dispatch_once_t onceToken = 0;
     
     dispatch_once(&onceToken, ^{

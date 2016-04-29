@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ImageViewer : UIView
+@interface GQImageViewer : UIView
 
 /*
     显示PageControl传yes
@@ -24,7 +24,7 @@
 /*显示ImageViewer到指定控制器上*/
 - (void)showView:(UIViewController *)viewController;
 
-+ (ImageViewer *)sharedInstance;
++ (GQImageViewer *)sharedInstance;
 
 - (void)dissMiss;
 
