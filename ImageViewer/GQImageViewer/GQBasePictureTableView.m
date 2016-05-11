@@ -6,9 +6,9 @@
 //  Copyright (c) 2015年 GQ. All rights reserved.
 //
 
-#import "BasePictureTableView.h"
+#import "GQBasePictureTableView.h"
 
-@implementation BasePictureTableView
+@implementation GQBasePictureTableView
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
     self = [super initWithFrame:frame style:style];

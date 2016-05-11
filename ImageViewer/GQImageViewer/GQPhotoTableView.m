@@ -6,10 +6,10 @@
 //  Copyright (c) 2015年 GQ. All rights reserved.
 //
 
-#import "PhotoTableView.h"
-#import "PhotoScrollView.h"
+#import "GQPhotoTableView.h"
+#import "GQPhotoScrollView.h"
 
-@implementation PhotoTableView
+@implementation GQPhotoTableView
 
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
@@ -36,13 +36,13 @@
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI_2);
         cell.backgroundColor = [UIColor clearColor];
         
-        PhotoScrollView *photoSV = [[PhotoScrollView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        GQPhotoScrollView *photoSV = [[GQPhotoScrollView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         photoSV.backgroundColor = [UIColor clearColor];
         photoSV.tag = 100;
         [cell.contentView addSubview:photoSV];
     }
     
-    PhotoScrollView *photoSV = (PhotoScrollView *)[cell.contentView viewWithTag:100];
+    GQPhotoScrollView *photoSV = (GQPhotoScrollView *)[cell.contentView viewWithTag:100];
     
     photoSV.data = self.imageArray[indexPath.row];
     
@@ -52,7 +52,7 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    PhotoScrollView *photoSV = (PhotoScrollView *)[cell.contentView viewWithTag:100];
+    GQPhotoScrollView *photoSV = (GQPhotoScrollView *)[cell.contentView viewWithTag:100];
     [photoSV setZoomScale:1.0 animated:YES];
     
     

@@ -6,11 +6,11 @@
 //  Copyright (c) 2015年 GQ. All rights reserved.
 //
 
-#import "PhotoScrollView.h"
+#import "GQPhotoScrollView.h"
 #import "UIImageView+WebCache.h"
-#import "ImageViewer.h"
+#import "GQImageViewer.h"
 
-@implementation PhotoScrollView
+@implementation GQPhotoScrollView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -74,7 +74,7 @@
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     if (tap.numberOfTapsRequired == 1) {
-        [[ImageViewer sharedInstance] dissMiss];
+        [[GQImageViewer sharedInstance] dissMiss];
     }
     else if(tap.numberOfTapsRequired == 2) {
         if (self.zoomScale > 1) {

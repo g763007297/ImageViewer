@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PhotoScrollView : UIScrollView<UIScrollViewDelegate>{
+@interface GQPhotoScrollView : UIScrollView<UIScrollViewDelegate>{
     UIImageView *_imageView;
 }
 

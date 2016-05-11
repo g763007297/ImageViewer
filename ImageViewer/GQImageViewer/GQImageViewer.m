@@ -7,7 +7,7 @@
 //
 
 #import "GQImageViewer.h"
-#import "PhotoTableView.h"
+#import "GQPhotoTableView.h"
 
 @interface GQImageViewer()
 
@@ -57,7 +57,7 @@ __strong static GQImageViewer *imageViewerManager;
         [self insertSubview:label atIndex:1];
     }
     
-    PhotoTableView *_tableView = [[PhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(rect), CGRectGetMaxY(rect)) style:UITableViewStylePlain];
+    GQPhotoTableView *_tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(rect), CGRectGetMaxY(rect)) style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.block = ^(NSInteger index){
         if (page) {

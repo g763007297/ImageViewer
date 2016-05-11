@@ -6,9 +6,9 @@
 //  Copyright (c) 2015年 GQ. All rights reserved.
 //
 
-#import "BasePictureTableView.h"
+#import "GQBasePictureTableView.h"
 
-@interface PhotoTableView : BasePictureTableView
+@interface GQPhotoTableView : GQBasePictureTableView
 
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BasePictureTableView : UITableView<UITableViewDataSource,UITableViewDelegate>
+@interface GQBasePictureTableView : UITableView<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, retain) NSArray *imageArray;
 
