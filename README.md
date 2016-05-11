@@ -2,9 +2,14 @@
 [![](https://img.shields.io/badge/platform-iOS-brightgreen.svg)](http://cocoapods.org/?q=SRouter)&nbsp;
 
 # ImageViewer
+
 一款图片查看器，与SD结合使用，图片原尺寸显示，不会变形定，双击放大缩小，单击消失，支持多张图片，多个网络图片url混合查看，支持指定查看哪张图片。不需要跳转到新的viewcontroller，就可以覆盖当前控制器显示。
 
-如何使用:
+## Overview
+
+![Demo Overview](https://github.com/g763007297/ImageViewer/blob/master/Screenshot/demo.gif)
+
+## Basic usage
 
 1.将GQImageViewer文件夹加入到工程中。如果你的工程中有SDWebImage就不需要再添加，如果没有则需要将SDWebImage加入。
 
