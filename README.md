@@ -3,7 +3,7 @@
 
 如何使用:
 
-1.将ImageViewer文件夹加入到工程中。如果你的工程中有SDWebImage就不需要再添加，如果没有则需要将SDWebImage加入。
+1.将GQImageViewer文件夹加入到工程中。如果你的工程中有SDWebImage就不需要再添加，如果没有则需要将SDWebImage加入。
 
 2.在需要使用的图片查看器的控制器中#import "GQImageViewer.h"。
 
