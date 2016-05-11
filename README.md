@@ -8,6 +8,7 @@
 2.在需要使用的图片查看器的控制器中#import "GQImageViewer.h"。
 
 3.在需要触发查看器的地方添加以下代码:
+``` objc
 
   GQImageViewer *imageViewer = [[GQImageViewer alloc] init];//初始化
   
@@ -19,6 +20,8 @@
   
   [imageViewer showView:self];
   
+```
+
   特别说明，如果是下网络图片的话，在iOS9以上的系统需要添加plist字段，否则无法拉取图片:
   
   <key>NSAppTransportSecurity</key>
