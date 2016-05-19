@@ -9,6 +9,12 @@
 
 ![Demo Overview](https://github.com/g763007297/ImageViewer/blob/master/Screenshot/demo.gif)
 
+CocoaPods
+
+1.在 Podfile 中添加 pod 'GQImageViewer'。
+2.执行 pod install 或 pod update。
+3.导入 GQImageViewer.h。
+
 ## Basic usage
 
 1.将GQImageViewer文件夹加入到工程中。如果你的工程中有SDWebImage就不需要再添加，如果没有则需要将SDWebImage加入。
