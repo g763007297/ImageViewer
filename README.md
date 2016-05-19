@@ -9,7 +9,7 @@
 
 ![Demo Overview](https://github.com/g763007297/ImageViewer/blob/master/Screenshot/demo.gif)
 
-CocoaPods
+##CocoaPods
 
 1.在 Podfile 中添加 pod 'GQImageViewer'。
 2.执行 pod install 或 pod update。
