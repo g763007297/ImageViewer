@@ -1,6 +1,6 @@
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/angelcs1990/SRouter/master/LICENSE)&nbsp;
-[![](https://img.shields.io/badge/platform-iOS-brightgreen.svg)](http://cocoapods.org/?q=SRouter)&nbsp;
-
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/angelcs1990/GQImageViewer/master/LICENSE)&nbsp;
+[![](https://img.shields.io/badge/platform-iOS-brightgreen.svg)](http://cocoapods.org/?q=GQImageViewer)&nbsp;
+[![support](https://img.shields.io/badge/support-iOS7.0%2B-blue.svg)](https://www.apple.com/nl/ios/)&nbsp;
 # ImageViewer
 
 一款图片查看器，与SD结合使用，图片原尺寸显示，不会变形定，双击放大缩小，单击消失，支持多张图片，多个网络图片url混合查看，支持指定查看哪张图片。不需要跳转到新的viewcontroller，就可以覆盖当前控制器显示。
