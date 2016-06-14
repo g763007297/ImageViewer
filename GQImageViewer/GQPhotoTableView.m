@@ -23,7 +23,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *identify = @"identifier";
+    static NSString *identify = @"GQPhotoScrollViewIdentify";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
     
@@ -51,21 +51,8 @@
 }
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     GQPhotoScrollView *photoSV = (GQPhotoScrollView *)[cell.contentView viewWithTag:100];
     [photoSV setZoomScale:1.0 animated:YES];
-    
-    
-}
-
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-//    if (self.pageControl) {
-//        UIPageControl *page = (UIPageControl *)[cell.contentView viewWithTag:101];
-//        page.currentPage = indexPath.row;
-//    }else{
-//        UILabel *label = (UILabel *)[cell.contentView viewWithTag:101];
-//        label.text = [NSString stringWithFormat:@"%@/%@",StringFormat(indexPath.row+1),StringFormat(self.imageArray?self.imageArray.count:self.data.count)];
-//    }
 }
 
 @end

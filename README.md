@@ -23,16 +23,14 @@
 
 3.在需要触发查看器的地方添加以下代码:
 ``` objc
-
-  GQImageViewer *imageViewer = [[GQImageViewer alloc] init];//初始化
-  
-  imageViewer.imageArray = @[] //可以是NSURL，UIImage，UIImageView，NSString，如果是string类型的话必须是未格式化的url
-  
-  imageViewer.pageControl = YES;//显示pageControl  如果需要显示label则传no；
-  
-  imageViewer.index = 5;//指定查看哪张图片,不能数组越界
-  
-  [imageViewer showView:self];
+ 
+ [[GQImageViewer sharedInstance] setImageArray:imageArray];
+ 
+ [GQImageViewer sharedInstance].pageControl = YES;
+ 
+ [GQImageViewer sharedInstance].index = 5;
+ 
+ [[GQImageViewer sharedInstance] showView:self];
   
 ```
 

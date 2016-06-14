@@ -10,5 +10,4 @@
 
 @interface GQPhotoTableView : GQBasePictureTableView
 
-
 @end

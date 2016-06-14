@@ -47,6 +47,11 @@
     self.selectedInexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
+- (void)setImageArray:(NSArray *)imageArray{
+    _imageArray = [imageArray copy];
+    [self reloadData];
+}
+
 - (void)setRowHeight:(CGFloat)rowHeight {
     [super setRowHeight:rowHeight];
     
@@ -62,7 +67,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *identify = @"identifier";
+    static NSString *identify = @"GQBaseCellIdentifier";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
     
@@ -77,13 +82,6 @@
     }
     
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-    
-    [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    
-    self.selectedInexPath = indexPath;
 }
 
 #pragma mark - UIScrollView delegate
