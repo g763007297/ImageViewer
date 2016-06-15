@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
 
   s.name         = "GQImageViewer"
-s.version = "0.0.1"
-  s.summary      = "一款图片查看器，图片原尺寸显示，不会变形定，双击放大缩小，单击消失，支持多张图片"
+  s.version = "0.0.2"
+  s.summary      = "一款多图片浏览器，图片原尺寸显示，不会变形定，双击放大缩小，单击消失，支持多张图片，支持链式调用"
 
   s.homepage     = "https://github.com/g763007297/ImageViewer"
   # s.screenshots  = "https://github.com/g763007297/ImageViewer/blob/master/Screenshot/demo.gif"

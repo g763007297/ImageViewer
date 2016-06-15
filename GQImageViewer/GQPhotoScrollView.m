@@ -51,35 +51,47 @@
     return self;
 }
 
-- (void)setData:(id)data{
-    if ([data isKindOfClass:[UIImage class]]) {
+- (void)setData:(id)data
+{
+    if ([data isKindOfClass:[UIImage class]])
+    {
         _imageView.image = data;
-    }else if ([data isKindOfClass:[NSString class]]){
+    }else if ([data isKindOfClass:[NSString class]])
+    {
         [_imageView sd_setImageWithURL:[NSURL URLWithString:data]];
-    }else if ([data isKindOfClass:[NSURL class]]){
+    }else if ([data isKindOfClass:[NSURL class]])
+    {
         [_imageView sd_setImageWithURL:data];
-    }else if ([data isKindOfClass:[UIImageView class]]){
+    }else if ([data isKindOfClass:[UIImageView class]])
+    {
         UIImageView *imageView = (UIImageView *)data;
         _imageView.image = imageView.image;
-    }else{
+    }else
+    {
         _imageView.image = nil;
     }
 }
 
 #pragma mark - UIScrollView delegate
 //返回需要缩放的子视图
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
     return _imageView;
 }
 
-- (void)tapAction:(UITapGestureRecognizer *)tap {
-    if (tap.numberOfTapsRequired == 1) {
+- (void)tapAction:(UITapGestureRecognizer *)tap
+{
+    if (tap.numberOfTapsRequired == 1)
+    {
         [[GQImageViewer sharedInstance] dissMiss];
     }
-    else if(tap.numberOfTapsRequired == 2) {
-        if (self.zoomScale > 1) {
+    else if(tap.numberOfTapsRequired == 2)
+    {
+        if (self.zoomScale > 1)
+        {
             [self setZoomScale:1 animated:YES];
-        } else {
+        } else
+        {
             [self setZoomScale:3 animated:YES];
         }
     }

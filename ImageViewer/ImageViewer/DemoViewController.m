@@ -11,7 +11,9 @@
 
 #import "UIImage+MultiFormat.h"
 
-@interface DemoViewController ()
+@interface DemoViewController (){
+    UIView *demoView;
+}
 
 @end
 
@@ -39,6 +41,10 @@
     
     [button addTarget:self action:@selector(showImageViewer:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+    
+    demoView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, 64, 200, 200)];
+    demoView.backgroundColor = [UIColor redColor];
+    [self.view addSubview:demoView];
 }
 
 - (void)showImageViewer:(id)sender{
@@ -58,21 +64,37 @@
                                       @"http://a.hiphotos.baidu.com/image/pic/item/7af40ad162d9f2d30f78d8c9acec8a136327ccaf.jpg",
                                       @"http://a.hiphotos.baidu.com/image/pic/item/c8177f3e6709c93d8087f2d19a3df8dcd100549b.jpg",
                                       @"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"]];
-    [[GQImageViewer sharedInstance] setImageArray:imageArray];
-    [GQImageViewer sharedInstance].usePageControl = YES;
-    [GQImageViewer sharedInstance].selectIndex = 5;
-    [[GQImageViewer sharedInstance] showView:self];
     
-//    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
+    //基本调用
+//    [[GQImageViewer sharedInstance] setImageArray:imageArray];
+//    [GQImageViewer sharedInstance].usePageControl = YES;
+//    [GQImageViewer sharedInstance].selectIndex = 5;
+//    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;
+//    [[GQImageViewer sharedInstance] showInView:self.navigationController.view];
+    
+    //链式调用
+    [GQImageViewer sharedInstance]
+    .imageArrayChain(imageArray)
+    .usePageControlChain(YES)
+    .selectIndexChain(5)
+    .launchDirectionChain(GQLaunchDirectionRight)
+    .showViewChain(demoView);
+    
+    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
 }
 
 /**
  *  模拟修改图片数组
  */
 - (void)changeView{
-    [GQImageViewer sharedInstance].usePageControl = NO;
-    [GQImageViewer sharedInstance].imageArray = @[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"];
-    [GQImageViewer sharedInstance].selectIndex = 8;
+    [GQImageViewer sharedInstance]
+    .imageArrayChain(@[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"]);
+    [GQImageViewer sharedInstance].usePageControlChain(NO);
+    [GQImageViewer sharedInstance].selectIndexChain(8);
+    
+//    [GQImageViewer sharedInstance].usePageControl = NO;
+//    [GQImageViewer sharedInstance].imageArray = @[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"];
+//    [GQImageViewer sharedInstance].selectIndex = 8;
 }
 
 - (void)didReceiveMemoryWarning {
