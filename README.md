@@ -22,7 +22,7 @@
 
 3.在需要触发查看器的地方添加以下代码:
 
-``` objc
+```objc
 
     //基本调用
     [[GQImageViewer sharedInstance] setImageArray:imageArray];//这是图片数组
@@ -44,7 +44,7 @@
 
   特别说明，如果是下网络图片的话，在iOS9以上的系统需要添加plist字段，否则无法拉取图片:
   
-  ``` objc
+```objc
   
   <key>NSAppTransportSecurity</key>
   
@@ -59,7 +59,7 @@
 	欢迎指出错误的方法或者需要改善的地方。联系qq：763007297
 	
 	
-	```
+``` 
 	
 ## Level history
 	
