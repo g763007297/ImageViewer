@@ -80,11 +80,13 @@ __strong static GQImageViewer *imageViewerManager;
 @synthesize selectIndexChain = _selectIndexChain;
 @synthesize showViewChain = _showViewChain;
 @synthesize launchDirectionChain = _launchDirectionChain;
+@synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
 
 GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQUsePageControlChain);
 GQChainObjectDefine(imageArrayChain, ImageArray, NSArray *, GQImageArrayChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
 GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQLaunchDirectionChain);
+GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
 
 - (GQShowViewChain)showViewChain
 {
@@ -147,7 +149,6 @@ GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQL
 {
     
     [self updateNumberView];
-    
     if (!_tableView) {
         _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(rect) ,CGRectGetHeight(rect)) style:UITableViewStylePlain];
         __weak typeof(self) weakSelf = self;
@@ -191,6 +192,9 @@ GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQL
 
 - (void)updatePageNumber
 {
+    if (self.achieveSelectIndex) {
+        self.achieveSelectIndex(_selectIndex);
+    }
     if (_usePageControl) {
         _pageControl.currentPage = self.selectIndex;
     }else{

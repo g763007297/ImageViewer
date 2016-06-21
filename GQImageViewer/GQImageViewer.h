@@ -15,17 +15,21 @@ typedef enum {
     GQLaunchDirectionRight      //从右往左推出
 }GQLaunchDirection;
 
+typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片的index的block
+
 @class GQImageViewer;
 
 //链式调用block
 typedef GQImageViewer * (^GQUsePageControlChain)(BOOL pageControl);
 typedef GQImageViewer * (^GQImageArrayChain)(NSArray *imageArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
-typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirection) ;
+typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirection);
+typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock selectIndexBlock);
 typedef void (^GQShowViewChain)(UIView *showView);
 
 @interface GQImageViewer : UIView
 
+#pragma mark -- 链式调用
 /**
  *  显示PageControl传yes   type : BOOL
  */
@@ -51,6 +55,13 @@ typedef void (^GQShowViewChain)(UIView *showView);
  */
 @property (nonatomic, copy, readonly) GQShowViewChain showViewChain;
 
+/**
+ *  获取当前选中的图片index  type: GQAchieveIndexBlock
+ */
+@property (nonatomic, copy, readonly) GQAchieveIndexChain achieveSelectIndexChain;
+
+#pragma mark -- 普通调用
+
 /*
  *  显示PageControl传yes   默认 : yes
  *  显示label就传no
@@ -60,7 +71,12 @@ typedef void (^GQShowViewChain)(UIView *showView);
 /**
  *  图片数组
  */
-@property (nonatomic, retain) NSArray *imageArray;//图片数组
+@property (nonatomic, copy) NSArray *imageArray;//图片数组
+
+/**
+ *  获取当前选中的图片index
+ */
+@property (nonatomic, copy) GQAchieveIndexBlock achieveSelectIndex;
 
 /**
  *  选中的图片索引

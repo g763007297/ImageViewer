@@ -69,6 +69,9 @@
 //    [[GQImageViewer sharedInstance] setImageArray:imageArray];
 //    [GQImageViewer sharedInstance].usePageControl = YES;
 //    [GQImageViewer sharedInstance].selectIndex = 5;
+//    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){
+//        NSLog(@"%ld",selectIndex);
+//    };
 //    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;
 //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view];
     
@@ -77,6 +80,9 @@
     .imageArrayChain(imageArray)
     .usePageControlChain(YES)
     .selectIndexChain(5)
+    .achieveSelectIndexChain(^(NSInteger selectIndex){
+        NSLog(@"%ld",selectIndex);
+    })
     .launchDirectionChain(GQLaunchDirectionRight)
     .showViewChain(demoView);
     
