@@ -25,20 +25,26 @@
 ```objc
 
     //基本调用
-    [[GQImageViewer sharedInstance] setImageArray:imageArray];//这是图片数组
+        [[GQImageViewer sharedInstance] setImageArray:imageArray];//这是图片数组
     [GQImageViewer sharedInstance].usePageControl = YES;//设置是否使用pageControl
     [GQImageViewer sharedInstance].selectIndex = 5;//设置选中的图片索引
+    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){
+        NSLog(@"%ld",selectIndex);
+    };//获取当前选中的图片索引
     [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;//设置推出方向
     [[GQImageViewer sharedInstance] showInView:self.navigationController.view];//显示GQImageViewer到指定view上
 
  
 	 //链式调用
-	[GQImageViewer sharedInstance]
-	.imageArrayChain(imageArray)
-	.usePageControlChain(YES)
-	.selectIndexChain(5)
-	.launchDirectionChain(GQLaunchDirectionRight)
-	.showViewChain(demoView);
+	 [GQImageViewer sharedInstance]
+    .imageArrayChain(imageArray)
+    .usePageControlChain(YES)
+    .selectIndexChain(5)
+    .achieveSelectIndexChain(^(NSInteger selectIndex){
+        NSLog(@"%ld",selectIndex);
+    })
+    .launchDirectionChain(GQLaunchDirectionRight)
+    .showViewChain(demoView);
   
 ```
 
@@ -71,4 +77,9 @@
 	
 	支持链式调用,支持显示在指定UIView上，无需指定UIViewController,支持设置推出方向
 
-(3) wait a moment
+(3) 0.0.3
+ 
+	新增获取当前选中的图片索引
+	
+(4) wait a moment
+
