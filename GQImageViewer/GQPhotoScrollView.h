@@ -8,12 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image);
+
 @interface GQPhotoScrollView : UIScrollView<UIScrollViewDelegate>{
     UIImageView *_imageView;
 }
 
 @property (nonatomic, retain) id data;
 
-@property(nonatomic,assign)NSInteger row;
+@property(nonatomic,assign) NSInteger row;
+
+@property (nonatomic, copy) UIImage *placeholderImage;
+
+@property (nonatomic, copy) GQDownloaderCompletedBlock block;
 
 @end

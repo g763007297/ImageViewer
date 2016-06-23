@@ -7,8 +7,15 @@
 //
 
 #import "GQPhotoScrollView.h"
-#import "UIImageView+WebCache.h"
 #import "GQImageViewer.h"
+
+#import "UIImageView+WebCache.h"
+
+#import "GQImageViewerConst.h"
+
+@interface GQPhotoScrollView()
+
+@end
 
 @implementation GQPhotoScrollView
 
@@ -36,7 +43,7 @@
         //单击手势
         UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
         [self addGestureRecognizer:tap1];
-        
+
         //双击放大缩小手势
         UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
         //双击
@@ -44,7 +51,7 @@
         //手指的数量
         tap2.numberOfTouchesRequired = 1;
         [self addGestureRecognizer:tap2];
-        
+
         //tap1、tap2两个手势同时响应时，则取消tap1手势
         [tap1 requireGestureRecognizerToFail:tap2];
     }
@@ -56,12 +63,9 @@
     if ([data isKindOfClass:[UIImage class]])
     {
         _imageView.image = data;
-    }else if ([data isKindOfClass:[NSString class]])
+    }else if ([data isKindOfClass:[NSString class]]||[data isKindOfClass:[NSURL class]])
     {
-        [_imageView sd_setImageWithURL:[NSURL URLWithString:data]];
-    }else if ([data isKindOfClass:[NSURL class]])
-    {
-        [_imageView sd_setImageWithURL:data];
+        [self downloadeImage:data];
     }else if ([data isKindOfClass:[UIImageView class]])
     {
         UIImageView *imageView = (UIImageView *)data;
@@ -70,6 +74,27 @@
     {
         _imageView.image = nil;
     }
+}
+
+- (void)downloadeImage:(id)data{
+    NSURL *imageUrl = data;
+    if ([data isKindOfClass:[NSString class]]) {
+        imageUrl = [NSURL URLWithString:data];
+    }
+    GQWeakify(self);
+    [_imageView sd_setImageWithURL:imageUrl placeholderImage:_placeholderImage?_placeholderImage:[UIImage imageNamed:@""] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        GQStrongify(self);
+        if (self.block) {
+            self.block(self.row,image);
+        }
+    }];
+}
+
+- (void)setBlock:(GQDownloaderCompletedBlock)block{
+    if (_block) {
+        _block = nil;
+    }
+    _block = [block copy];
 }
 
 #pragma mark - UIScrollView delegate

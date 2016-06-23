@@ -16,15 +16,12 @@
     if (self) {
         [self _initViews:frame];
     }
-    
     return self;
 }
 
 - (void)awakeFromNib
 {
-    
     [super awakeFromNib];
-    
     [self _initViews:self.frame];
 }
 
@@ -50,9 +47,10 @@
     self.selectedInexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
-- (void)setImageArray:(NSArray *)imageArray
+- (void)setImageArray:(NSMutableArray *)imageArray
 {
-    _imageArray = [imageArray copy];
+    _imageArray = [[NSMutableArray alloc] initWithCapacity:0];
+    [_imageArray addObjectsFromArray:imageArray];
     [self reloadData];
 }
 
@@ -107,6 +105,10 @@
     [self scrollCellToCenter];
 }
 
+- (void) scrollViewDidScroll:(UIScrollView *)sender {
+    [self getPageIndex];
+}
+
 //将单元格滚动至中间位置
 - (void)scrollCellToCenter
 {
@@ -123,12 +125,27 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     
     [self scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
+- (void)getPageIndex
+{
+    CGFloat edge = self.contentInset.top;
     
-    if (self.block) {
-        self.block(indexPath.row);
+    float y = self.contentOffset.y + edge + self.rowHeight/2;
+    int row = y/self.rowHeight;
+    
+    if (row >= self.imageArray.count || row < 0) {
+        return;
     }
-    //记录选中的单元格IndexPath
-    self.selectedInexPath = indexPath;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    
+    if (indexPath.row != self.selectedInexPath.row) {
+        if (self.block) {
+            self.block(row);
+        }
+        //记录选中的单元格IndexPath
+        self.selectedInexPath = indexPath;
+    }
 }
 
 @end

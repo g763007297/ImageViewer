@@ -8,20 +8,7 @@
 
 #import "GQImageViewer.h"
 #import "GQPhotoTableView.h"
-
-#define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)\
-- (_block_type_)_key_name_\
-{\
-    __weak typeof(self) weakSelf = self;\
-    if (!_##_key_name_) {\
-        _##_key_name_ = ^(_type_ value){\
-        __strong typeof(weakSelf) strongSelf = weakSelf;\
-        [strongSelf set##_Chain_:value];\
-        return strongSelf;\
-        };\
-    }\
-    return _##_key_name_;\
-}\
+#import "GQImageViewerConst.h"
 
 static NSInteger pageNumberTag = 10086;
 
@@ -91,10 +78,10 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
 - (GQShowViewChain)showViewChain
 {
     if (!_showViewChain) {
-        __weak typeof(self) weakSelf = self;
+        GQWeakify(self);
         _showViewChain = ^(UIView *showView){
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            [strongSelf showInView:showView];
+            GQStrongify(self);
+            [self showInView:showView];
         };
     }
     return _showViewChain;
@@ -115,7 +102,7 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     
     NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
     
-    _tableView.imageArray = _imageArray;
+    _tableView.imageArray = [_imageArray copy];
     
     if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
         _selectIndex = [imageArray count]-1;
@@ -147,15 +134,14 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
 
 - (void)initViewWithFrame:(CGRect)rect
 {
-    
     [self updateNumberView];
     if (!_tableView) {
         _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(rect) ,CGRectGetHeight(rect)) style:UITableViewStylePlain];
-        __weak typeof(self) weakSelf = self;
+        GQWeakify(self);
         _tableView.block = ^(NSInteger index){
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            strongSelf->_selectIndex = index;
-            [strongSelf updatePageNumber];
+            GQStrongify(self);
+            self->_selectIndex = index;
+            [self updatePageNumber];
         };
         _tableView.rowHeight = CGRectGetWidth(rect);
         _tableView.pagingEnabled  = YES;
@@ -163,14 +149,13 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     [self insertSubview:_tableView atIndex:0];
     
     //将所有的图片url赋给tableView显示
-    _tableView.imageArray = _imageArray;
+    _tableView.imageArray = [_imageArray copy];
     
     [self scrollToSettingIndex];
 }
 
 - (void)updateNumberView
 {
-    
     [[self viewWithTag:pageNumberTag] removeFromSuperview];
     
     if (_usePageControl) {
@@ -268,6 +253,7 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
                      } completion:^(BOOL finished) {
                          [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
                          [self removeFromSuperview];
+                         _tableView = nil;
                          _isVisible = NO;
                      }];
 }

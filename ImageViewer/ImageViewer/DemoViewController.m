@@ -75,7 +75,7 @@
 //    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;
 //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view];
     
-    //链式调用
+//    链式调用
     [GQImageViewer sharedInstance]
     .imageArrayChain(imageArray)
     .usePageControlChain(YES)
@@ -86,7 +86,7 @@
     .launchDirectionChain(GQLaunchDirectionRight)
     .showViewChain(demoView);
     
-    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
+//    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
 }
 
 /**

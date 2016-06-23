@@ -10,10 +10,10 @@
 
 @interface GQBasePictureTableView : UITableView<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic, retain) NSArray *imageArray;
+@property (nonatomic, strong) NSMutableArray *imageArray;
 
-@property (nonatomic , copy) void (^block)(NSInteger index);
+@property (nonatomic, copy) void (^block)(NSInteger index);
 //当前选中的单元格IndexPath
-@property(nonatomic,retain)NSIndexPath *selectedInexPath;
+@property(nonatomic,copy) NSIndexPath *selectedInexPath;
 
 @end

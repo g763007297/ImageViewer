@@ -69,6 +69,11 @@ typedef void (^GQShowViewChain)(UIView *showView);
 @property (nonatomic, assign) BOOL usePageControl;
 
 /**
+ *  如果有网络图片则设置默认图片
+ */
+@property (nonatomic, copy) UIImage *placeholderImage;
+
+/**
  *  图片数组
  */
 @property (nonatomic, copy) NSArray *imageArray;//图片数组

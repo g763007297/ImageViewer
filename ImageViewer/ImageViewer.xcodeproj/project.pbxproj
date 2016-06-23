@@ -52,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B61BECEA1D1B75650054AD38 /* GQImageViewerConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GQImageViewerConst.h; sourceTree = "<group>"; };
 		B695216F1CE2C82F00F288AF /* GQBasePictureTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQBasePictureTableView.h; sourceTree = "<group>"; };
 		B69521701CE2C82F00F288AF /* GQBasePictureTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQBasePictureTableView.m; sourceTree = "<group>"; };
 		B69521711CE2C82F00F288AF /* GQImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViewer.h; sourceTree = "<group>"; };
@@ -131,6 +132,7 @@
 		B695216E1CE2C82F00F288AF /* GQImageViewer */ = {
 			isa = PBXGroup;
 			children = (
+				B61BECEA1D1B75650054AD38 /* GQImageViewerConst.h */,
 				B695216F1CE2C82F00F288AF /* GQBasePictureTableView.h */,
 				B69521701CE2C82F00F288AF /* GQBasePictureTableView.m */,
 				B69521711CE2C82F00F288AF /* GQImageViewer.h */,

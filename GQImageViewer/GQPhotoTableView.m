@@ -9,8 +9,9 @@
 #import "GQPhotoTableView.h"
 #import "GQPhotoScrollView.h"
 
-@implementation GQPhotoTableView
+#import "GQImageViewerConst.h"
 
+@implementation GQPhotoTableView
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
 {
@@ -23,7 +24,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     static NSString *identify = @"GQPhotoScrollViewIdentify";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
@@ -48,8 +48,17 @@
     photoSV.data = self.imageArray[indexPath.row];
     
     photoSV.row = indexPath.row;
+    
+    GQWeakify(self);
+    photoSV.block = ^(NSInteger index , UIImage *image){
+        GQStrongify(self);
+        if ([self.imageArray count] > index) {
+            [self.imageArray replaceObjectAtIndex:index withObject:image];
+        }
+    };
     return cell;
 }
+
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
