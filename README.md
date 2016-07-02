@@ -84,6 +84,6 @@
 
 (5) wait a moment
 
-##Support
+#Support
 
 欢迎指出bug或者需要改善的地方，欢迎提出issues，或者联系qq：763007297， 我会及时的做出回应。
