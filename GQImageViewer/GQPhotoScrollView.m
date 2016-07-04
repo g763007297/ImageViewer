@@ -81,13 +81,16 @@
     if ([data isKindOfClass:[NSString class]]) {
         imageUrl = [NSURL URLWithString:data];
     }
-    GQWeakify(self);
-    [_imageView sd_setImageWithURL:imageUrl placeholderImage:_placeholderImage?_placeholderImage:[UIImage imageNamed:@""] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        GQStrongify(self);
-        if (self.block) {
-            self.block(self.row,image);
-        }
-    }];
+    if (![[_imageView sd_imageURL] isEqual:imageUrl]) {
+        [_imageView sd_cancelCurrentImageLoad];
+        GQWeakify(self);
+        [_imageView sd_setImageWithURL:imageUrl placeholderImage:_placeholderImage?_placeholderImage:[UIImage imageNamed:@""] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            GQStrongify(self);
+            if (self.block) {
+                self.block(self.row,image,imageUrl);
+            }
+        }];
+    }
 }
 
 - (void)setBlock:(GQDownloaderCompletedBlock)block{
@@ -108,6 +111,7 @@
 {
     if (tap.numberOfTapsRequired == 1)
     {
+        [_imageView sd_cancelCurrentImageLoad];
         [[GQImageViewer sharedInstance] dissMiss];
     }
     else if(tap.numberOfTapsRequired == 2)

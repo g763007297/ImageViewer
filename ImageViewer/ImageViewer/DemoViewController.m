@@ -78,7 +78,7 @@
 //    链式调用
     [GQImageViewer sharedInstance]
     .imageArrayChain(imageArray)
-    .usePageControlChain(YES)
+    .usePageControlChain(NO)
     .selectIndexChain(5)
     .achieveSelectIndexChain(^(NSInteger selectIndex){
         NSLog(@"%ld",selectIndex);

@@ -95,7 +95,8 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
 
 - (void)setImageArray:(NSArray *)imageArray
 {
-    _imageArray = [imageArray copy];
+    
+    _imageArray = [[self handleImageUrlArray:imageArray] copy];
     if (!_isVisible) {
         return;
     }
@@ -194,6 +195,19 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex inSection:0];
         [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
+}
+
+//图片处理
+- (NSArray *)handleImageUrlArray:(NSArray *)imageURlArray{
+    NSMutableArray *handleImages = [[NSMutableArray alloc] initWithCapacity:[imageURlArray count]];
+    for (id imageObject in imageURlArray) {
+        id handleImageUrl = imageObject;
+        if ([imageObject isKindOfClass:[NSString class]]) {
+            handleImageUrl = [NSURL URLWithString:imageObject];
+        }
+        [handleImages addObject:handleImageUrl];
+    }
+    return handleImages;
 }
 
 - (void)showInView:(UIView *)showView

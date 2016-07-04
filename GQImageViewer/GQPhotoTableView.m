@@ -50,10 +50,10 @@
     photoSV.row = indexPath.row;
     
     GQWeakify(self);
-    photoSV.block = ^(NSInteger index , UIImage *image){
+    photoSV.block = ^(NSInteger index , UIImage *image , NSURL *imageUrl){
         GQStrongify(self);
-        if ([self.imageArray count] > index) {
-            [self.imageArray replaceObjectAtIndex:index withObject:image];
+        if ([self.imageArray count] > index&&[self.imageArray containsObject:imageUrl]) {
+            [self.imageArray replaceObjectAtIndex:[self.imageArray indexOfObject:imageUrl] withObject:image];
         }
     };
     return cell;

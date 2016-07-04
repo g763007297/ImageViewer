@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image);
+typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image , NSURL *imageUrl);
 
 @interface GQPhotoScrollView : UIScrollView<UIScrollViewDelegate>{
     UIImageView *_imageView;
