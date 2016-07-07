@@ -17,8 +17,8 @@ static NSInteger pageNumberTag = 10086;
     GQPhotoTableView *_tableView;
     UIPageControl *_pageControl;
     UILabel *_pageLabel;
-    CGRect superViewRect;
-    CGRect initialRect;
+    CGRect _superViewRect;
+    CGRect _initialRect;
 }
 
 @property (nonatomic, assign) BOOL isVisible;
@@ -160,13 +160,13 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     [[self viewWithTag:pageNumberTag] removeFromSuperview];
     
     if (_usePageControl) {
-        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(superViewRect)-10, 0, 10)];
+        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_superViewRect)-10, 0, 10)];
         _pageControl.numberOfPages = _imageArray.count;
         _pageControl.tag = pageNumberTag;
         _pageControl.currentPage = _selectIndex;
         [self insertSubview:_pageControl atIndex:1];
     }else{
-        _pageLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(superViewRect)/2 - 30, CGRectGetHeight(superViewRect) - 20, 60, 15)];
+        _pageLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_superViewRect)/2 - 30, CGRectGetHeight(_superViewRect) - 20, 60, 15)];
         _pageLabel.textAlignment = NSTextAlignmentCenter;
         _pageLabel.tag = pageNumberTag;
         _pageLabel.text = [NSString stringWithFormat:@"%ld/%ld",(_selectIndex+1),_imageArray.count];
@@ -219,41 +219,41 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
         _isVisible = YES;
     }
     
-    superViewRect = CGRectMake(0, 0, CGRectGetWidth(showView.frame), CGRectGetHeight(showView.frame));
+    _superViewRect = CGRectMake(0, 0, CGRectGetWidth(showView.frame), CGRectGetHeight(showView.frame));
     
     self.alpha = 0;
     
-    [self initViewWithFrame:superViewRect];
+    [self initViewWithFrame:_superViewRect];
     
     switch (_laucnDirection) {
         case GQLaunchDirectionBottom:{
-            initialRect = CGRectMake(0, CGRectGetHeight(showView.frame), CGRectGetWidth(showView.frame), 0);
+            _initialRect = CGRectMake(0, CGRectGetHeight(showView.frame), CGRectGetWidth(showView.frame), 0);
             break;
         }
         case GQLaunchDirectionTop:{
-            initialRect = CGRectMake(0, 0, CGRectGetWidth(showView.frame), 0);
+            _initialRect = CGRectMake(0, 0, CGRectGetWidth(showView.frame), 0);
             break;
         }
         case GQLaunchDirectionLeft:{
-            initialRect = CGRectMake(0, 0, 0, CGRectGetHeight(showView.frame));
+            _initialRect = CGRectMake(0, 0, 0, CGRectGetHeight(showView.frame));
             break;
         }
         case GQLaunchDirectionRight:{
-            initialRect = CGRectMake(CGRectGetWidth(showView.frame), 0, 0, CGRectGetHeight(showView.frame));
+            _initialRect = CGRectMake(CGRectGetWidth(showView.frame), 0, 0, CGRectGetHeight(showView.frame));
             break;
         }
         default:
             break;
     }
     
-    self.frame = initialRect;
+    self.frame = _initialRect;
     
     [showView addSubview:self];
     
     [UIView animateWithDuration:0.3
                      animations:^{
                          self.alpha = 1;
-                         self.frame = superViewRect;
+                         self.frame = _superViewRect;
                      } completion:^(BOOL finished) {
                      }];
 }
@@ -263,7 +263,7 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     [UIView animateWithDuration:0.3
                      animations:^{
                          self.alpha = 0;
-                         self.frame = initialRect;
+                         self.frame = _initialRect;
                      } completion:^(BOOL finished) {
                          [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
                          [self removeFromSuperview];

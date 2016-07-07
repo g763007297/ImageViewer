@@ -86,7 +86,7 @@
     .launchDirectionChain(GQLaunchDirectionRight)
     .showViewChain(demoView);
     
-//    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
+    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
 }
 
 /**
