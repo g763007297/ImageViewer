@@ -82,7 +82,10 @@
 
 	修复卡顿现象，更加精确快速获取当前图片的索引
 
-(5) wait a moment
+(5) 0.0。5
+	修复屏幕旋转时frame布局不准的bug
+
+(6) wait a moment
 
 ##Support
 
