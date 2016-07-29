@@ -14,21 +14,20 @@ static NSInteger pageNumberTag = 10086;
 
 @interface GQImageViewer()
 {
-    GQPhotoTableView *_tableView;
-    UIPageControl *_pageControl;
-    UILabel *_pageLabel;
-    CGRect _superViewRect;
-    CGRect _initialRect;
+    GQPhotoTableView *_tableView;//tableview
+    UIPageControl *_pageControl;//页码显示control
+    UILabel *_pageLabel;//页码显示label
+    CGRect _superViewRect;//superview的rect
+    CGRect _initialRect;//初始化rect
 }
 
-@property (nonatomic, assign) BOOL isVisible;
+@property (nonatomic, assign) BOOL isVisible;//是否正在显示
 
 @end
 
 @implementation GQImageViewer
 
 __strong static GQImageViewer *imageViewerManager;
-
 + (GQImageViewer *)sharedInstance
 {
     static dispatch_once_t onceToken = 0;
@@ -49,11 +48,13 @@ __strong static GQImageViewer *imageViewerManager;
     return self;
 }
 
+//初始化，不可重复调用
 - (instancetype)initWithFrame:(CGRect)frame
 {
     NSAssert(!imageViewerManager, @"init method can't call");
     self = [super initWithFrame:frame];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         [self setClipsToBounds:YES];
         self.laucnDirection = GQLaunchDirectionBottom;
@@ -87,6 +88,8 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     return _showViewChain;
 }
 
+#pragma mark -- set method
+
 - (void)setUsePageControl:(BOOL)usePageControl
 {
     _usePageControl = usePageControl;
@@ -95,7 +98,6 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
 
 - (void)setImageArray:(NSArray *)imageArray
 {
-    
     _imageArray = [[self handleImageUrlArray:imageArray] copy];
     if (!_isVisible) {
         return;
@@ -133,18 +135,88 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     [self scrollToSettingIndex];
 }
 
-- (void)initViewWithFrame:(CGRect)rect
+- (void)showInView:(UIView *)showView
+{
+    if ([_imageArray count]==0) {
+        return;
+    }
+    
+    if (_isVisible) {
+        [self dissMiss];
+        return;
+    }else{
+        _isVisible = YES;
+    }
+    
+    //设置superview的rect
+    _superViewRect = showView.bounds;
+    
+    //初始化子view
+    [self initSubViews];
+    
+    //更新初始化rect
+    [self updateInitialRect];
+    
+    //设置初始值
+    self.alpha = 0;
+    self.frame = _initialRect;
+    
+    [showView addSubview:self];
+    
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.alpha = 1;
+                         self.frame = _superViewRect;
+                     }];
+}
+
+//view消失
+- (void)dissMiss
+{
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.alpha = 0;
+                         self.frame = _initialRect;
+                     } completion:^(BOOL finished) {
+                         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                         [self removeFromSuperview];
+                         _tableView = nil;
+                         _isVisible = NO;
+                     }];
+}
+
+#pragma mark -- privateMethod
+//屏幕旋转通知
+- (void)statusBarOrientationChange:(NSNotification *)noti{
+    if (_isVisible) {
+        _superViewRect = self.superview.bounds;
+        [self orientationChange];
+    }
+}
+
+//屏幕旋转调整frame
+- (void)orientationChange{
+    [_tableView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_tableView removeFromSuperview];
+    _tableView = nil;
+    [self initSubViews];
+    self.frame = _superViewRect;
+    [self updateInitialRect];
+}
+
+//初始化子view
+- (void)initSubViews
 {
     [self updateNumberView];
     if (!_tableView) {
-        _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(rect) ,CGRectGetHeight(rect)) style:UITableViewStylePlain];
+        _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) style:UITableViewStylePlain];
         GQWeakify(self);
         _tableView.block = ^(NSInteger index){
             GQStrongify(self);
             self->_selectIndex = index;
             [self updatePageNumber];
         };
-        _tableView.rowHeight = CGRectGetWidth(rect);
+        _tableView.rowHeight = CGRectGetWidth(_superViewRect);
         _tableView.pagingEnabled  = YES;
     }
     [self insertSubview:_tableView atIndex:0];
@@ -155,6 +227,31 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     [self scrollToSettingIndex];
 }
 
+//更新初始化rect
+- (void)updateInitialRect{
+    switch (_laucnDirection) {
+        case GQLaunchDirectionBottom:{
+            _initialRect = CGRectMake(0, CGRectGetHeight(_superViewRect), CGRectGetWidth(_superViewRect), 0);
+            break;
+        }
+        case GQLaunchDirectionTop:{
+            _initialRect = CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0);
+            break;
+        }
+        case GQLaunchDirectionLeft:{
+            _initialRect = CGRectMake(0, 0, 0, CGRectGetHeight(_superViewRect));
+            break;
+        }
+        case GQLaunchDirectionRight:{
+            _initialRect = CGRectMake(CGRectGetWidth(_superViewRect), 0, 0, CGRectGetHeight(_superViewRect));
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+//更新页面显示view
 - (void)updateNumberView
 {
     [[self viewWithTag:pageNumberTag] removeFromSuperview];
@@ -169,13 +266,14 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
         _pageLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_superViewRect)/2 - 30, CGRectGetHeight(_superViewRect) - 20, 60, 15)];
         _pageLabel.textAlignment = NSTextAlignmentCenter;
         _pageLabel.tag = pageNumberTag;
-        _pageLabel.text = [NSString stringWithFormat:@"%ld/%ld",(_selectIndex+1),_imageArray.count];
+        _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(_selectIndex+1),_imageArray.count];
         _pageLabel.textColor = [UIColor whiteColor];
         [self insertSubview:_pageLabel atIndex:1];
     }
     [self updatePageNumber];
 }
 
+//更新页码
 - (void)updatePageNumber
 {
     if (self.achieveSelectIndex) {
@@ -184,7 +282,7 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     if (_usePageControl) {
         _pageControl.currentPage = self.selectIndex;
     }else{
-        _pageLabel.text = [NSString stringWithFormat:@"%ld/%ld",(_selectIndex+1),_imageArray.count];
+        _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(_selectIndex+1),_imageArray.count];
     }
 }
 
@@ -193,7 +291,7 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     //滚动到指定的单元格
     if (_tableView) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex inSection:0];
-        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
 }
 
@@ -210,66 +308,9 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     return handleImages;
 }
 
-- (void)showInView:(UIView *)showView
-{
-    if (_isVisible) {
-        [self dissMiss];
-        return;
-    }else{
-        _isVisible = YES;
-    }
-    
-    _superViewRect = CGRectMake(0, 0, CGRectGetWidth(showView.frame), CGRectGetHeight(showView.frame));
-    
-    self.alpha = 0;
-    
-    [self initViewWithFrame:_superViewRect];
-    
-    switch (_laucnDirection) {
-        case GQLaunchDirectionBottom:{
-            _initialRect = CGRectMake(0, CGRectGetHeight(showView.frame), CGRectGetWidth(showView.frame), 0);
-            break;
-        }
-        case GQLaunchDirectionTop:{
-            _initialRect = CGRectMake(0, 0, CGRectGetWidth(showView.frame), 0);
-            break;
-        }
-        case GQLaunchDirectionLeft:{
-            _initialRect = CGRectMake(0, 0, 0, CGRectGetHeight(showView.frame));
-            break;
-        }
-        case GQLaunchDirectionRight:{
-            _initialRect = CGRectMake(CGRectGetWidth(showView.frame), 0, 0, CGRectGetHeight(showView.frame));
-            break;
-        }
-        default:
-            break;
-    }
-    
-    self.frame = _initialRect;
-    
-    [showView addSubview:self];
-    
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         self.alpha = 1;
-                         self.frame = _superViewRect;
-                     } completion:^(BOOL finished) {
-                     }];
-}
-
-- (void)dissMiss
-{
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         self.alpha = 0;
-                         self.frame = _initialRect;
-                     } completion:^(BOOL finished) {
-                         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                         [self removeFromSuperview];
-                         _tableView = nil;
-                         _isVisible = NO;
-                     }];
+//清除通知，防止崩溃
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 @end

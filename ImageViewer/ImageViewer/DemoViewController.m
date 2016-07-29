@@ -29,7 +29,7 @@
     self.navigationController.visibleViewController.title = @"ImageViewer";
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, CGRectGetMaxY(self.view.frame)/2+40, 200, 40)];
+    [button setFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, CGRectGetMaxY(self.view.frame)/2+140, 200, 40)];
     [button setTitle:@"点击此处查看图片" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     
@@ -42,7 +42,7 @@
     [button addTarget:self action:@selector(showImageViewer:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
     
-    demoView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, 64, 200, 200)];
+    demoView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, 64, 200, 300)];
     demoView.backgroundColor = [UIColor redColor];
     [self.view addSubview:demoView];
 }

@@ -32,6 +32,8 @@
     //旋转之后宽、高互换了,所以重新设置frame
     self.frame = frame;
     
+    self.backgroundColor = [UIColor clearColor];
+    
     self.separatorStyle = UITableViewCellSeparatorStyleNone;
     //去掉垂直方向的滚动条
     self.showsVerticalScrollIndicator = NO;
@@ -41,8 +43,6 @@
     
     //设置减速的方式， UIScrollViewDecelerationRateFast 为快速减速
     self.decelerationRate = UIScrollViewDecelerationRateFast;
-    
-    self.backgroundColor = [UIColor clearColor];
     
     self.selectedInexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 }

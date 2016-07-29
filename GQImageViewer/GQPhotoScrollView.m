@@ -25,7 +25,7 @@
     if (self) {
         
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        _imageView.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor clearColor];
         //让图片等比例适应图片视图的尺寸
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_imageView];

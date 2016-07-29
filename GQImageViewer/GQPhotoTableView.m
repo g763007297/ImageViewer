@@ -38,7 +38,7 @@
         cell.backgroundColor = [UIColor clearColor];
         
         GQPhotoScrollView *photoSV = [[GQPhotoScrollView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-        photoSV.backgroundColor = [UIColor clearColor];
+        
         photoSV.tag = 100;
         [cell.contentView addSubview:photoSV];
     }
