@@ -10,8 +10,6 @@
 
 @class GQImageView;
 
-typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image , NSURL *imageUrl);
-
 @interface GQPhotoScrollView : UIScrollView<UIScrollViewDelegate>{
     GQImageView *_imageView;
 }
@@ -21,7 +19,5 @@ typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image , N
 @property(nonatomic,assign) NSInteger row;
 
 @property (nonatomic, copy) UIImage *placeholderImage;
-
-//@property (nonatomic, copy) GQDownloaderCompletedBlock block;
 
 @end

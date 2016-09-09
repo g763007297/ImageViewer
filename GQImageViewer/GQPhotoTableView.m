@@ -8,7 +8,6 @@
 
 #import "GQPhotoTableView.h"
 #import "GQPhotoScrollView.h"
-
 #import "GQImageViewerConst.h"
 
 @implementation GQPhotoTableView

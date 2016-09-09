@@ -45,7 +45,7 @@
 
 - (void)startRequest
 {
-    __block UIImage *image = nil;;
+    __block UIImage *image = nil;
     if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:_imageUrl.absoluteString]){
         GQWeakify(self);
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:_imageUrl];
