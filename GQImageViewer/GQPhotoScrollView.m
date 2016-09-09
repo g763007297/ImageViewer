@@ -8,8 +8,7 @@
 
 #import "GQPhotoScrollView.h"
 #import "GQImageViewer.h"
-
-#import "UIImageView+WebCache.h"
+#import "GQImageView.h"
 
 #import "GQImageViewerConst.h"
 
@@ -24,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView = [[GQImageView alloc] initWithFrame:self.bounds];
         self.backgroundColor = [UIColor clearColor];
         //让图片等比例适应图片视图的尺寸
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -81,10 +80,10 @@
     if ([data isKindOfClass:[NSString class]]) {
         imageUrl = [NSURL URLWithString:data];
     }
-    if (![[_imageView sd_imageURL] isEqual:imageUrl]) {
-        [_imageView sd_cancelCurrentImageLoad];
+    if (![_imageView.imageUrl isEqual:imageUrl]) {
+        [_imageView cancelCurrentImageRequest];
         GQWeakify(self);
-        [_imageView sd_setImageWithURL:imageUrl placeholderImage:_placeholderImage?_placeholderImage:[UIImage imageNamed:@""] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
             GQStrongify(self);
             if (self.block) {
                 self.block(self.row,image,imageUrl);
@@ -111,7 +110,7 @@
 {
     if (tap.numberOfTapsRequired == 1)
     {
-        [_imageView sd_cancelCurrentImageLoad];
+        [_imageView cancelCurrentImageRequest];
         [[GQImageViewer sharedInstance] dissMiss];
     }
     else if(tap.numberOfTapsRequired == 2)
@@ -124,6 +123,12 @@
             [self setZoomScale:3 animated:YES];
         }
     }
+}
+
+- (void)dealloc
+{
+    [_imageView cancelCurrentImageRequest];
+    _imageView = nil;
 }
 
 @end

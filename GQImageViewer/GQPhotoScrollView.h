@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class GQImageView;
+
 typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image , NSURL *imageUrl);
 
 @interface GQPhotoScrollView : UIScrollView<UIScrollViewDelegate>{
-    UIImageView *_imageView;
+    GQImageView *_imageView;
 }
 
 @property (nonatomic, retain) id data;

@@ -9,8 +9,6 @@
 #import "DemoViewController.h"
 #import "GQImageViewer.h"
 
-#import "UIImage+MultiFormat.h"
-
 @interface DemoViewController (){
     UIView *demoView;
 }
@@ -86,7 +84,7 @@
     .launchDirectionChain(GQLaunchDirectionRight)
     .showViewChain(demoView);
     
-    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
+//    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
 }
 
 /**
@@ -94,9 +92,9 @@
  */
 - (void)changeView{
     [GQImageViewer sharedInstance]
-    .imageArrayChain(@[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"]);
-    [GQImageViewer sharedInstance].usePageControlChain(NO);
-    [GQImageViewer sharedInstance].selectIndexChain(8);
+    .imageArrayChain(@[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"])
+    .usePageControlChain(NO)
+    .selectIndexChain(8);
     
 //    [GQImageViewer sharedInstance].usePageControl = NO;
 //    [GQImageViewer sharedInstance].imageArray = @[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"];
