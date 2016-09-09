@@ -10,6 +10,8 @@
 #import "GQPhotoTableView.h"
 #import "GQImageViewerConst.h"
 
+#import "GQImageCacheManager.h"
+
 static NSInteger pageNumberTag = 10086;
 
 @interface GQImageViewer()
@@ -19,6 +21,7 @@ static NSInteger pageNumberTag = 10086;
     UILabel *_pageLabel;//页码显示label
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
+    UILongPressGestureRecognizer *longTap;//长按手势
 }
 
 @property (nonatomic, assign) BOOL isVisible;//是否正在显示
@@ -27,31 +30,12 @@ static NSInteger pageNumberTag = 10086;
 
 @implementation GQImageViewer
 
-__strong static GQImageViewer *imageViewerManager;
-+ (GQImageViewer *)sharedInstance
-{
-    static dispatch_once_t onceToken = 0;
-    
-    dispatch_once(&onceToken, ^{
-        imageViewerManager = [[super allocWithZone:nil] init];
-    });
-    return imageViewerManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [self sharedInstance];
-}
-
-- (id)copyWithZone:(NSZone*)zone
-{
-    return self;
-}
+GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
 
 //初始化，不可重复调用
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    NSAssert(!imageViewerManager, @"init method can't call");
+    NSAssert(!zsharedInstance, @"init method can't call");
     self = [super initWithFrame:frame];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -69,12 +53,14 @@ __strong static GQImageViewer *imageViewerManager;
 @synthesize showViewChain = _showViewChain;
 @synthesize launchDirectionChain = _launchDirectionChain;
 @synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
+@synthesize longTapIndexChain = _longTapIndexChain;
 
 GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQUsePageControlChain);
 GQChainObjectDefine(imageArrayChain, ImageArray, NSArray *, GQImageArrayChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
 GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQLaunchDirectionChain);
 GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
+GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
 
 - (GQShowViewChain)showViewChain
 {
@@ -133,6 +119,17 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
     
     [self updatePageNumber];
     [self scrollToSettingIndex];
+}
+
+- (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
+{
+    _longTapIndex = [longTapIndex copy];
+    
+    if (_longTapIndex) {
+        //长按手势
+        longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapAction:)];
+        [self addGestureRecognizer:longTap];
+    }
 }
 
 - (void)showInView:(UIView *)showView
@@ -311,6 +308,40 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
 //清除通知，防止崩溃
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+#pragma mark -- 长按手势响应处理
+- (void)longTapAction:(UILongPressGestureRecognizer *)ges
+{
+    if (ges.state == UIGestureRecognizerStateBegan)
+    {
+        if (_longTapIndex)
+        {
+            if ([_imageArray count] > _selectIndex)
+            {
+                id imageData = _imageArray[_selectIndex];
+                UIImage *image;
+                if ([imageData isKindOfClass:[NSString class]]||[imageData isKindOfClass:[NSURL class]])
+                {
+                    if ([imageData isKindOfClass:[NSURL class]])
+                    {
+                        imageData = ((NSURL *)imageData).absoluteString;
+                    }
+                    if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData])
+                    {
+                        image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:imageData];
+                    }
+                }else if ([imageData isKindOfClass:[UIImageView class]])
+                {
+                    image = ((UIImageView *)imageData).image;
+                }else
+                {
+                    image = imageData;
+                }
+                _longTapIndex(image,_selectIndex);
+            }
+        }
+    }
 }
 
 @end

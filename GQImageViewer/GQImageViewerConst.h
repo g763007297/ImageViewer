@@ -15,7 +15,7 @@ static _object_name_ *z##_shared_obj_name_ = nil;  \
     @synchronized(self) {                            \
         if (z##_shared_obj_name_ == nil) {             \
             static dispatch_once_t done;\
-            dispatch_once(&done, ^{ z##_shared_obj_name_ = [[self alloc] init]; });\
+            dispatch_once(&done, ^{ z##_shared_obj_name_ = [[super allocWithZone:nil] init]; });\
         }\
     }                                                \
     return z##_shared_obj_name_;                     \
@@ -28,7 +28,12 @@ static _object_name_ *z##_shared_obj_name_ = nil;  \
         }                                              \
     }                                                \
     return nil;                                    \
-}
+}                                                 \
+- (id)copyWithZone:(NSZone*)zone    \
+{\
+    return z##_shared_obj_name_;\
+}\
+
 
 #define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)\
 - (_block_type_)_key_name_\

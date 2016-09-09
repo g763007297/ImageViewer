@@ -81,6 +81,9 @@
     .achieveSelectIndexChain(^(NSInteger selectIndex){
         NSLog(@"%ld",selectIndex);
     })
+    .longTapIndexChain(^(UIImage *image , NSInteger selectIndex){
+        NSLog(@"%p,%ld",image,selectIndex);
+    })
     .launchDirectionChain(GQLaunchDirectionRight)
     .showViewChain(demoView);
     

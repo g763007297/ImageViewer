@@ -16,6 +16,7 @@ typedef enum {
 }GQLaunchDirection;
 
 typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片的index的block
+typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 
 @class GQImageViewer;
 
@@ -24,7 +25,8 @@ typedef GQImageViewer * (^GQUsePageControlChain)(BOOL pageControl);
 typedef GQImageViewer * (^GQImageArrayChain)(NSArray *imageArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
 typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirection);
-typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock selectIndexBlock);
+typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock achieveIndexBlock);
+typedef GQImageViewer * (^GQLongTapIndexChain)(GQLongTapIndexBlock longTapIndexBlock);
 typedef void (^GQShowViewChain)(UIView *showView);
 
 @interface GQImageViewer : UIView
@@ -56,11 +58,23 @@ typedef void (^GQShowViewChain)(UIView *showView);
 @property (nonatomic, copy, readonly) GQShowViewChain showViewChain;
 
 /**
- *  获取当前选中的图片index  type: GQAchieveIndexBlock
+ *  获取当前选中的图片index  type: void (^GQAchieveIndexBlock)(NSInteger selectIndex)
  */
 @property (nonatomic, copy, readonly) GQAchieveIndexChain achieveSelectIndexChain;
 
+/**
+ *  长按手势  type : void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
+ */
+@property (nonatomic, copy, readonly) GQLongTapIndexChain longTapIndexChain;
+
 #pragma mark -- 普通调用
+
+/**
+ *  单例方法
+ *
+ *  @return GQImageViewer
+ */
++ (GQImageViewer *)sharedInstance;
 
 /*
  *  显示PageControl传yes   默认 : yes
@@ -84,6 +98,11 @@ typedef void (^GQShowViewChain)(UIView *showView);
 @property (nonatomic, copy) GQAchieveIndexBlock achieveSelectIndex;
 
 /**
+ *  长按手势
+ */
+@property (nonatomic, copy) GQLongTapIndexBlock longTapIndex;
+
+/**
  *  选中的图片索引
  */
 @property(nonatomic,assign) NSInteger selectIndex;
@@ -99,13 +118,6 @@ typedef void (^GQShowViewChain)(UIView *showView);
  *  @param showView view
  */
 - (void)showInView:(UIView *)showView;
-
-/**
- *  单例方法
- *
- *  @return GQImageViewer
- */
-+ (GQImageViewer *)sharedInstance;
 
 /**
  *  取消显示

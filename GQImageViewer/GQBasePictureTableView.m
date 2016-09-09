@@ -112,7 +112,6 @@
 //将单元格滚动至中间位置
 - (void)scrollCellToCenter
 {
-    
     CGFloat edge = self.contentInset.top;
     
     float y = self.contentOffset.y + edge + self.rowHeight/2;
