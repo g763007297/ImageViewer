@@ -12,13 +12,8 @@
 
 @interface GQImageView()
 
-@property (nonatomic, strong) UIActivityIndicatorView *indicator;
 @property (nonatomic, copy) GQImageCompletionBlock complete;
-@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic, strong) GQImageDataDownload *download;
-
--(void)showLoading;
--(void)hideLoading;
 
 @end
 
@@ -26,30 +21,13 @@
 
 - (void)dealloc
 {
+    _download = nil;
     [self cancelCurrentImageRequest];
-}
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    self.indicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    self.showLoadingView = NO;
-}
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        self.indicatorViewStyle = UIActivityIndicatorViewStyleGray;
-        self.showLoadingView = NO;
-    }
-    return self;
 }
 
 - (void)cancelCurrentImageRequest
 {
     [_download cancel];
-    [self hideLoading];
 }
 
 - (void)loadImage:(NSURL*)url complete:(GQImageCompletionBlock)complete
@@ -65,9 +43,6 @@
     self.complete = [complete copy];
     self.imageUrl = url;
     [self cancelCurrentImageRequest];
-    if (self.showLoadingView) {
-        [self showLoading];
-    }
     self.image = placeHolderImage;
     GQWeakify(self);
     _download = [[GQImageDataDownload alloc]
@@ -81,36 +56,6 @@
                          self.complete(image,error,url);
                      }
                  }];
-}
-
--(void)setIndicatorViewStyle:(UIActivityIndicatorViewStyle)style
-{
-    _indicatorViewStyle = style;
-    [_indicator setActivityIndicatorViewStyle:style];
-}
-
--(void)showLoading
-{
-    if (!_indicator) {
-        _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:_indicatorViewStyle];
-        _indicator.center = CGPointMake(self.bounds.origin.x+(self.bounds.size.width/2), self.bounds.origin.y+(self.bounds.size.height/2));
-        [_indicator setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin];
-    }
-    if (!_indicator.isAnimating||_indicator.hidden) {
-        _indicator.hidden = NO;
-        if(!_indicator.superview){
-            [self addSubview:_indicator];
-        }
-        [_indicator startAnimating];
-    }
-}
-
--(void)hideLoading
-{
-    if (_indicator) {
-        [_indicator stopAnimating];
-        _indicator.hidden = YES;
-    }
 }
 
 @end

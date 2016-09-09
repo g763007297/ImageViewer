@@ -52,7 +52,7 @@
         NSData *data = [NSData dataWithContentsOfFile:fromPath];
         [imageArray addObject:[UIImage imageWithData:data]];
     }
-    [imageArray addObjectsFromArray:@[@"http://g.hiphotos.baidu.com/image/pic/item/4b90f603738da977772000d7b651f8198618e33b.jpg",
+    [imageArray addObjectsFromArray:@[@"http://img0.imgtn.bdimg.com/it/u=513437991,1334115219&fm=206&gp=0.jpg",
                                       @"http://h.hiphotos.baidu.com/image/pic/item/203fb80e7bec54e7f14e9ce2bf389b504ec26aa8.jpg",
                                       @"http://f.hiphotos.baidu.com/image/pic/item/a8014c086e061d9507500dd67ff40ad163d9cacd.jpg",
                                       @"http://e.hiphotos.baidu.com/image/pic/item/8718367adab44aed02675424b71c8701a08bfbc1.jpg",

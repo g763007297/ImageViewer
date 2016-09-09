@@ -22,6 +22,6 @@ typedef void (^GQDownloaderCompletedBlock) (NSInteger index , UIImage *image , N
 
 @property (nonatomic, copy) UIImage *placeholderImage;
 
-@property (nonatomic, copy) GQDownloaderCompletedBlock block;
+//@property (nonatomic, copy) GQDownloaderCompletedBlock block;
 
 @end

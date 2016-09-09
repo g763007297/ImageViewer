@@ -12,8 +12,6 @@ typedef void(^GQImageCompletionBlock)(UIImage *image, NSError *error, NSURL *ima
 
 @interface GQImageView : UIImageView
 
-@property (nonatomic,assign) UIActivityIndicatorViewStyle indicatorViewStyle;
-@property (nonatomic,assign) BOOL showLoadingView;
 @property (nonatomic,strong) NSURL *imageUrl;
 
 - (void)loadImage:(NSURL*)url complete:(GQImageCompletionBlock)complete;

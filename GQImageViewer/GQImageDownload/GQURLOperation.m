@@ -12,14 +12,6 @@
 
 @interface GQURLOperation()<NSURLConnectionDelegate,NSURLConnectionDataDelegate,NSURLSessionDelegate,NSURLSessionTaskDelegate>
 
-#if !OS_OBJECT_USE_OBJC
-@property (nonatomic, assign) dispatch_queue_t saveDataDispatchQueue;
-@property (nonatomic, assign) dispatch_group_t saveDataDispatchGroup;
-#else
-@property (nonatomic, strong) dispatch_queue_t saveDataDispatchQueue;
-@property (nonatomic, strong) dispatch_group_t saveDataDispatchGroup;
-#endif
-
 @end
 
 @implementation GQURLOperation
@@ -52,8 +44,6 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     self = [super init];
     self.operationData = [[NSMutableData alloc] init];
     self.operationRequest = urlRequest;
-    self.saveDataDispatchGroup = dispatch_group_create();
-    self.saveDataDispatchQueue = dispatch_queue_create("com.ISS.GQHTTPRequest", DISPATCH_QUEUE_SERIAL);
     
     if (onProgressBlock) {
         _operationProgressBlock = [onProgressBlock copy];

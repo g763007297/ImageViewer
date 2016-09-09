@@ -14,13 +14,11 @@
     NSDate *_lastSuspendedTime;
 }
 
-@property (nonatomic,readonly) NSOperationQueue *connectionQueue;
+@property (nonatomic,strong) NSOperationQueue *connectionQueue;
 
 @end
 
 @implementation GQHttpRequestManager
-
-@synthesize connectionQueue = _connectionQueue;
 
 GQOBJECT_SINGLETON_BOILERPLATE(GQHttpRequestManager, sharedHttpRequestManager)
 

@@ -11,6 +11,9 @@
 #import "GQImageCacheManager.h"
 #import "GQURLOperation.h"
 #import "GQHttpRequestManager.h"
+#import "NSData+GQCategory.h"
+
+#import "UIImage+GQCategory.h"
 
 @interface GQImageDataDownload()
 
@@ -37,6 +40,7 @@
 - (void)cancel
 {
     [_operation cancel];
+    _operation = nil;
     _complete = nil;
     _progress = nil;
 }
@@ -50,13 +54,15 @@
         _operation = [[GQURLOperation alloc]
                       initWithURLRequest:request
                       progress:^(float progress) {
+                          GQStrongify(self);
                           if (self.progress) {
                               self.progress(progress);
                           }
                       } completion:^(GQURLOperation *urlOperation, BOOL requestSuccess, NSError *error) {
                           GQStrongify(self);
-                          image = [UIImage imageWithData:urlOperation.operationData];
-                          [[GQImageCacheManager sharedManager] saveImage:[UIImage imageWithData:urlOperation.operationData] withUrl:_imageUrl.absoluteString];
+                          NSData *data = urlOperation.operationData;
+                          image = [data imageWithData];
+                          [[GQImageCacheManager sharedManager] saveImage:image withUrl:_imageUrl.absoluteString];
                           if (self.complete) {
                               self.complete(self.imageUrl,image,error);
                           }

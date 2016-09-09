@@ -10,6 +10,8 @@
 #import "GQImageViewer.h"
 #import "GQImageView.h"
 
+#import "GQImageCacheManager.h"
+
 #import "GQImageViewerConst.h"
 
 @interface GQPhotoScrollView()
@@ -64,7 +66,12 @@
         _imageView.image = data;
     }else if ([data isKindOfClass:[NSString class]]||[data isKindOfClass:[NSURL class]])
     {
-        [self downloadeImage:data];
+        NSURL *imageUrl = data;
+        if ([data isKindOfClass:[NSString class]]) {
+            imageUrl = [NSURL URLWithString:data];
+        }
+        [_imageView cancelCurrentImageRequest];
+        [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:nil];
     }else if ([data isKindOfClass:[UIImageView class]])
     {
         UIImageView *imageView = (UIImageView *)data;
@@ -73,30 +80,6 @@
     {
         _imageView.image = nil;
     }
-}
-
-- (void)downloadeImage:(id)data{
-    NSURL *imageUrl = data;
-    if ([data isKindOfClass:[NSString class]]) {
-        imageUrl = [NSURL URLWithString:data];
-    }
-    if (![_imageView.imageUrl isEqual:imageUrl]) {
-        [_imageView cancelCurrentImageRequest];
-        GQWeakify(self);
-        [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
-            GQStrongify(self);
-            if (self.block) {
-                self.block(self.row,image,imageUrl);
-            }
-        }];
-    }
-}
-
-- (void)setBlock:(GQDownloaderCompletedBlock)block{
-    if (_block) {
-        _block = nil;
-    }
-    _block = [block copy];
 }
 
 #pragma mark - UIScrollView delegate
@@ -127,6 +110,7 @@
 
 - (void)dealloc
 {
+    [[GQImageCacheManager sharedManager] clearMemoryCache];
     [_imageView cancelCurrentImageRequest];
     _imageView = nil;
 }
