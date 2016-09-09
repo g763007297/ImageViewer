@@ -9,45 +9,46 @@
 #ifndef GQImageViewerConst_h
 #define GQImageViewerConst_h                                         
 
-#define GQOBJECT_SINGLETON_BOILERPLATE(_object_name_, _shared_obj_name_) \
-static _object_name_ *z##_shared_obj_name_ = nil;  \
-+ (_object_name_ *)_shared_obj_name_ {             \
-    @synchronized(self) {                            \
-        if (z##_shared_obj_name_ == nil) {             \
-            static dispatch_once_t done;\
-            dispatch_once(&done, ^{ z##_shared_obj_name_ = [[super allocWithZone:nil] init]; });\
-        }\
-    }                                                \
-    return z##_shared_obj_name_;                     \
-}                                                  \
-+ (id)allocWithZone:(NSZone *)zone {               \
-    @synchronized(self) {                            \
-        if (z##_shared_obj_name_ == nil) {             \
-            z##_shared_obj_name_ = [super allocWithZone:NULL]; \
-            return z##_shared_obj_name_;                 \
-        }                                              \
-    }                                                \
-    return nil;                                    \
-}                                                 \
-- (id)copyWithZone:(NSZone*)zone    \
-{\
-    return z##_shared_obj_name_;\
-}\
+#define GQOBJECT_SINGLETON_BOILERPLATE(_object_name_, _shared_obj_name_)    \
+static _object_name_ *z##_shared_obj_name_ = nil;                           \
++ (_object_name_ *)_shared_obj_name_ {                                      \
+    @synchronized(self) {                                                   \
+        if (z##_shared_obj_name_ == nil) {                                  \
+            static dispatch_once_t done;                                    \
+            dispatch_once(&done, ^{ z##_shared_obj_name_                    \
+            = [[super allocWithZone:nil] init]; });                         \
+        }                                                                   \
+    }                                                                       \
+    return z##_shared_obj_name_;                                            \
+}                                                                           \
++ (id)allocWithZone:(NSZone *)zone {                                        \
+    @synchronized(self) {                                                   \
+        if (z##_shared_obj_name_ == nil) {                                  \
+            z##_shared_obj_name_ = [super allocWithZone:NULL];              \
+            return z##_shared_obj_name_;                                    \
+        }                                                                   \
+    }                                                                       \
+    return nil;                                                             \
+}                                                                           \
+- (id)copyWithZone:(NSZone*)zone                                            \
+{                                                                           \
+    return z##_shared_obj_name_;                                            \
+}
 
 
 #define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)\
-- (_block_type_)_key_name_\
-{\
-    __weak typeof(self) weakSelf = self;\
-    if (!_##_key_name_) {\
-        _##_key_name_ = ^(_type_ value){\
-            __strong typeof(weakSelf) strongSelf = weakSelf;\
-            [strongSelf set##_Chain_:value];\
-            return strongSelf;\
-        };\
-    }\
-    return _##_key_name_;\
-}\
+- (_block_type_)_key_name_                                              \
+{                                                                       \
+    __weak typeof(self) weakSelf = self;                                \
+    if (!_##_key_name_) {                                               \
+        _##_key_name_ = ^(_type_ value){                                \
+            __strong typeof(weakSelf) strongSelf = weakSelf;            \
+            [strongSelf set##_Chain_:value];                            \
+            return strongSelf;                                          \
+        };                                                              \
+    }                                                                   \
+    return _##_key_name_;                                               \
+}
 
 //强弱引用
 #ifndef GQWeakify
