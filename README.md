@@ -2,7 +2,7 @@
 [![](https://img.shields.io/badge/platform-iOS-brightgreen.svg)](http://cocoapods.org/?q=GQImageViewer)&nbsp;
 [![support](https://img.shields.io/badge/support-iOS6.0%2B-blue.svg)](https://www.apple.com/nl/ios/)&nbsp;
 # ImageViewer
-一款多图片浏览器，图片原尺寸显示，不会变形定，双击放大缩小，单击消失，支持多张图片，支持链式调用，支持设置推出方向，多个网络图片url混合查看，支持指定查看哪张图片。不需要跳转到新的viewcontroller，就可以覆盖当前控制器显示。
+一款多图片浏览器，图片原尺寸显示，不会变形定，双击放大缩小，单击消失，支持链式调用，支持设置推出方向，支持多张本地及网络图片混合查看，支持指定查看哪张图片。不需要跳转到新的viewcontroller，就可以覆盖当前控制器显示。
 
 ## Overview
 
