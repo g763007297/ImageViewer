@@ -10,7 +10,8 @@
 #import "GQGobalPaths.H"
 #import "GQImageViewerConst.h"
 
-@interface GQImageCacheManager(){
+@interface GQImageCacheManager()
+{
     NSMutableDictionary *_memoryCache;
 }
 @end

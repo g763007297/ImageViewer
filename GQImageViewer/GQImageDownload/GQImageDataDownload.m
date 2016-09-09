@@ -13,8 +13,6 @@
 #import "GQHttpRequestManager.h"
 #import "NSData+GQCategory.h"
 
-#import "UIImage+GQCategory.h"
-
 @interface GQImageDataDownload()
 
 @property (nonatomic, copy) completeBlock complete;
@@ -61,8 +59,10 @@
                       } completion:^(GQURLOperation *urlOperation, BOOL requestSuccess, NSError *error) {
                           GQStrongify(self);
                           NSData *data = urlOperation.operationData;
-                          image = [data imageWithData];
-                          [[GQImageCacheManager sharedManager] saveImage:image withUrl:_imageUrl.absoluteString];
+                          image = [data gqImageWithData];
+                          if (image) {
+                              [[GQImageCacheManager sharedManager] saveImage:image withUrl:_imageUrl.absoluteString];
+                          }
                           if (self.complete) {
                               self.complete(self.imageUrl,image,error);
                           }

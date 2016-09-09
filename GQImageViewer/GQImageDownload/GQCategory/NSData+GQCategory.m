@@ -11,10 +11,12 @@
 
 @implementation NSData (GQCategory)
 
-- (UIImage *)imageWithData{
+- (UIImage *)gqImageWithData
+{
     UIImage *image;
-    NSString *imageContentType = [self typeForImageData];
-    if ([imageContentType isEqualToString:@"image/gif"]) {
+    NSString *imageContentType = [self gqTypeForImageData];
+    if ([imageContentType isEqualToString:@"image/gif"])
+    {
         image = [self animatedGIFWithData];
     }
     else {
@@ -29,10 +31,8 @@
     return image;
 }
 
-- (UIImage *)animatedGIFWithData{
-    if (!self) {
-        return nil;
-    }
+- (UIImage *)animatedGIFWithData
+{
     
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)self, NULL);
     
@@ -42,8 +42,7 @@
     
     if (count <= 1) {
         animatedImage = [[UIImage alloc] initWithData:self];
-    }
-    else {
+    }else {
         NSMutableArray *images = [NSMutableArray array];
         
         NSTimeInterval duration = 0.0f;
@@ -70,28 +69,31 @@
     return animatedImage;
 }
 
-- (float)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source {
+- (float)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source
+{
+    
     float frameDuration = 0.1f;
+    
     CFDictionaryRef cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil);
+    
     NSDictionary *frameProperties = (__bridge NSDictionary *)cfFrameProperties;
+    
     NSDictionary *gifProperties = frameProperties[(NSString *)kCGImagePropertyGIFDictionary];
     
     NSNumber *delayTimeUnclampedProp = gifProperties[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
+    
     if (delayTimeUnclampedProp) {
+        
         frameDuration = [delayTimeUnclampedProp floatValue];
-    }
-    else {
+    }else {
         
         NSNumber *delayTimeProp = gifProperties[(NSString *)kCGImagePropertyGIFDelayTime];
+        
         if (delayTimeProp) {
+            
             frameDuration = [delayTimeProp floatValue];
         }
     }
-    
-    // Many annoying ads specify a 0 duration to make an image flash as quickly as possible.
-    // We follow Firefox's behavior and use a duration of 100 ms for any frames that specify
-    // a duration of <= 10 ms. See <rdar://problem/7689300> and <http://webkit.org/b/36082>
-    // for more information.
     
     if (frameDuration < 0.011f) {
         frameDuration = 0.100f;
@@ -101,49 +103,50 @@
     return frameDuration;
 }
 
-- (UIImageOrientation)imageOrientationFromImageData{
+- (UIImageOrientation)imageOrientationFromImageData
+{
+    
     UIImageOrientation result = UIImageOrientationUp;
+    
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)(NSData *)self, NULL);
+    
     if (imageSource) {
+        
         CFDictionaryRef properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
+        
         if (properties) {
             CFTypeRef val;
+            
             int exifOrientation;
+            
             val = CFDictionaryGetValue(properties, kCGImagePropertyOrientation);
+            
             if (val) {
                 CFNumberGetValue(val, kCFNumberIntType, &exifOrientation);
+                
                 result = [self exifOrientationToiOSOrientation:exifOrientation];
-            } // else - if it's not set it remains at up
+            }
             CFRelease((CFTypeRef) properties);
-        } else {
-            //NSLog(@"NO PROPERTIES, FAIL");
         }
         CFRelease(imageSource);
     }
     return result;
 }
 
-- (UIImageOrientation)exifOrientationToiOSOrientation:(int)exifOrientation {
+- (UIImageOrientation)exifOrientationToiOSOrientation:(int)exifOrientation
+{
     UIImageOrientation orientation = UIImageOrientationUp;
     switch (exifOrientation) {
         case 1:
             orientation = UIImageOrientationUp;
             break;
             
-        case 3:
-            orientation = UIImageOrientationDown;
-            break;
-            
-        case 8:
-            orientation = UIImageOrientationLeft;
-            break;
-            
-        case 6:
-            orientation = UIImageOrientationRight;
-            break;
-            
         case 2:
             orientation = UIImageOrientationUpMirrored;
+            break;
+            
+        case 3:
+            orientation = UIImageOrientationDown;
             break;
             
         case 4:
@@ -154,17 +157,26 @@
             orientation = UIImageOrientationLeftMirrored;
             break;
             
+        case 6:
+            orientation = UIImageOrientationRight;
+            break;
+            
         case 7:
             orientation = UIImageOrientationRightMirrored;
             break;
+            
+        case 8:
+            orientation = UIImageOrientationLeft;
+            break;
+            
         default:
             break;
     }
     return orientation;
 }
 
-
-- (NSString *)typeForImageData{
+- (NSString *)gqTypeForImageData
+{
     uint8_t c;
     [self getBytes:&c length:1];
     switch (c) {
@@ -191,24 +203,6 @@
             return nil;
     }
     return nil;
-}
-
-- (BOOL)isGIF
-{
-    BOOL isGIF = NO;
-    
-    uint8_t c;
-    [self getBytes:&c length:1];
-    
-    switch (c)
-    {
-        case 0x47:  // probably a GIF
-            isGIF = YES;
-            break;
-        default:
-            break;
-    }
-    return isGIF;
 }
 
 @end

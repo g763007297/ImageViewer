@@ -11,10 +11,8 @@
 
 @interface NSData (GQCategory)
 
-- (UIImage *)imageWithData;
+- (UIImage *)gqImageWithData;
 
-- (NSString *)typeForImageData;
-
-- (BOOL)isGIF;
+- (NSString *)gqTypeForImageData;
 
 @end
