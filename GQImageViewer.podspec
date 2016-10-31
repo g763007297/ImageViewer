@@ -10,9 +10,8 @@ Pod::Spec.new do |s|
   s.license      = "MIT (example)"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
-  s.author             = { "developer_高" => "763007297@qq.com" }
-
-  s.platform     = :ios
+  s.author       = { "developer_高" => "763007297@qq.com" }
+  
   s.platform     = :ios, "6.0"
 
   s.source       = { :git => "https://github.com/g763007297/ImageViewer.git", :tag => s.version.to_s }

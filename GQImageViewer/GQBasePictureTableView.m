@@ -105,7 +105,8 @@
     [self scrollCellToCenter];
 }
 
-- (void) scrollViewDidScroll:(UIScrollView *)sender {
+- (void) scrollViewDidScroll:(UIScrollView *)scrollView
+{
     [self getPageIndex];
 }
 
