@@ -14,9 +14,9 @@
     GQImageView *_imageView;
 }
 
-@property (nonatomic, retain) id data;
+@property (nonatomic, strong) id data;
 
-@property(nonatomic,assign) NSInteger row;
+@property (nonatomic, assign) NSInteger row;
 
 @property (nonatomic, copy) UIImage *placeholderImage;
 

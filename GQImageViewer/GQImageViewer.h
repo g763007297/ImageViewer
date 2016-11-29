@@ -15,6 +15,11 @@ typedef enum {
     GQLaunchDirectionRight      //从右往左推出
 }GQLaunchDirection;
 
+//typedef enum {
+//    GQImageViewTypeImageOnly,
+//    GQImageViewTypeImageText
+//}GQImageViewType;
+
 typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片的index的block
 typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 
@@ -27,7 +32,7 @@ typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
 typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirection);
 typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock achieveIndexBlock);
 typedef GQImageViewer * (^GQLongTapIndexChain)(GQLongTapIndexBlock longTapIndexBlock);
-typedef void (^GQShowViewChain)(UIView *showView);
+typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 
 @interface GQImageViewer : UIView
 
@@ -55,7 +60,7 @@ typedef void (^GQShowViewChain)(UIView *showView);
 /**
  *  显示GQImageViewer到指定view上   type: UIView *
  */
-@property (nonatomic, copy, readonly) GQShowViewChain showViewChain;
+@property (nonatomic, copy, readonly) GQShowViewChain showInViewChain;
 
 /**
  *  获取当前选中的图片index  type: void (^GQAchieveIndexBlock)(NSInteger selectIndex)
@@ -90,7 +95,7 @@ typedef void (^GQShowViewChain)(UIView *showView);
 /**
  *  图片数组
  */
-@property (nonatomic, copy) NSArray *imageArray;//图片数组
+@property (nonatomic, copy) NSArray *imageArray;
 
 /**
  *  获取当前选中的图片index
@@ -105,23 +110,23 @@ typedef void (^GQShowViewChain)(UIView *showView);
 /**
  *  选中的图片索引
  */
-@property(nonatomic,assign) NSInteger selectIndex;
+@property (nonatomic, assign) NSInteger selectIndex;
 
 /**
  *  推出方向  默认GQLaunchDirectionBottom
  */
-@property (nonatomic) GQLaunchDirection laucnDirection;
+@property (nonatomic, assign) GQLaunchDirection laucnDirection;
 
 /**
  *  显示GQImageViewer到指定view上
  *
  *  @param showView view
  */
-- (void)showInView:(UIView *)showView;
+- (void)showInView:(UIView *)showView animation:(BOOL)animation;
 
 /**
  *  取消显示
  */
-- (void)dissMiss;
+- (void)dissMissWithAnimation:(BOOL)animation;
 
 @end

@@ -10,51 +10,66 @@
 #import "GQPhotoScrollView.h"
 #import "GQImageViewerConst.h"
 
+@interface GQImageVideoCollectionViewCell : UICollectionViewCell
+
+@end
+
+@implementation GQImageVideoCollectionViewCell
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initView];
+    }
+    return self;
+}
+
+- (void)initView {
+    GQPhotoScrollView *photoSV = [[GQPhotoScrollView alloc] init];
+    self.backgroundColor = [UIColor clearColor];
+    photoSV.tag = 100;
+    [self.contentView addSubview:photoSV];
+}
+
+- (void)layoutSubviews {
+    GQPhotoScrollView *photoSV = (GQPhotoScrollView *)[self.contentView viewWithTag:100];
+    photoSV.frame = self.bounds;
+}
+
+@end
+
 @implementation GQPhotoTableView
 
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
+- (id)initWithFrame:(CGRect)frame collectionViewLayout:(nonnull UICollectionViewLayout *)layout
 {
-    self = [super initWithFrame:frame style:style];
+    self = [super initWithFrame:frame collectionViewLayout:layout];
     if (self) {
+        [self registerClass:[GQImageVideoCollectionViewCell class] forCellWithReuseIdentifier:@"GQImageVideoScrollViewIdentify"];
         self.pagingEnabled = YES;
     }
     return self;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *identify = @"GQPhotoScrollViewIdentify";
+    static NSString *identify = @"GQImageVideoScrollViewIdentify";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identify];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        //将cell.contentView顺时针旋转90度
-        cell.contentView.transform = CGAffineTransformMakeRotation(M_PI_2);
-        cell.backgroundColor = [UIColor clearColor];
-        
-        GQPhotoScrollView *photoSV = [[GQPhotoScrollView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-        
-        photoSV.tag = 100;
-        [cell.contentView addSubview:photoSV];
-    }
+    GQImageVideoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
     
     GQPhotoScrollView *photoSV = (GQPhotoScrollView *)[cell.contentView viewWithTag:100];
     
-    photoSV.data = self.imageArray[indexPath.row];
+    photoSV.data = self.dataArray[indexPath.row];
     
     photoSV.row = indexPath.row;
     
     return cell;
 }
 
-#pragma mark - UITableViewDelegate
-- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+#pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(nonnull UICollectionViewCell *)cell forItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     GQPhotoScrollView *photoSV = (GQPhotoScrollView *)[cell.contentView viewWithTag:100];
+    
     [photoSV setZoomScale:1.0 animated:YES];
 }
 

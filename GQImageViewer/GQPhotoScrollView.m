@@ -24,9 +24,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         _imageView = [[GQImageView alloc] initWithFrame:self.bounds];
-        self.backgroundColor = [UIColor clearColor];
         //让图片等比例适应图片视图的尺寸
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_imageView];
@@ -57,6 +55,13 @@
         [tap1 requireGestureRecognizerToFail:tap2];
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.zoomScale == 1) {
+        _imageView.frame = self.bounds;
+    }
 }
 
 - (void)setData:(id)data
@@ -94,7 +99,7 @@
     if (tap.numberOfTapsRequired == 1)
     {
         [_imageView cancelCurrentImageRequest];
-        [[GQImageViewer sharedInstance] dissMiss];
+        [[GQImageViewer sharedInstance] dissMissWithAnimation:YES];
     }
     else if(tap.numberOfTapsRequired == 2)
     {

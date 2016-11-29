@@ -50,7 +50,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
 @synthesize usePageControlChain = _usePageControlChain;
 @synthesize imageArrayChain =_imageArrayChain;
 @synthesize selectIndexChain = _selectIndexChain;
-@synthesize showViewChain = _showViewChain;
+@synthesize showInViewChain = _showInViewChain;
 @synthesize launchDirectionChain = _launchDirectionChain;
 @synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
 @synthesize longTapIndexChain = _longTapIndexChain;
@@ -62,16 +62,16 @@ GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQL
 GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
 
-- (GQShowViewChain)showViewChain
+- (GQShowViewChain)showInViewChain
 {
-    if (!_showViewChain) {
+    if (!_showInViewChain) {
         GQWeakify(self);
-        _showViewChain = ^(UIView *showView){
+        _showInViewChain = ^(UIView *showView, BOOL animation){
             GQStrongify(self);
-            [self showInView:showView];
+            [self showInView:showView animation:animation];
         };
     }
-    return _showViewChain;
+    return _showInViewChain;
 }
 
 #pragma mark -- set method
@@ -91,7 +91,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     
     NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
     
-    _tableView.imageArray = [_imageArray copy];
+    _tableView.dataArray = [_imageArray copy];
     
     if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
         _selectIndex = [imageArray count]-1;
@@ -132,14 +132,14 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     }
 }
 
-- (void)showInView:(UIView *)showView
+- (void)showInView:(UIView *)showView animation:(BOOL)animation
 {
     if ([_imageArray count]==0) {
         return;
     }
     
     if (_isVisible) {
-        [self dissMiss];
+        [self dissMissWithAnimation:YES];
         return;
     }else{
         _isVisible = YES;
@@ -168,18 +168,26 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 }
 
 //view消失
-- (void)dissMiss
+- (void)dissMissWithAnimation:(BOOL)animation
 {
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         self.alpha = 0;
-                         self.frame = _initialRect;
-                     } completion:^(BOOL finished) {
-                         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                         [self removeFromSuperview];
-                         _tableView = nil;
-                         _isVisible = NO;
-                     }];
+    dispatch_block_t completionBlock = ^(){
+        [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self removeFromSuperview];
+        _tableView = nil;
+        _isVisible = NO;
+    };
+    
+    if (animation) {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             self.alpha = 0;
+                             self.frame = _initialRect;
+                         } completion:^(BOOL finished) {
+                             dispatch_async(dispatch_get_main_queue(), completionBlock);
+                         }];
+    }else {
+        completionBlock();
+    }
 }
 
 #pragma mark -- privateMethod
@@ -193,11 +201,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 
 //屏幕旋转调整frame
 - (void)orientationChange{
-    [_tableView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [_tableView removeFromSuperview];
-    _tableView = nil;
-    [self initSubViews];
     self.frame = _superViewRect;
+    _tableView.frame = _superViewRect;
     [self updateInitialRect];
 }
 
@@ -206,20 +211,19 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 {
     [self updateNumberView];
     if (!_tableView) {
-        _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) style:UITableViewStylePlain];
+        _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
         GQWeakify(self);
         _tableView.block = ^(NSInteger index){
             GQStrongify(self);
             self->_selectIndex = index;
             [self updatePageNumber];
         };
-        _tableView.rowHeight = CGRectGetWidth(_superViewRect);
         _tableView.pagingEnabled  = YES;
     }
     [self insertSubview:_tableView atIndex:0];
     
     //将所有的图片url赋给tableView显示
-    _tableView.imageArray = [_imageArray copy];
+    _tableView.dataArray = [_imageArray copy];
     
     [self scrollToSettingIndex];
 }
@@ -288,7 +292,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     //滚动到指定的单元格
     if (_tableView) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex inSection:0];
-        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        [_tableView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }
 
