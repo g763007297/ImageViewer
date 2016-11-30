@@ -8,6 +8,6 @@
 
 #import "GQBaseCollectionView.h"
 
-@interface GQPhotoTableView : GQBaseCollectionView
+@interface GQImageCollectionView : GQBaseCollectionView
 
 @end

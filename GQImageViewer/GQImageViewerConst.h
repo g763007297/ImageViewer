@@ -36,7 +36,7 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
 }
 
 
-#define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)\
+#define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)  \
 - (_block_type_)_key_name_                                              \
 {                                                                       \
     __weak typeof(self) weakSelf = self;                                \

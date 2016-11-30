@@ -6,10 +6,10 @@
 //  Copyright © 2016年 tusm. All rights reserved.
 //
 
-#import "NSData+GQCategory.h"
+#import "NSData+GQImageViewrCategory.h"
 #import <ImageIO/ImageIO.h>
 
-@implementation NSData (GQCategory)
+@implementation NSData (GQImageViewrCategory)
 
 - (UIImage *)gqImageWithData
 {

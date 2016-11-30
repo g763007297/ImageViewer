@@ -7,21 +7,21 @@
 //
 
 #import "GQImageViewer.h"
-#import "GQPhotoTableView.h"
+#import "GQImageCollectionView.h"
+#import "GQTextScrollView.h"
 #import "GQImageViewerConst.h"
 
 #import "GQImageCacheManager.h"
-
-static NSInteger pageNumberTag = 10086;
+#import "GQImageViewerModel.h"
 
 @interface GQImageViewer()
 {
-    GQPhotoTableView *_tableView;//tableview
-    UIPageControl *_pageControl;//页码显示control
-    UILabel *_pageLabel;//页码显示label
+    GQTextScrollView *textScrollView;
+    GQImageCollectionView *_tableView;//tableview
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
     UILongPressGestureRecognizer *longTap;//长按手势
+    NSArray <GQImageViewerModel *>*dataSources;//数据源
 }
 
 @property (nonatomic, assign) BOOL isVisible;//是否正在显示
@@ -39,27 +39,33 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
     self = [super initWithFrame:frame];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+        self.backgroundColor = [UIColor blackColor];
         [self setClipsToBounds:YES];
         self.laucnDirection = GQLaunchDirectionBottom;
         self.usePageControl = YES;
+        self.needLoopScroll = NO;
     }
     return self;
 }
 
 @synthesize usePageControlChain = _usePageControlChain;
-@synthesize imageArrayChain =_imageArrayChain;
+@synthesize needLoopScrollChain = _needLoopScrollChain;
+@synthesize dataSouceArrayChain =_dataSouceArrayChain;
 @synthesize selectIndexChain = _selectIndexChain;
+@synthesize configureChain = _configureChain;
 @synthesize showInViewChain = _showInViewChain;
 @synthesize launchDirectionChain = _launchDirectionChain;
 @synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
+@synthesize singleTapChain = _singleTapChain;
 @synthesize longTapIndexChain = _longTapIndexChain;
 
 GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQUsePageControlChain);
-GQChainObjectDefine(imageArrayChain, ImageArray, NSArray *, GQImageArrayChain);
+GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQUsePageControlChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
+GQChainObjectDefine(configureChain, Configure, GQImageViewrConfigure*, GQConfigureChain);
 GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQLaunchDirectionChain);
 GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
+GQChainObjectDefine(singleTapChain, SingleTap, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
 
 - (GQShowViewChain)showInViewChain
@@ -74,42 +80,38 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     return _showInViewChain;
 }
 
+- (GQDataSouceArrayChain)dataSouceArrayChain
+{
+    if (!_dataSouceArrayChain) {
+        GQWeakify(self);
+        _dataSouceArrayChain = ^(NSArray *imageArray ,NSArray *textArray){
+            GQStrongify(self);
+            [self setImageArray:imageArray textArray:textArray];
+            return self;
+        };
+    }
+    return _dataSouceArrayChain;
+}
+
 #pragma mark -- set method
 
 - (void)setUsePageControl:(BOOL)usePageControl
 {
     _usePageControl = usePageControl;
-    [self updateNumberView];
+    [self setupTextScrollView];
 }
 
-- (void)setImageArray:(NSArray *)imageArray
-{
-    _imageArray = [[self handleImageUrlArray:imageArray] copy];
+- (void)setNeedLoopScroll:(BOOL)needLoopScroll {
+    _needLoopScroll = needLoopScroll;
     if (!_isVisible) {
         return;
     }
-    
-    NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
-    
-    _tableView.dataArray = [_imageArray copy];
-    
-    if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
-        _selectIndex = [imageArray count]-1;
-        
-        [self updatePageNumber];
-        [self scrollToSettingIndex];
-    }
+    _tableView.needLoopScroll = _needLoopScroll;
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex
 {
     _selectIndex = selectIndex;
-    if (!_isVisible) {
-        return;
-    }
-    
-    NSAssert(selectIndex>=0, @"_selectIndex must be greater than zero");
-    NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
     
     if (selectIndex>[_imageArray count]-1){
         _selectIndex = [_imageArray count]-1;
@@ -117,8 +119,44 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
         _selectIndex = 0;
     }
     
-    [self updatePageNumber];
+    if (!_isVisible) {
+        return;
+    }
+    
+    NSAssert(selectIndex>=0, @"_selectIndex must be greater than zero");
+    NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
+    
+    [self setupTextScrollView];
     [self scrollToSettingIndex];
+}
+
+- (void)setImageArray:(NSArray *)imageArray textArray:(NSArray *)textArray {
+    _textArray = [textArray copy];
+    _imageArray = [imageArray copy];
+    if ([_textArray count] > 0) {
+        NSAssert([_textArray count] == [_imageArray count], @"imageArray count must be equal to textArray");
+    }
+    NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
+    
+    dataSources = [self handleImageUrlArray:_imageArray withTextArray:_textArray];
+    
+    if (!_isVisible) {
+        return;
+    }
+    
+    _tableView.dataArray = [dataSources copy];
+    
+    if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
+        _selectIndex = [imageArray count]-1;
+        
+        [self setupTextScrollView];
+        [self scrollToSettingIndex];
+    }
+}
+
+- (void)setConfigure:(GQImageViewrConfigure *)configure {
+    _configure = [configure copy];
+    _tableView.configure = _configure;
 }
 
 - (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
@@ -191,6 +229,20 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 }
 
 #pragma mark -- privateMethod
+
+- (void)setupTextScrollView {
+    textScrollView.backgroundColor = _configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
+    CGFloat height = [textScrollView configureSource:dataSources
+                                     withConfigure:_configure
+                                  withCurrentIndex:_selectIndex
+                                    usePageControl:_usePageControl];
+    textScrollView.frame = CGRectMake(0, _superViewRect.size.height - height, _superViewRect.size.width, height);
+    
+    if (self.achieveSelectIndex) {
+        self.achieveSelectIndex(_selectIndex);
+    }
+}
+
 //屏幕旋转通知
 - (void)statusBarOrientationChange:(NSNotification *)noti{
     if (_isVisible) {
@@ -203,27 +255,48 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 - (void)orientationChange{
     self.frame = _superViewRect;
     _tableView.frame = _superViewRect;
+    [self setupTextScrollView];
     [self updateInitialRect];
 }
 
 //初始化子view
 - (void)initSubViews
 {
-    [self updateNumberView];
     if (!_tableView) {
-        _tableView = [[GQPhotoTableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
+        _tableView = [[GQImageCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
         GQWeakify(self);
         _tableView.block = ^(NSInteger index){
             GQStrongify(self);
             self->_selectIndex = index;
-            [self updatePageNumber];
+            [self setupTextScrollView];
         };
+        
+        if (_singleTap||[_textArray count] > 0) {
+            GQWeakify(self);
+            _tableView.sigleTap = ^(){
+                GQStrongify(self);
+                if (weak_self.singleTap) {
+                    weak_self.singleTap(weak_self.selectIndex);
+                }
+                if ([_textArray count] > 0) {
+                    [self->textScrollView setHidden:!self->textScrollView.hidden];
+                }
+            };
+        }
         _tableView.pagingEnabled  = YES;
     }
+    
+    _tableView.needLoopScroll = _needLoopScroll;
+    
     [self insertSubview:_tableView atIndex:0];
     
+    if (!textScrollView) {
+        textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+    }
+    [self addSubview:textScrollView];
+    
     //将所有的图片url赋给tableView显示
-    _tableView.dataArray = [_imageArray copy];
+    _tableView.dataArray = [dataSources copy];
     
     [self scrollToSettingIndex];
 }
@@ -252,61 +325,32 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     }
 }
 
-//更新页面显示view
-- (void)updateNumberView
-{
-    [[self viewWithTag:pageNumberTag] removeFromSuperview];
-    
-    if (_usePageControl) {
-        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_superViewRect)-10, 0, 10)];
-        _pageControl.numberOfPages = _imageArray.count;
-        _pageControl.tag = pageNumberTag;
-        _pageControl.currentPage = _selectIndex;
-        [self insertSubview:_pageControl atIndex:1];
-    }else{
-        _pageLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_superViewRect)/2 - 30, CGRectGetHeight(_superViewRect) - 20, 60, 15)];
-        _pageLabel.textAlignment = NSTextAlignmentCenter;
-        _pageLabel.tag = pageNumberTag;
-        _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(_selectIndex+1),_imageArray.count];
-        _pageLabel.textColor = [UIColor whiteColor];
-        [self insertSubview:_pageLabel atIndex:1];
-    }
-    [self updatePageNumber];
-}
-
-//更新页码
-- (void)updatePageNumber
-{
-    if (self.achieveSelectIndex) {
-        self.achieveSelectIndex(_selectIndex);
-    }
-    if (_usePageControl) {
-        _pageControl.currentPage = self.selectIndex;
-    }else{
-        _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(_selectIndex+1),_imageArray.count];
-    }
-}
-
 - (void)scrollToSettingIndex
 {
     //滚动到指定的单元格
     if (_tableView) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex inSection:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex inSection:(_needLoopScroll?maxSectionNum/2:0)];
         [_tableView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }
 
 //图片处理
-- (NSArray *)handleImageUrlArray:(NSArray *)imageURlArray{
-    NSMutableArray *handleImages = [[NSMutableArray alloc] initWithCapacity:[imageURlArray count]];
-    for (id imageObject in imageURlArray) {
-        id handleImageUrl = imageObject;
+- (NSArray *)handleImageUrlArray:(NSArray *)imageURlArray withTextArray:(NSArray *)textArray{
+    NSMutableArray *handleSouces = [[NSMutableArray alloc] initWithCapacity:[imageURlArray count]];
+    for (int i = 0; i <[imageURlArray count]; i++) {
+        GQImageViewerModel *model = [GQImageViewerModel new];
+        id imageObject = imageURlArray[i];
         if ([imageObject isKindOfClass:[NSString class]]) {
-            handleImageUrl = [NSURL URLWithString:imageObject];
+            imageObject = [NSURL URLWithString:imageObject];
         }
-        [handleImages addObject:handleImageUrl];
+        if ([textArray count] == [imageURlArray count]) {
+            model.textSource = textArray[i];
+        }
+        model.imageSource = imageObject;
+        [handleSouces addObject:model];
     }
-    return handleImages;
+    
+    return handleSouces;
 }
 
 //清除通知，防止崩溃

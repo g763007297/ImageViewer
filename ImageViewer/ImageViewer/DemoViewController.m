@@ -41,7 +41,7 @@
     [self.view addSubview:button];
     
     demoView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, 64, 200, 300)];
-    demoView.backgroundColor = [UIColor redColor];
+    demoView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:demoView];
 }
 
@@ -53,30 +53,34 @@
 //        [imageArray addObject:[UIImage imageWithData:data]];
 //    }
     [imageArray addObjectsFromArray:@[@"http://desk.fd.zol-img.com.cn/t_s960x600c5/g4/M00/0D/01/Cg-4y1ULoXCII6fEAAeQFx3fsKgAAXCmAPjugYAB5Av166.jpg",
-                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/05/0F/ChMkJ1erCriIJ_opAAY8rSwt72wAAUU6gMmHKwABjzF444.jpg",
-                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/00/ChMkJ1bKxCSIRtwrAA2uHQvukJIAALHCALaz_UADa41063.jpg",
-                                      @"http://pic1.win4000.com/mobile/d/581c3bd22e898.jpg",
-                                      @"http://img5.duitang.com/uploads/item/201610/31/20161031192742_rjhCx.thumb.700_0.jpeg",
-                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/06/ChMkJ1bKyhmIQFUTABNsnM0g-twAALIWgPk0D0AE2y0479.jpg",
-                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/07/0D/ChMkJlgaksOIEZcSAAYHVJbTdlwAAXcSwNDVmYABgds319.jpg",
-                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/03/ChMkJlbKxtqIF93BABJ066MJkLcAALHrQL_qNkAEnUD253.jpg",
-                                      @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_1.jpg",
-                                      @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_8.jpg"]];
+                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/05/0F/ChMkJ1erCriIJ_opAAY8rSwt72wAAUU6gMmHKwABjzF444.jpg"]];
+    
+    NSArray *textArray = @[@"http://desk.fd.zol-img.com.cn/t_s960x600c5/g4/M00/0D/01/Cg-4y1ULoXCII6fEAAeQFx3fsKgAAXCmAPjugYAB5Av166.jpg",
+                                  @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/05/0F/ChMkJ1erCriIJ_opAAY8rSwt72wAAUU6gMmHKwABjzF444.jpg",
+                                  @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/00/ChMkJ1bKxCSIRtwrAA2uHQvukJIAALHCALaz_UADa41063.jpg",
+                                  @"http://pic1.win4000.com/mobile/d/581c3bd22e898.jpg",
+                                  @"http://img5.duitang.com/uploads/item/201610/31/20161031192742_rjhCx.thumb.700_0.jpeg",
+                                  @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/06/ChMkJ1bKyhmIQFUTABNsnM0g-twAALIWgPk0D0AE2y0479.jpg",
+                                  @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/07/0D/ChMkJlgaksOIEZcSAAYHVJbTdlwAAXcSwNDVmYABgds319.jpg",
+                                  @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/03/ChMkJlbKxtqIF93BABJ066MJkLcAALHrQL_qNkAEnUD253.jpg",
+                                  @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_1.jpg",
+                                  @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_8.jpg"];
     
     //基本调用
-//    [[GQImageViewer sharedInstance] setImageArray:imageArray];
+//    [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];
 //    [GQImageViewer sharedInstance].usePageControl = YES;
 //    [GQImageViewer sharedInstance].selectIndex = 5;
 //    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){
 //        NSLog(@"%ld",selectIndex);
 //    };
 //    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;
-//    [[GQImageViewer sharedInstance] showInView:self.navigationController.view];
+//    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];
     
 //    链式调用
     [GQImageViewer sharedInstance]
-    .imageArrayChain(imageArray)
+    .dataSouceArrayChain(imageArray,nil)
     .usePageControlChain(NO)
+    .needLoopScrollChain(YES)
     .selectIndexChain(5)
     .achieveSelectIndexChain(^(NSInteger selectIndex){
         NSLog(@"%ld",selectIndex);
@@ -85,7 +89,7 @@
         NSLog(@"%p,%ld",image,selectIndex);
     })
     .launchDirectionChain(GQLaunchDirectionRight)
-    .showInViewChain(demoView,YES);
+    .showInViewChain(self.navigationController.view,YES);
     
 //    [self performSelector:@selector(changeView) withObject:nil afterDelay:3.0];
 }
@@ -95,7 +99,7 @@
  */
 - (void)changeView{
     [GQImageViewer sharedInstance]
-    .imageArrayChain(@[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"])
+    .dataSouceArrayChain(@[@"http://g.hiphotos.baidu.com/image/pic/item/a8ec8a13632762d0a97e5899a5ec08fa513dc650.jpg"],nil)
     .usePageControlChain(NO)
     .selectIndexChain(8);
     

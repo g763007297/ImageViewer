@@ -7,6 +7,7 @@
 //
 
 #import "GQBaseCollectionView.h"
+#import "GQImageViewrConfigure.h"
 
 @interface GQReuseTabViewFlowLayout : UICollectionViewFlowLayout
 
@@ -63,28 +64,38 @@
     self.selectedInexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     [layouts prepareLayout];
 }
 
-- (void)setDataArray:(NSArray *)dataArray
+- (void)setDataArray:(NSArray <GQImageViewerModel *>*)dataArray
 {
     _dataArray = [dataArray copy];
     [layouts prepareLayout];
 }
 
-#pragma mark -- UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 10000;
+- (void)setConfigure:(GQImageViewrConfigure *)configure {
+    self.configure = [configure copy];
+    self.backgroundColor = self.configure.imageViewBgColor;
+    [layouts prepareLayout];
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+#pragma mark -- UICollectionViewDataSource
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return _needLoopScroll?maxSectionNum:1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     return _dataArray.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
     static NSString *identify = @"GQBaseCellIdentifier";
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
     return cell;
@@ -119,15 +130,11 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
-    if (row < 0) {
-        row = _dataArray.count;
-    }
-    
     if (row >= _dataArray.count) {
-        row = 0;
+        row = row%_dataArray.count;
     }
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
     
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
 }
@@ -139,14 +146,21 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
-    if (row >= _dataArray.count || row < 0) {
-        return;
+    if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
+        row = 0;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
+        [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    }else if (self.contentOffset.x < 0){
+        row = (int)(self.dataArray.count - 1);
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
+        [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
     
     if (indexPath.row != self.selectedInexPath.row) {
         if (self.block) {
-            self.block(row);
+            self.block(row%self.dataArray.count);
         }
         //记录选中的单元格IndexPath
         self.selectedInexPath = indexPath;

@@ -10,14 +10,14 @@
 
 @class GQImageView;
 
-@interface GQPhotoScrollView : UIScrollView<UIScrollViewDelegate>{
+@interface GQImageScrollView : UIScrollView<UIScrollViewDelegate>{
     GQImageView *_imageView;
 }
 
 @property (nonatomic, strong) id data;
 
-@property (nonatomic, assign) NSInteger row;
-
 @property (nonatomic, copy) UIImage *placeholderImage;
+
+@property (nonatomic, copy) void(^singleTap)();
 
 @end

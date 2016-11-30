@@ -9,10 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface NSData (GQCategory)
+@interface NSData (GQImageViewrCategory)
 
+/**
+ 获取图片资源
+ 
+ @return UIImage *
+ */
 - (UIImage *)gqImageWithData;
 
+/**
+ 获取图片种类
+
+ @return 种类字符串
+ */
 - (NSString *)gqTypeForImageData;
 
 @end

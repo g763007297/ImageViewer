@@ -21,8 +21,8 @@
 
 - (void)dealloc
 {
-    _download = nil;
     [self cancelCurrentImageRequest];
+    _download = nil;
 }
 
 - (void)cancelCurrentImageRequest

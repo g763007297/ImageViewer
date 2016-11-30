@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 GQ. All rights reserved.
 //
 
-#import "GQPhotoScrollView.h"
+#import "GQImageScrollView.h"
 #import "GQImageViewer.h"
 #import "GQImageView.h"
 
@@ -14,11 +14,11 @@
 
 #import "GQImageViewerConst.h"
 
-@interface GQPhotoScrollView()
+@interface GQImageScrollView()
 
 @end
 
-@implementation GQPhotoScrollView
+@implementation GQImageScrollView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -64,6 +64,10 @@
     }
 }
 
+- (void)setSingleTap:(void (^)())singleTap {
+    _singleTap = [singleTap copy];
+}
+
 - (void)setData:(id)data
 {
     if ([data isKindOfClass:[UIImage class]])
@@ -98,8 +102,12 @@
 {
     if (tap.numberOfTapsRequired == 1)
     {
-        [_imageView cancelCurrentImageRequest];
-        [[GQImageViewer sharedInstance] dissMissWithAnimation:YES];
+        if (self.singleTap) {
+            self.singleTap();
+        }else {
+            [_imageView cancelCurrentImageRequest];
+            [[GQImageViewer sharedInstance] dissMissWithAnimation:YES];
+        }
     }
     else if(tap.numberOfTapsRequired == 2)
     {

@@ -11,7 +11,7 @@
 #import "GQImageCacheManager.h"
 #import "GQURLOperation.h"
 #import "GQHttpRequestManager.h"
-#import "NSData+GQCategory.h"
+#import "NSData+GQImageViewrCategory.h"
 
 @interface GQImageDataDownload()
 
