@@ -22,7 +22,7 @@ typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 @class GQImageViewer;
 
 //链式调用block
-typedef GQImageViewer * (^GQUsePageControlChain)(BOOL pageControl);
+typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
 typedef GQImageViewer * (^GQDataSouceArrayChain)(NSArray *imageArray ,NSArray *textArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
 typedef GQImageViewer * (^GQConfigureChain) (GQImageViewrConfigure *configure);
@@ -30,6 +30,7 @@ typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirect
 typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock achieveIndexBlock);
 typedef GQImageViewer * (^GQLongTapIndexChain)(GQLongTapIndexBlock longTapIndexBlock);
 typedef GQImageViewer * (^GQSingleTapChain)(GQAchieveIndexBlock singleTapBlock);
+typedef GQImageViewer * (^GQPanTapGesChain) (BOOL needPanTapBlock);
 typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 
 @interface GQImageViewer : UIView
@@ -38,12 +39,12 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 /**
  *  显示PageControl传yes   type : BOOL
  */
-@property (nonatomic, copy, readonly) GQUsePageControlChain usePageControlChain;
+@property (nonatomic, copy, readonly) GQBOOLChain usePageControlChain;
 
 /**
  是否需要循环滚动   Type: BOOL
  */
-@property (nonatomic, copy, readonly) GQUsePageControlChain needLoopScrollChain;
+@property (nonatomic, copy, readonly) GQBOOLChain needLoopScrollChain;
 
 /**
  *  数据源    type : NSArray *
@@ -85,6 +86,11 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  */
 @property (nonatomic, copy, readonly) GQLongTapIndexChain longTapIndexChain;
 
+/**
+ 滑动手势  type : BOOL
+ */
+@property (nonatomic, copy, readonly) GQBOOLChain needPanGestureChain;
+
 #pragma mark -- 普通调用
 
 /**
@@ -112,6 +118,11 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  是否需要循环滚动
  */
 @property (nonatomic, assign) BOOL needLoopScroll;
+
+/**
+ 是否需要滑动消失手势
+ */
+@property (nonatomic, assign) BOOL needPanGesture;
 
 /**
  设置配置

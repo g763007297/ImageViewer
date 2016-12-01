@@ -14,15 +14,22 @@
 #import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
 
+#import "UIView+GQImageViewrCategory.h"
+
 @interface GQImageViewer()<GQCollectionViewDelegate>
 {
-    GQTextScrollView *_textScrollView;
-    GQImageCollectionView *_tableView;//tableview
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
-    UILongPressGestureRecognizer *_longTap;//长按手势
-    NSArray <GQImageViewerModel *>*_dataSources;//数据源
+    CGFloat _textScrollViewY;
+    BOOL interation;
 }
+
+@property (nonatomic, strong) GQTextScrollView *textScrollView;
+@property (nonatomic, strong) GQImageCollectionView *collectionView;//collectionView
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+
+@property (nonatomic, strong) UILongPressGestureRecognizer *longTapGesture;//长按手势
+@property (nonatomic, strong) NSArray <GQImageViewerModel *>*dataSources;//数据源
 
 @property (nonatomic, assign) BOOL isVisible;//是否正在显示
 
@@ -58,15 +65,17 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
 @synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
 @synthesize singleTapChain = _singleTapChain;
 @synthesize longTapIndexChain = _longTapIndexChain;
+@synthesize needPanGestureChain = _needPanGestureChain;
 
-GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQUsePageControlChain);
-GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQUsePageControlChain);
+GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQBOOLChain);
+GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQBOOLChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
 GQChainObjectDefine(configureChain, Configure, GQImageViewrConfigure*, GQConfigureChain);
 GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQLaunchDirectionChain);
 GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(singleTapChain, SingleTap, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
+GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 
 - (GQShowViewChain)showInViewChain
 {
@@ -107,7 +116,16 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     if (!_isVisible) {
         return;
     }
-    _tableView.needLoopScroll = _needLoopScroll;
+    _collectionView.needLoopScroll = _needLoopScroll;
+}
+
+- (void)setNeedPanGesture:(BOOL)needPanGesture {
+    _needPanGesture = needPanGesture;
+    if (_needPanGesture) {
+        [self.panGesture setEnabled:YES];
+    }else {
+        [self.panGesture setEnabled:NO];
+    }
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex
@@ -146,7 +164,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
         return;
     }
     
-    _tableView.dataArray = [_dataSources copy];
+    _collectionView.dataArray = [_dataSources copy];
     
     if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
         _selectIndex = [imageArray count]-1;
@@ -159,7 +177,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 - (void)setConfigure:(GQImageViewrConfigure *)configure
 {
     _configure = [configure copy];
-    _tableView.configure = _configure;
+    _collectionView.configure = _configure;
 }
 
 - (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
@@ -168,14 +186,13 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     
     if (_longTapIndex) {
         //长按手势
-        _longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapAction:)];
-        [self addGestureRecognizer:_longTap];
+        [self addGestureRecognizer:self.longTapGesture];
     }
 }
 
 - (void)showInView:(UIView *)showView animation:(BOOL)animation
 {
-    if ([_imageArray count]==0) {
+    if ([_dataSources count]==0) {
         return;
     }
     
@@ -195,17 +212,23 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     //更新初始化rect
     [self updateInitialRect];
     
-    //设置初始值
-    self.alpha = 0;
-    self.frame = _initialRect;
-    
-    [showView addSubview:self];
-    
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         self.alpha = 1;
-                         self.frame = _superViewRect;
-                     }];
+    if (animation) {
+        //设置初始值
+        self.alpha = 0;
+        self.frame = _initialRect;
+        
+        [showView addSubview:self];
+        
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             self.alpha = 1;
+                             self.frame = _superViewRect;
+                         }];
+    }else {
+        self.alpha = 1;
+        self.frame = _superViewRect;
+        [showView addSubview:self];
+    }
 }
 
 //view消失
@@ -214,9 +237,9 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     dispatch_block_t completionBlock = ^(){
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
-        _tableView = nil;
+        _collectionView = nil;
         _textScrollView = nil;
-        _tableView.delegate = nil;
+        _collectionView.delegate = nil;
         _isVisible = NO;
     };
     
@@ -272,6 +295,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
                                   withCurrentIndex:_selectIndex
                                     usePageControl:_usePageControl];
     _textScrollView.frame = CGRectMake(0, _superViewRect.size.height - height, _superViewRect.size.width, height);
+    _textScrollViewY = _superViewRect.size.height - height;
 }
 
 //屏幕旋转通知
@@ -287,7 +311,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 - (void)orientationChange
 {
     self.frame = _superViewRect;
-    _tableView.frame = _superViewRect;
+    _collectionView.frame = _superViewRect;
     [self setupTextScrollView];
     [self updateInitialRect];
 }
@@ -295,24 +319,15 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 //初始化子view
 - (void)initSubViews
 {
-    if (!_tableView) {
-        _tableView = [[GQImageCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
-        _tableView.gqDelegate = self;
-        _tableView.pagingEnabled  = YES;
-    }
+    [self insertSubview:self.collectionView atIndex:0];
     
-    _tableView.needLoopScroll = _needLoopScroll;
-    
-    [self insertSubview:_tableView atIndex:0];
-    
-    if (!_textScrollView) {
-        _textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
-    }
-    [self addSubview:_textScrollView];
-    [self setupTextScrollView];
+    _collectionView.needLoopScroll = _needLoopScroll;
     
     //将所有的图片url赋给tableView显示
-    _tableView.dataArray = [_dataSources copy];
+    _collectionView.dataArray = [_dataSources copy];
+    
+    [self addSubview:self.textScrollView];
+    [self setupTextScrollView];
     
     [self scrollToSettingIndex];
 }
@@ -345,9 +360,9 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 - (void)scrollToSettingIndex
 {
     //滚动到指定的单元格
-    if (_tableView) {
+    if (_collectionView) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex+(_needLoopScroll?[_dataSources count]*maxSectionNum/2:0) inSection:0];
-        [_tableView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }
 
@@ -409,6 +424,79 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
             }
         }
     }
+}
+
+- (void)panGestureAction:(UIPanGestureRecognizer *)gesture {
+    float transitionY = [gesture translationInView:gesture.view].y;
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan:
+            //手势开始的时候标记手势状态，并开始相应的事件
+            interation = YES;
+            break;
+        case UIGestureRecognizerStateChanged:{
+            //手势过程中，通过updateInteractiveTransition设置pop过程进行的百分比
+            [self updateInteractiveTransition:transitionY];
+            break;
+        }
+        case UIGestureRecognizerStateEnded:{
+            interation = NO;
+            //手势完成后结束标记并且判断移动距离是否过半，过则finishInteractiveTransition完成转场操作，否者取消转场操作
+            if (fabsf(transitionY) > 50) {
+                [self dissMissWithAnimation:NO];
+            }else{
+                [self updateInteractiveTransition:0];
+                [self setupTextScrollView];
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (void)updateInteractiveTransition:(float)transition
+{
+    self.collectionView.y = transition;
+    transition = fabsf(transition);
+    self.alpha = 1- transition/self.height;
+    if (transition != 0) {
+        self.textScrollView.y = _textScrollViewY + transition;
+    }else {
+        [self setupTextScrollView];
+    }
+}
+
+#pragma mark -- lazy load
+
+- (GQTextScrollView *)textScrollView {
+    if (!_textScrollView) {
+        _textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+    }
+    return _textScrollView;
+}
+
+- (GQImageCollectionView *)collectionView {
+    if (!_collectionView) {
+        _collectionView = [[GQImageCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
+        _collectionView.gqDelegate = self;
+        _collectionView.pagingEnabled  = YES;
+    }
+    return _collectionView;
+}
+
+- (UILongPressGestureRecognizer *)longTapGesture {
+    if (!_longTapGesture) {
+        _longTapGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapAction:)];
+    }
+    return _longTapGesture;
+}
+
+- (UIPanGestureRecognizer *)panGesture {
+    if (!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureAction:)];
+        [self addGestureRecognizer:self.panGesture];
+    }
+    return _panGesture;
 }
 
 @end
