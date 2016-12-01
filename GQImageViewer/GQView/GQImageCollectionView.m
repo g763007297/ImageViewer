@@ -102,12 +102,11 @@ typedef void (^GQSingleTap)();
 }
 
 #pragma mark - UICollectionViewDelegate
-
 - (void)collectionView:(UICollectionView *)collectionView
   didEndDisplayingCell:(nonnull UICollectionViewCell *)cell
-    forItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    forItemAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
     GQImageScrollView *photoSV = (GQImageScrollView *)[cell.contentView viewWithTag:100];
-    
     [photoSV setZoomScale:1.0 animated:YES];
 }
 

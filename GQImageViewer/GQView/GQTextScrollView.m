@@ -21,12 +21,11 @@ static const CGFloat maxTextHight = 200;
     UIFont *_textFont;
     CGFloat _maxHeight;
     UIEdgeInsets _textEdgeInsets;
+    NSInteger _pageNumber;
 }
 
 @property (nonatomic, strong) UILabel *textLabel;
-
 @property (nonatomic, strong) UIPageControl *pageControl;
-
 @property (nonatomic, strong) UILabel *pageLabel;
 
 @end
@@ -61,8 +60,9 @@ static const CGFloat maxTextHight = 200;
 {
     [super layoutSubviews];
     self.contentSize = CGSizeMake(self.bounds.size.width, _textHeight + _textEdgeInsets.top + _textEdgeInsets.bottom);
+    _pageControl.frame = CGRectMake(0, 0, self.bounds.size.width, 10);
     _textLabel.frame = CGRectMake(_textEdgeInsets.left, _textEdgeInsets.top, self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, _textHeight);
-    _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, _textHeight);
+    _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, self.frame.size.height);
 }
 
 - (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
@@ -118,12 +118,12 @@ static const CGFloat maxTextHight = 200;
     }else {
         if (usePageControl) {
             _pageControl.currentPage = currentIndex;
-            _textHeight = 10;
+            scolleViewHeight = 10;
             [_pageLabel setHidden:YES];
             [_pageControl setHidden:NO];
             [_textLabel setHidden:YES];
         }else {
-            _textHeight = 15;
+            scolleViewHeight = 20;
             _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(currentIndex+1),pageNumber];
             [_pageLabel setHidden:NO];
             [_pageControl setHidden:YES];
@@ -140,8 +140,7 @@ static const CGFloat maxTextHight = 200;
 
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
-        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 0, 0, 10)];
-        _pageControl.numberOfPages = _pageNumber;
+        _pageControl = [[UIPageControl alloc] init];
         _pageControl.tag = pageNumberTag;
         [_pageControl setHidden:YES];
     }
@@ -162,7 +161,7 @@ static const CGFloat maxTextHight = 200;
 - (UILabel *)textLabel {
     if (!_textLabel) {
         _textEdgeInsets = UIEdgeInsetsMake(0, 5, 10, 5);
-        _textLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        _textLabel = [[UILabel alloc] init];
         _textLabel.numberOfLines = 0;
     }
     return _textLabel;
@@ -170,6 +169,8 @@ static const CGFloat maxTextHight = 200;
 
 - (void)dealloc {
     _pageControl = nil;
+    _textLabel = nil;
+    _pageLabel = nil;
 }
 
 @end

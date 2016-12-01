@@ -20,6 +20,5 @@
 
 @property (nonatomic, readonly, strong) NSString *text;
 @property (nonatomic, readonly, strong) GQImageViewrConfigure *configure;
-@property (nonatomic, readonly, assign) NSInteger pageNumber;
 
 @end

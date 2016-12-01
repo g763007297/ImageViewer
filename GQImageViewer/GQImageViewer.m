@@ -16,12 +16,12 @@
 
 @interface GQImageViewer()<GQCollectionViewDelegate>
 {
-    GQTextScrollView *textScrollView;
+    GQTextScrollView *_textScrollView;
     GQImageCollectionView *_tableView;//tableview
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
-    UILongPressGestureRecognizer *longTap;//长按手势
-    NSArray <GQImageViewerModel *>*dataSources;//数据源
+    UILongPressGestureRecognizer *_longTap;//长按手势
+    NSArray <GQImageViewerModel *>*_dataSources;//数据源
 }
 
 @property (nonatomic, assign) BOOL isVisible;//是否正在显示
@@ -140,13 +140,13 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     }
     NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
     
-    dataSources = [self handleImageUrlArray:_imageArray withTextArray:_textArray];
+    _dataSources = [self handleImageUrlArray:_imageArray withTextArray:_textArray];
     
     if (!_isVisible) {
         return;
     }
     
-    _tableView.dataArray = [dataSources copy];
+    _tableView.dataArray = [_dataSources copy];
     
     if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
         _selectIndex = [imageArray count]-1;
@@ -168,8 +168,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     
     if (_longTapIndex) {
         //长按手势
-        longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapAction:)];
-        [self addGestureRecognizer:longTap];
+        _longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapAction:)];
+        [self addGestureRecognizer:_longTap];
     }
 }
 
@@ -215,6 +215,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
         _tableView = nil;
+        _textScrollView = nil;
+        _tableView.delegate = nil;
         _isVisible = NO;
     };
     
@@ -240,11 +242,11 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
             self.singleTap(self.selectIndex);
         }
         if ([_textArray count] > 0) {
-            [self->textScrollView setHidden:!self->textScrollView.hidden];
-        }else {
-            [self dissMissWithAnimation:YES];
+            [self->_textScrollView setHidden:!self->_textScrollView.hidden];
         }
+        return;
     }
+    [self dissMissWithAnimation:YES];
 }
 
 - (void)GQCollectionViewDidEndScroll:(GQBaseCollectionView *)collectionView
@@ -264,12 +266,12 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 
 - (void)setupTextScrollView
 {
-    textScrollView.backgroundColor = _configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
-    CGFloat height = [textScrollView configureSource:dataSources
+    _textScrollView.backgroundColor = _configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
+    CGFloat height = [_textScrollView configureSource:_dataSources
                                      withConfigure:_configure
                                   withCurrentIndex:_selectIndex
                                     usePageControl:_usePageControl];
-    textScrollView.frame = CGRectMake(0, _superViewRect.size.height - height, _superViewRect.size.width, height);
+    _textScrollView.frame = CGRectMake(0, _superViewRect.size.height - height, _superViewRect.size.width, height);
 }
 
 //屏幕旋转通知
@@ -303,14 +305,14 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     
     [self insertSubview:_tableView atIndex:0];
     
-    if (!textScrollView) {
-        textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+    if (!_textScrollView) {
+        _textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
     }
-    [self addSubview:textScrollView];
+    [self addSubview:_textScrollView];
     [self setupTextScrollView];
     
     //将所有的图片url赋给tableView显示
-    _tableView.dataArray = [dataSources copy];
+    _tableView.dataArray = [_dataSources copy];
     
     [self scrollToSettingIndex];
 }
@@ -344,7 +346,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 {
     //滚动到指定的单元格
     if (_tableView) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex+(_needLoopScroll?[dataSources count]*maxSectionNum/2:0) inSection:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex+(_needLoopScroll?[_dataSources count]*maxSectionNum/2:0) inSection:0];
         [_tableView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }

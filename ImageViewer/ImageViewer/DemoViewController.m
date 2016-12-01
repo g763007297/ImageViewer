@@ -86,8 +86,8 @@
     
 //    链式调用
     [GQImageViewer sharedInstance]
-    .dataSouceArrayChain(imageArray,textArray)
-    .usePageControlChain(NO)
+    .dataSouceArrayChain(imageArray,nil)
+    .usePageControlChain(YES)
     .needLoopScrollChain(NO)
     .selectIndexChain(5)
     .achieveSelectIndexChain(^(NSInteger selectIndex){
