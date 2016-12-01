@@ -434,14 +434,14 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
             interation = YES;
             break;
         case UIGestureRecognizerStateChanged:{
-            //手势过程中，通过updateInteractiveTransition设置pop过程进行的百分比
+            //手势过程中，通过updateInteractiveTransition设置frame
             [self updateInteractiveTransition:transitionY];
             break;
         }
         case UIGestureRecognizerStateEnded:{
             interation = NO;
-            //手势完成后结束标记并且判断移动距离是否过半，过则finishInteractiveTransition完成转场操作，否者取消转场操作
-            if (fabsf(transitionY) > 50) {
+            //手势完成后结束标记并且判断移动距离
+            if (fabsf(transitionY) > _superViewRect.size.height/4) {
                 [self dissMissWithAnimation:NO];
             }else{
                 [self updateInteractiveTransition:0];
