@@ -14,7 +14,7 @@
 #import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
 
-@interface GQImageViewer()
+@interface GQImageViewer()<GQCollectionViewDelegate>
 {
     GQTextScrollView *textScrollView;
     GQImageCollectionView *_tableView;//tableview
@@ -101,7 +101,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     [self setupTextScrollView];
 }
 
-- (void)setNeedLoopScroll:(BOOL)needLoopScroll {
+- (void)setNeedLoopScroll:(BOOL)needLoopScroll
+{
     _needLoopScroll = needLoopScroll;
     if (!_isVisible) {
         return;
@@ -130,7 +131,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     [self scrollToSettingIndex];
 }
 
-- (void)setImageArray:(NSArray *)imageArray textArray:(NSArray *)textArray {
+- (void)setImageArray:(NSArray *)imageArray textArray:(NSArray *)textArray
+{
     _textArray = [textArray copy];
     _imageArray = [imageArray copy];
     if ([_textArray count] > 0) {
@@ -154,7 +156,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     }
 }
 
-- (void)setConfigure:(GQImageViewrConfigure *)configure {
+- (void)setConfigure:(GQImageViewrConfigure *)configure
+{
     _configure = [configure copy];
     _tableView.configure = _configure;
 }
@@ -228,23 +231,50 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
     }
 }
 
+#pragma mark -- GQCollectionViewDelegate
+
+- (void)GQCollectionViewDidSigleTap:(GQBaseCollectionView *)collectionView withCurrentSelectIndex:(NSInteger)index
+{
+    if (_singleTap||[_textArray count] > 0) {
+        if (self.singleTap) {
+            self.singleTap(self.selectIndex);
+        }
+        if ([_textArray count] > 0) {
+            [self->textScrollView setHidden:!self->textScrollView.hidden];
+        }else {
+            [self dissMissWithAnimation:YES];
+        }
+    }
+}
+
+- (void)GQCollectionViewDidEndScroll:(GQBaseCollectionView *)collectionView
+{
+    [self setupTextScrollView];
+}
+
+- (void)GQCollectionViewCurrentSelectIndex:(NSInteger)index
+{
+    self->_selectIndex = index;
+    if (self.achieveSelectIndex) {
+        self.achieveSelectIndex(_selectIndex);
+    }
+}
+
 #pragma mark -- privateMethod
 
-- (void)setupTextScrollView {
+- (void)setupTextScrollView
+{
     textScrollView.backgroundColor = _configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
     CGFloat height = [textScrollView configureSource:dataSources
                                      withConfigure:_configure
                                   withCurrentIndex:_selectIndex
                                     usePageControl:_usePageControl];
     textScrollView.frame = CGRectMake(0, _superViewRect.size.height - height, _superViewRect.size.width, height);
-    
-    if (self.achieveSelectIndex) {
-        self.achieveSelectIndex(_selectIndex);
-    }
 }
 
 //屏幕旋转通知
-- (void)statusBarOrientationChange:(NSNotification *)noti{
+- (void)statusBarOrientationChange:(NSNotification *)noti
+{
     if (_isVisible) {
         _superViewRect = self.superview.bounds;
         [self orientationChange];
@@ -252,7 +282,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 }
 
 //屏幕旋转调整frame
-- (void)orientationChange{
+- (void)orientationChange
+{
     self.frame = _superViewRect;
     _tableView.frame = _superViewRect;
     [self setupTextScrollView];
@@ -264,27 +295,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 {
     if (!_tableView) {
         _tableView = [[GQImageCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
-        GQWeakify(self);
-        _tableView.block = ^(NSInteger index){
-            GQStrongify(self);
-            self->_selectIndex = index;
-            [self setupTextScrollView];
-        };
-        
-        if (_singleTap||[_textArray count] > 0) {
-            GQWeakify(self);
-            _tableView.sigleTap = ^(){
-                GQStrongify(self);
-                if (weak_self.singleTap) {
-                    weak_self.singleTap(weak_self.selectIndex);
-                }
-                if ([_textArray count] > 0) {
-                    [self->textScrollView setHidden:!self->textScrollView.hidden];
-                }else {
-                    [self dissMissWithAnimation:YES];
-                }
-            };
-        }
+        _tableView.gqDelegate = self;
         _tableView.pagingEnabled  = YES;
     }
     
@@ -296,6 +307,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
         textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
     }
     [self addSubview:textScrollView];
+    [self setupTextScrollView];
     
     //将所有的图片url赋给tableView显示
     _tableView.dataArray = [dataSources copy];
@@ -304,7 +316,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 }
 
 //更新初始化rect
-- (void)updateInitialRect{
+- (void)updateInitialRect
+{
     switch (_laucnDirection) {
         case GQLaunchDirectionBottom:{
             _initialRect = CGRectMake(0, CGRectGetHeight(_superViewRect), CGRectGetWidth(_superViewRect), 0);
@@ -337,7 +350,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 }
 
 //图片处理
-- (NSArray *)handleImageUrlArray:(NSArray *)imageURlArray withTextArray:(NSArray *)textArray{
+- (NSArray *)handleImageUrlArray:(NSArray *)imageURlArray withTextArray:(NSArray *)textArray
+{
     NSMutableArray *handleSouces = [[NSMutableArray alloc] initWithCapacity:[imageURlArray count]];
     for (int i = 0; i <[imageURlArray count]; i++) {
         GQImageViewerModel *model = [GQImageViewerModel new];
@@ -356,7 +370,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 }
 
 //清除通知，防止崩溃
-- (void)dealloc{
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 

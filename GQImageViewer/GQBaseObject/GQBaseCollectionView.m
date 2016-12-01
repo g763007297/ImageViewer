@@ -27,11 +27,13 @@
 
 @end
 
-@implementation GQBaseCollectionView {
+@implementation GQBaseCollectionView
+{
      GQReuseTabViewFlowLayout *layouts;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout {
+- (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout
+{
     
     layouts  = [[GQReuseTabViewFlowLayout alloc] init];
     
@@ -130,13 +132,23 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
-    if (row >= _dataArray.count) {
-        row = row%_dataArray.count;
+    if (_needLoopScroll) {
+        if (row >= _dataArray.count) {
+            row = row%_dataArray.count;
+        }
+    }else {
+        if (row >= self.dataArray.count || row < 0) {
+            return;
+        }
     }
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row+(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0) inSection:0];
     
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    
+    if (self.gqDelegate&&[self.gqDelegate respondsToSelector:@selector(GQCollectionViewDidEndScroll:)]) {
+        [self.gqDelegate GQCollectionViewDidEndScroll:self];
+    }
 }
 
 - (void)getPageIndex
@@ -146,22 +158,29 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
-    //如果超过边界则返回中间位置
-    if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
-        row = (int)(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0);
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
-    }else if (self.contentOffset.x < 0){
-        row = (int)(self.dataArray.count - 1 + (_needLoopScroll?[_dataArray count]*maxSectionNum/2:0));
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    if (_needLoopScroll) {
+        //如果超过边界则返回中间位置
+        if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
+            row = (int)(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0);
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        }else if (self.contentOffset.x < 0){
+            row = (int)(self.dataArray.count - 1 + (_needLoopScroll?[_dataArray count]*maxSectionNum/2:0));
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        }
+    }else {
+        if (row >= _dataArray.count || row < 0) {
+            return;
+        }
     }
+    
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row%self.dataArray.count inSection:0];
     
     if (indexPath.row != self.selectedInexPath.row) {
-        if (self.block) {
-            self.block(row%self.dataArray.count);
+        if (self.gqDelegate&&[self.gqDelegate respondsToSelector:@selector(GQCollectionViewCurrentSelectIndex:)]) {
+            [self.gqDelegate GQCollectionViewCurrentSelectIndex:row%self.dataArray.count];
         }
         //记录选中的单元格IndexPath
         self.selectedInexPath = indexPath;

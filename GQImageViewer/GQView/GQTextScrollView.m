@@ -13,13 +13,14 @@
 
 static NSInteger pageNumberTag = 10086;
 
-static const CGFloat maxTextHight = 100;
+static const CGFloat maxTextHight = 200;
 
 @interface GQTextScrollView(){
-    CGFloat textHeight;
+    CGFloat _textHeight;
     UIColor *_textColor;
     UIFont *_textFont;
     CGFloat _maxHeight;
+    UIEdgeInsets _textEdgeInsets;
 }
 
 @property (nonatomic, strong) UILabel *textLabel;
@@ -32,13 +33,14 @@ static const CGFloat maxTextHight = 100;
 
 @implementation GQTextScrollView
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
-        _textLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        _textLabel.numberOfLines = 0;
-        //让图片等比例适应图片视图的尺寸
-        [self addSubview:_textLabel];
+        
+        [self addSubview:self.textLabel];
+        [self addSubview:self.pageControl];
+        [self addSubview:self.pageLabel];
         
         //设置最大放大倍数
         self.maximumZoomScale = 3.0;
@@ -55,12 +57,12 @@ static const CGFloat maxTextHight = 100;
     return self;
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
-    
-    self.contentSize = CGSizeMake(self.bounds.size.width, textHeight);
-    _textLabel.frame = CGRectMake(5, 0, self.bounds.size.width - 10, textHeight);
-    _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, textHeight);
+    self.contentSize = CGSizeMake(self.bounds.size.width, _textHeight + _textEdgeInsets.top + _textEdgeInsets.bottom);
+    _textLabel.frame = CGRectMake(_textEdgeInsets.left, _textEdgeInsets.top, self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, _textHeight);
+    _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, _textHeight);
 }
 
 - (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
@@ -97,13 +99,17 @@ static const CGFloat maxTextHight = 100;
         _pageControl.numberOfPages = pageNumber;
     }
     
-    CGFloat height = [text textSizeWithFont:textFont withcSize:CGSizeMake(self.bounds.size.width - 10, MAXFLOAT)].height + 10;
-    CGFloat scolleViewHeight = height;
-    if (height >maxHeight) {
-        scolleViewHeight = maxHeight;
+    if (!UIEdgeInsetsEqualToEdgeInsets(configure.textEdgeInsets, UIEdgeInsetsZero)&&!UIEdgeInsetsEqualToEdgeInsets(_textEdgeInsets, configure.textEdgeInsets)) {
+        _textEdgeInsets = configure.textEdgeInsets;
     }
     
-    textHeight = height;
+    CGFloat height = [text textSizeWithFont:textFont withcSize:CGSizeMake(self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
+    CGFloat scolleViewHeight = height + _textEdgeInsets.top + _textEdgeInsets.bottom;
+    if (scolleViewHeight >_maxHeight) {
+        scolleViewHeight = _maxHeight;
+    }
+    
+    _textHeight = height;
     
     if (_text) {
         [_pageLabel setHidden:YES];
@@ -112,12 +118,12 @@ static const CGFloat maxTextHight = 100;
     }else {
         if (usePageControl) {
             _pageControl.currentPage = currentIndex;
-            textHeight = 10;
+            _textHeight = 10;
             [_pageLabel setHidden:YES];
             [_pageControl setHidden:NO];
             [_textLabel setHidden:YES];
         }else {
-            textHeight = 15;
+            _textHeight = 15;
             _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(currentIndex+1),pageNumber];
             [_pageLabel setHidden:NO];
             [_pageControl setHidden:YES];
@@ -125,6 +131,8 @@ static const CGFloat maxTextHight = 100;
         }
     }
     
+    [self setContentOffset:CGPointZero animated:NO];
+    [self setNeedsLayout];
     return scolleViewHeight;
 }
 
@@ -136,7 +144,6 @@ static const CGFloat maxTextHight = 100;
         _pageControl.numberOfPages = _pageNumber;
         _pageControl.tag = pageNumberTag;
         [_pageControl setHidden:YES];
-        [self insertSubview:_pageControl atIndex:1];
     }
     return _pageControl;
 }
@@ -148,9 +155,21 @@ static const CGFloat maxTextHight = 100;
         _pageLabel.tag = pageNumberTag;
         [_pageLabel setHidden:YES];
         _pageLabel.textColor = [UIColor whiteColor];
-        [self insertSubview:_pageLabel atIndex:1];
     }
     return _pageLabel;
+}
+
+- (UILabel *)textLabel {
+    if (!_textLabel) {
+        _textEdgeInsets = UIEdgeInsetsMake(0, 5, 10, 5);
+        _textLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        _textLabel.numberOfLines = 0;
+    }
+    return _textLabel;
+}
+
+- (void)dealloc {
+    _pageControl = nil;
 }
 
 @end

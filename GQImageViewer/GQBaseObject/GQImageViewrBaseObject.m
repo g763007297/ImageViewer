@@ -157,7 +157,8 @@ typedef void(^GQEnumerateSuper)(Class c , BOOL *stop);
     return propertyNames;
 }
 
-+ (void)enumerateCustomClass:(GQEnumerateSuper)block {
++ (void)enumerateCustomClass:(GQEnumerateSuper)block
+{
     if (block == nil) {
         return;
     }
@@ -174,7 +175,8 @@ typedef void(^GQEnumerateSuper)(Class c , BOOL *stop);
     }
 }
 
-- (id)getValue:(NSString *)property {
+- (id)getValue:(NSString *)property
+{
     SEL getSel = NSSelectorFromString(property);
     id valueObj = nil;
     if ([self respondsToSelector:getSel]) {

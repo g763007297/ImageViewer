@@ -7,10 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+@class GQBaseCollectionView;
+
+@protocol GQCollectionViewDelegate <NSObject>
+
+@optional
+- (void)GQCollectionViewDidSigleTap:(GQBaseCollectionView *)collectionView withCurrentSelectIndex:(NSInteger)index;
+
+- (void)GQCollectionViewDidEndScroll:(GQBaseCollectionView *)collectionView;
+
+- (void)GQCollectionViewDidScroll:(GQBaseCollectionView *)collectionView;
+
+- (void)GQCollectionViewCurrentSelectIndex:(NSInteger)index;
+
+@end
 
 static NSInteger const maxSectionNum = 100;
-
-typedef void (^GQSingleTap)();
 
 @class GQImageViewerModel;
 @class GQImageViewrConfigure;
@@ -21,11 +33,9 @@ typedef void (^GQSingleTap)();
 
 @property (nonatomic, strong) GQImageViewrConfigure *configure;
 
+@property (nonatomic, assign) id<GQCollectionViewDelegate> gqDelegate;
+
 @property (nonatomic, assign) BOOL needLoopScroll;
-
-@property (nonatomic, copy) void (^block)(NSInteger index);
-
-@property (nonatomic, copy) GQSingleTap sigleTap;
 
 //当前选中的单元格IndexPath
 @property (nonatomic, copy) NSIndexPath *selectedInexPath;

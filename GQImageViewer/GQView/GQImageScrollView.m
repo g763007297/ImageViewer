@@ -57,14 +57,16 @@
     return self;
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     if (self.zoomScale == 1) {
         _imageView.frame = self.bounds;
     }
 }
 
-- (void)setSingleTap:(void (^)())singleTap {
+- (void)setSingleTap:(void (^)())singleTap
+{
     _singleTap = [singleTap copy];
 }
 
