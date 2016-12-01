@@ -280,6 +280,8 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
                 }
                 if ([_textArray count] > 0) {
                     [self->textScrollView setHidden:!self->textScrollView.hidden];
+                }else {
+                    [self dissMissWithAnimation:YES];
                 }
             };
         }
@@ -329,7 +331,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 {
     //滚动到指定的单元格
     if (_tableView) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex inSection:(_needLoopScroll?maxSectionNum/2:0)];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex+(_needLoopScroll?[dataSources count]*maxSectionNum/2:0) inSection:0];
         [_tableView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
 }

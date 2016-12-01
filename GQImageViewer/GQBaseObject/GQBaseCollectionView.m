@@ -76,7 +76,8 @@
     [layouts prepareLayout];
 }
 
-- (void)setConfigure:(GQImageViewrConfigure *)configure {
+- (void)setConfigure:(GQImageViewrConfigure *)configure
+{
     self.configure = [configure copy];
     self.backgroundColor = self.configure.imageViewBgColor;
     [layouts prepareLayout];
@@ -86,19 +87,17 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return _needLoopScroll?maxSectionNum:1;
+    return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return _dataArray.count;
+    return _dataArray.count*(_needLoopScroll?maxSectionNum:1);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *identify = @"GQBaseCellIdentifier";
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
-    return cell;
+    return nil;
 }
 
 #pragma mark - UIScrollView delegate
@@ -118,7 +117,8 @@
     [self scrollCellToCenter];
 }
 
-- (void) scrollViewDidScroll:(UIScrollView *)sender {
+- (void) scrollViewDidScroll:(UIScrollView *)sender
+{
     [self getPageIndex];
 }
 
@@ -134,7 +134,7 @@
         row = row%_dataArray.count;
     }
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row+(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0) inSection:0];
     
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
 }
@@ -146,17 +146,18 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
+    //如果超过边界则返回中间位置
     if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
-        row = 0;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
+        row = (int)(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0);
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }else if (self.contentOffset.x < 0){
-        row = (int)(self.dataArray.count - 1);
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
+        row = (int)(self.dataArray.count - 1 + (_needLoopScroll?[_dataArray count]*maxSectionNum/2:0));
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:_needLoopScroll?maxSectionNum/2:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row%self.dataArray.count inSection:0];
     
     if (indexPath.row != self.selectedInexPath.row) {
         if (self.block) {
