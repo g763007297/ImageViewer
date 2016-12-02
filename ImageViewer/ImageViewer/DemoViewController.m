@@ -103,7 +103,7 @@
     GQImageViewrConfigure *configure =
     [GQImageViewrConfigure initWithImageViewBgColor:[UIColor blackColor]
                                     textViewBgColor:nil
-                                          textColor:[UIColor redColor]
+                                          textColor:[UIColor whiteColor]
                                            textFont:[UIFont systemFontOfSize:12]
                                       maxTextHeight:200
                                      textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];

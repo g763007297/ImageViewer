@@ -461,9 +461,16 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     transition = fabsf(transition);
     self.alpha = 1- transition/self.height;
     if (transition != 0) {
+        self.collectionView.y = transition;
+        transition = fabsf(transition);
+        self.alpha = 1- transition/self.height;
         self.textScrollView.y = _textScrollViewY + transition;
     }else {
-        [self setupTextScrollView];
+        [UIView animateWithDuration:0.3 animations:^{
+            self.collectionView.y = transition;
+            self.alpha = 1- transition/self.height;
+            [self setupTextScrollView];
+        }];
     }
 }
 
