@@ -457,9 +457,6 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 
 - (void)updateInteractiveTransition:(float)transition
 {
-    self.collectionView.y = transition;
-    transition = fabsf(transition);
-    self.alpha = 1- transition/self.height;
     if (transition != 0) {
         self.collectionView.y = transition;
         transition = fabsf(transition);
