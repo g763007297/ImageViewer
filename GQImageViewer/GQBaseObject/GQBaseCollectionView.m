@@ -75,13 +75,13 @@
 - (void)setDataArray:(NSArray <GQImageViewerModel *>*)dataArray
 {
     _dataArray = [dataArray copy];
-    [layouts prepareLayout];
+    [self reloadData];
 }
 
 - (void)setConfigure:(GQImageViewrConfigure *)configure
 {
-    self.configure = [configure copy];
-    self.backgroundColor = self.configure.imageViewBgColor;
+    _configure = [configure copy];
+    self.backgroundColor = self.configure.imageViewBgColor?:[UIColor clearColor];
     [layouts prepareLayout];
 }
 

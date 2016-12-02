@@ -10,4 +10,22 @@
 
 @implementation GQImageViewrConfigure
 
++ (instancetype)initWithImageViewBgColor:(UIColor *)imageViewBgColor
+                         textViewBgColor:(UIColor *)textViewBgColor
+                               textColor:(UIColor *)textColor
+                                textFont:(UIFont *)textFont
+                           maxTextHeight:(CGFloat )maxTextHeight
+                          textEdgeInsets:(UIEdgeInsets)textEdgeInsets
+{
+    GQImageViewrConfigure *configure = [[[self class] alloc] init];
+    configure.imageViewBgColor = imageViewBgColor;
+    configure.textViewBgColor = textViewBgColor;
+    configure.textColor = textColor;
+    configure.textFont = textFont;
+    configure.maxTextHeight = maxTextHeight;
+    configure.textEdgeInsets = textEdgeInsets;
+    
+    return configure;
+}
+
 @end

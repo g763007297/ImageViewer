@@ -46,7 +46,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
     self = [super initWithFrame:frame];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         [self setClipsToBounds:YES];
         self.laucnDirection = GQLaunchDirectionBottom;
         self.usePageControl = YES;
@@ -289,7 +289,6 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 
 - (void)setupTextScrollView
 {
-    _textScrollView.backgroundColor = _configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
     CGFloat height = [_textScrollView configureSource:_dataSources
                                      withConfigure:_configure
                                   withCurrentIndex:_selectIndex
@@ -322,11 +321,13 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     [self insertSubview:self.collectionView atIndex:0];
     
     _collectionView.needLoopScroll = _needLoopScroll;
+    _collectionView.configure = _configure;
     
     //将所有的图片url赋给tableView显示
     _collectionView.dataArray = [_dataSources copy];
     
     [self addSubview:self.textScrollView];
+    
     [self setupTextScrollView];
     
     [self scrollToSettingIndex];

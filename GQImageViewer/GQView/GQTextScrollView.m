@@ -59,6 +59,7 @@ static const CGFloat maxTextHight = 200;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
     self.contentSize = CGSizeMake(self.bounds.size.width, _textHeight + _textEdgeInsets.top + _textEdgeInsets.bottom);
     _pageControl.frame = CGRectMake(0, 0, self.bounds.size.width, 10);
     _textLabel.frame = CGRectMake(_textEdgeInsets.left, _textEdgeInsets.top, self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, _textHeight);
@@ -70,6 +71,7 @@ static const CGFloat maxTextHight = 200;
         withCurrentIndex:(NSInteger)currentIndex
           usePageControl:(BOOL)usePageControl
 {
+    
     UIFont *textFont = configure.textFont?:[UIFont systemFontOfSize:15];
     if (![_textFont isEqual:textFont]) {
         _textFont = textFont;
@@ -88,7 +90,7 @@ static const CGFloat maxTextHight = 200;
         _textLabel.textColor = _textColor;
     }
     
-    CGFloat maxHeight = configure.maxTextHeight>0?:maxTextHight;
+    CGFloat maxHeight = configure.maxTextHeight?:maxTextHight;
     if (_maxHeight != maxHeight) {
         _maxHeight = maxHeight;
     }
@@ -99,9 +101,12 @@ static const CGFloat maxTextHight = 200;
         _pageControl.numberOfPages = pageNumber;
     }
     
-    if (!UIEdgeInsetsEqualToEdgeInsets(configure.textEdgeInsets, UIEdgeInsetsZero)&&!UIEdgeInsetsEqualToEdgeInsets(_textEdgeInsets, configure.textEdgeInsets)) {
+    if (!UIEdgeInsetsEqualToEdgeInsets(configure.textEdgeInsets, UIEdgeInsetsZero)&&
+        !UIEdgeInsetsEqualToEdgeInsets(_textEdgeInsets, configure.textEdgeInsets)) {
         _textEdgeInsets = configure.textEdgeInsets;
     }
+    
+    self.backgroundColor = configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
     
     CGFloat height = [text textSizeWithFont:textFont withcSize:CGSizeMake(self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
     CGFloat scolleViewHeight = height + _textEdgeInsets.top + _textEdgeInsets.bottom;
