@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GQHttpRequestManager : NSObject
+@interface GQImageHttpRequestManager : NSObject
 
-+ (GQHttpRequestManager *)sharedHttpRequestManager;
++ (GQImageHttpRequestManager *)sharedHttpRequestManager;
 
 - (void)addOperation:(NSOperation *)operation;
 

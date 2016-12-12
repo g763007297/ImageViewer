@@ -177,6 +177,7 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 - (void)setConfigure:(GQImageViewrConfigure *)configure
 {
     _configure = [configure copy];
+    self.backgroundColor = self.configure.imageViewBgColor?:[UIColor clearColor];
     _collectionView.configure = _configure;
 }
 
@@ -426,6 +427,8 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
         }
     }
 }
+
+#pragma mark -- 滑动手势处理
 
 - (void)panGestureAction:(UIPanGestureRecognizer *)gesture {
     float transitionY = [gesture translationInView:gesture.view].y;

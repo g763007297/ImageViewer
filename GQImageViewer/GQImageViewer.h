@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GQImageViewrConfigure.h"
+#import "GQImageViewerConst.h"
 
 typedef enum {
     GQLaunchDirectionBottom = 1,//从下往上推出

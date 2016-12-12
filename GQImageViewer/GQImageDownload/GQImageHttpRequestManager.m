@@ -6,10 +6,10 @@
 //  Copyright © 2016年 gaoqi. All rights reserved.
 //
 
-#import "GQHttpRequestManager.h"
+#import "GQImageHttpRequestManager.h"
 #import "GQImageViewerConst.h"
 
-@interface GQHttpRequestManager()
+@interface GQImageHttpRequestManager()
 {
     NSDate *_lastSuspendedTime;
 }
@@ -18,9 +18,9 @@
 
 @end
 
-@implementation GQHttpRequestManager
+@implementation GQImageHttpRequestManager
 
-GQOBJECT_SINGLETON_BOILERPLATE(GQHttpRequestManager, sharedHttpRequestManager)
+GQOBJECT_SINGLETON_BOILERPLATE(GQImageHttpRequestManager, sharedHttpRequestManager)
 
 - (id)init
 {

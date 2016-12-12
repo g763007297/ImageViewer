@@ -81,7 +81,6 @@
 - (void)setConfigure:(GQImageViewrConfigure *)configure
 {
     _configure = [configure copy];
-    self.backgroundColor = self.configure.imageViewBgColor?:[UIColor clearColor];
     [layouts prepareLayout];
 }
 

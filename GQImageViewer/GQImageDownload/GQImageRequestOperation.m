@@ -6,15 +6,15 @@
 //  Copyright © 2016年 gaoqi. All rights reserved.
 //
 
-#import "GQURLOperation.h"
+#import "GQImageRequestOperation.h"
 
 #import "GQImageViewerConst.h"
 
-@interface GQURLOperation()<NSURLConnectionDelegate,NSURLConnectionDataDelegate,NSURLSessionDelegate,NSURLSessionTaskDelegate>
+@interface GQImageRequestOperation()<NSURLConnectionDelegate,NSURLConnectionDataDelegate,NSURLSessionDelegate,NSURLSessionTaskDelegate>
 
 @end
 
-@implementation GQURLOperation
+@implementation GQImageRequestOperation
 
 @synthesize state = _state;
 
@@ -36,9 +36,9 @@ static NSInteger GQHTTPRequestTaskCount = 0;
 #endif
 }
 
-- (GQURLOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
-                              progress:(GQHTTPRequestChangeHandler)onProgressBlock
-                            completion:(GQHTTPRequestCompletionHandler)onCompletionBlock;
+- (GQImageRequestOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
+                              progress:(GQImageRequestChangeHandler)onProgressBlock
+                            completion:(GQImageRequestCompletionHandler)onCompletionBlock;
 
 {
     self = [super init];
@@ -70,22 +70,22 @@ static NSInteger GQHTTPRequestTaskCount = 0;
 
 - (BOOL)isFinished
 {
-    return self.state == GQURLStateFinished;
+    return self.state == GQImageRequestStateFinished;
 }
 
 - (BOOL)isExecuting
 {
-    return self.state == GQURLStateExecuting;
+    return self.state == GQImageRequestStateExecuting;
 }
 
-- (GQURLState)state
+- (GQImageRequestState)state
 {
     @synchronized(self) {
         return _state;
     }
 }
 
-- (void)setState:(GQURLState)newState
+- (void)setState:(GQImageRequestState)newState
 {
     @synchronized(self) {
         [self willChangeValueForKey:@"state"];
@@ -112,7 +112,7 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     
     [self willChangeValueForKey:@"isExecuting"];
     [self willChangeValueForKey:@"isFinished"];
-    self.state = GQURLStateFinished;
+    self.state = GQImageRequestStateFinished;
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];
 }
@@ -145,7 +145,7 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     });
     
     [self willChangeValueForKey:@"isExecuting"];
-    self.state = GQURLStateExecuting;
+    self.state = GQImageRequestStateExecuting;
     [self didChangeValueForKey:@"isExecuting"];
     
 #if TARGET_OS_IPHONE

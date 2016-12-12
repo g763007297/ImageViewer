@@ -8,19 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-@class GQURLOperation;
+@class GQImageRequestOperation;
 
 enum {
-    GQURLStateReady = 0,
-    GQURLStateExecuting,
-    GQURLStateFinished
+    GQImageRequestStateReady = 0,
+    GQImageRequestStateExecuting,
+    GQImageRequestStateFinished
 };
-typedef NSUInteger GQURLState;
+typedef NSUInteger GQImageRequestState;
 
-typedef void (^GQHTTPRequestChangeHandler) (float progress);
-typedef void (^GQHTTPRequestCompletionHandler)(GQURLOperation *urlOperation,BOOL requestSuccess, NSError *error);
+typedef void (^GQImageRequestChangeHandler) (float progress);
+typedef void (^GQImageRequestCompletionHandler)(GQImageRequestOperation *urlOperation,BOOL requestSuccess, NSError *error);
 
-@interface GQURLOperation : NSOperation
+@interface GQImageRequestOperation : NSOperation
 
 @property (nonatomic, strong) NSURLRequest                      *operationRequest;
 @property (nonatomic, strong) NSData                            *responseData;
@@ -36,15 +36,15 @@ typedef void (^GQHTTPRequestCompletionHandler)(GQURLOperation *urlOperation,BOOL
 @property (nonatomic, assign) CFRunLoopRef                      operationRunLoop;
 @property (nonatomic, readwrite) UIBackgroundTaskIdentifier     backgroundTaskIdentifier;
 
-@property (nonatomic, readwrite) GQURLState                     state;
+@property (nonatomic, readwrite) GQImageRequestState            state;
 @property (nonatomic, readwrite) float                          expectedContentLength;
 @property (nonatomic, readwrite) float                          receivedContentLength;
 
-@property (nonatomic, copy) GQHTTPRequestChangeHandler          operationProgressBlock;
-@property (nonatomic, copy) GQHTTPRequestCompletionHandler      operationCompletionBlock;
+@property (nonatomic, copy) GQImageRequestChangeHandler          operationProgressBlock;
+@property (nonatomic, copy) GQImageRequestCompletionHandler      operationCompletionBlock;
 
-- (GQURLOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
-                              progress:(GQHTTPRequestChangeHandler)onProgressBlock
-                            completion:(GQHTTPRequestCompletionHandler)onCompletionBlock;
+- (GQImageRequestOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
+                              progress:(GQImageRequestChangeHandler)onProgressBlock
+                            completion:(GQImageRequestCompletionHandler)onCompletionBlock;
 
 @end
