@@ -16,7 +16,8 @@
 - (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
              withConfigure:(GQImageViewrConfigure *)configure
           withCurrentIndex:(NSInteger)currentIndex
-            usePageControl:(BOOL)usePageControl;
+        withUsePageControl:(BOOL)usePageControl
+        withSuperViewWidth:(CGFloat)width;
 
 @property (nonatomic, readonly, strong) NSString *text;
 @property (nonatomic, readonly, strong) GQImageViewrConfigure *configure;

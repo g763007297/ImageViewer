@@ -63,13 +63,14 @@ static const CGFloat maxTextHight = 200;
     self.contentSize = CGSizeMake(self.bounds.size.width, _textHeight + _textEdgeInsets.top + _textEdgeInsets.bottom);
     _pageControl.frame = CGRectMake(0, 0, self.bounds.size.width, 10);
     _textLabel.frame = CGRectMake(_textEdgeInsets.left, _textEdgeInsets.top, self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, _textHeight);
-    _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, self.frame.size.height);
+    _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, 20);
 }
 
 - (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
-           withConfigure:(GQImageViewrConfigure *)configure
-        withCurrentIndex:(NSInteger)currentIndex
-          usePageControl:(BOOL)usePageControl
+             withConfigure:(GQImageViewrConfigure *)configure
+          withCurrentIndex:(NSInteger)currentIndex
+        withUsePageControl:(BOOL)usePageControl
+        withSuperViewWidth:(CGFloat)width
 {
     
     UIFont *textFont = configure.textFont?:[UIFont systemFontOfSize:15];
@@ -108,7 +109,7 @@ static const CGFloat maxTextHight = 200;
     
     self.backgroundColor = configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
     
-    CGFloat height = [text textSizeWithFont:textFont withcSize:CGSizeMake(self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
+    CGFloat height = [text textSizeWithFont:textFont withcSize:CGSizeMake(width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
     CGFloat scolleViewHeight = height + _textEdgeInsets.top + _textEdgeInsets.bottom;
     if (scolleViewHeight >_maxHeight) {
         scolleViewHeight = _maxHeight;

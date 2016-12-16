@@ -20,11 +20,12 @@
 {
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
-    CGFloat _textScrollViewY;
+    CGFloat _bottomBgViewY;
     BOOL interation;
 }
 
 @property (nonatomic, strong) GQTextScrollView *textScrollView;
+@property (nonatomic, strong) UIView *bottomBgView;
 @property (nonatomic, strong) GQImageCollectionView *collectionView;//collectionView
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
@@ -66,6 +67,8 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
 @synthesize singleTapChain = _singleTapChain;
 @synthesize longTapIndexChain = _longTapIndexChain;
 @synthesize needPanGestureChain = _needPanGestureChain;
+@synthesize bottomViewChain = _bottomViewChain;
+@synthesize topViewChain = _topViewChain;
 
 GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQBOOLChain);
 GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQBOOLChain);
@@ -76,6 +79,8 @@ GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexB
 GQChainObjectDefine(singleTapChain, SingleTap, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
 GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
+GQChainObjectDefine(bottomViewChain, BottomView, UIView *, GQSubViewChain);
+GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 
 - (GQShowViewChain)showInViewChain
 {
@@ -141,6 +146,22 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
         return;
     }
     _collectionView.placeholderImage = placeholderImage;
+}
+
+- (void)setBottomView:(UIView *)bottomView {
+    _bottomView = bottomView;
+    if (!_isVisible) {
+        return;
+    }
+    [self setupTextScrollView];
+}
+
+- (void)setTopView:(UIView *)topView {
+    _topView = topView;
+    if (!_isVisible) {
+        return;
+    }
+    [self setupTextScrollView];
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex
@@ -254,6 +275,7 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
         [self resetConfigure];
+        _bottomBgView = nil;
         _collectionView = nil;
         _textScrollView = nil;
         _collectionView.delegate = nil;
@@ -282,7 +304,24 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
             self.singleTap(self.selectIndex);
         }
         if ([_textArray count] > 0) {
-            [self->_textScrollView setHidden:!self->_textScrollView.hidden];
+            if (self->_bottomBgView.hidden) {
+                if (self -> _topView) {
+                    [self -> _topView setHidden:NO];
+                    [self -> _topView setAlpha:1];
+                }
+                [self->_bottomBgView setAlpha:1];
+                [self->_bottomBgView setHidden:NO];
+            }else {
+                [UIView animateWithDuration:0.2 animations:^{
+                    if (self -> _topView) {
+                        [self -> _topView setAlpha:0];
+                    }
+                    [self->_bottomBgView setAlpha:0];
+                }completion:^(BOOL finished) {
+                    [self->_bottomBgView setHidden:YES];
+                    [self -> _topView setHidden:YES];
+                }];
+            }
         }
         return;
     }
@@ -309,9 +348,20 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     CGFloat height = [_textScrollView configureSource:_dataSources
                                      withConfigure:_configure
                                   withCurrentIndex:_selectIndex
-                                    usePageControl:_usePageControl];
-    _textScrollView.frame = CGRectMake(0, _superViewRect.size.height - height, _superViewRect.size.width, height);
-    _textScrollViewY = _superViewRect.size.height - height;
+                                   withUsePageControl:_usePageControl
+                                   withSuperViewWidth:_superViewRect.size.width];
+    CGFloat bottomViewHeight = 0;
+    
+    if (_bottomView) {
+        bottomViewHeight = _bottomView.height;
+        _bottomView.frame = CGRectMake(_bottomView.x, height, _bottomView.width, bottomViewHeight);
+        [_bottomBgView addSubview:_bottomView];
+    }
+    
+    _textScrollView.frame = CGRectMake(0, 0, _superViewRect.size.width, height);
+    
+    _bottomBgViewY = _superViewRect.size.height - height - bottomViewHeight;
+    _bottomBgView.frame = CGRectMake(0, _superViewRect.size.height - height - bottomViewHeight, _superViewRect.size.width, height + bottomViewHeight);
 }
 
 //屏幕旋转通知
@@ -344,7 +394,13 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     //将所有的图片url赋给tableView显示
     _collectionView.dataArray = [_dataSources copy];
     
-    [self addSubview:self.textScrollView];
+    if (self.topView) {
+        [self addSubview:self.topView];
+    }
+    
+    [self addSubview:self.bottomBgView];
+    
+    [_bottomBgView addSubview:self.textScrollView];
     
     [self setupTextScrollView];
     
@@ -487,7 +543,7 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
         self.collectionView.y = transition;
         transition = fabsf(transition);
         self.alpha = 1- transition/self.height;
-        self.textScrollView.y = _textScrollViewY + transition;
+        self.bottomBgView.y = _bottomBgViewY + transition;
     }else {
         [UIView animateWithDuration:0.3 animations:^{
             self.collectionView.y = transition;
@@ -504,6 +560,13 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
         _textScrollView = [[GQTextScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
     }
     return _textScrollView;
+}
+
+- (UIView *)bottomBgView {
+    if (!_bottomBgView) {
+        _bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+    }
+    return _bottomBgView;
 }
 
 - (GQImageCollectionView *)collectionView {

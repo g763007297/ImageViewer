@@ -24,6 +24,7 @@ typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 
 //链式调用block
 typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
+typedef GQImageViewer * (^GQSubViewChain)(UIView *bottomView);
 typedef GQImageViewer * (^GQDataSouceArrayChain)(NSArray *imageArray ,NSArray *textArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
 typedef GQImageViewer * (^GQConfigureChain) (GQImageViewrConfigure *configure);
@@ -92,6 +93,16 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  */
 @property (nonatomic, copy, readonly) GQBOOLChain needPanGestureChain;
 
+/**
+ 底部自定义View type : UIView
+ */
+@property (nonatomic, copy, readonly) GQSubViewChain bottomViewChain;
+
+/**
+ 顶部自定义View type : UIView
+ */
+@property (nonatomic, copy, readonly) GQSubViewChain topViewChain;
+
 #pragma mark -- 普通调用
 
 /**
@@ -134,6 +145,16 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  *  如果有网络图片则设置默认图片
  */
 @property (nonatomic, copy) UIImage *placeholderImage;
+
+/**
+ 底部UIView   默认为nil
+ */
+@property (nonatomic, copy) UIView *bottomView;
+
+/**
+ 底部UIView   默认为nil
+ */
+@property (nonatomic, copy) UIView *topView;
 
 /**
  *  图片数组

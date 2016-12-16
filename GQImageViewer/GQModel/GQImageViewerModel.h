@@ -10,8 +10,10 @@
 
 @interface GQImageViewerModel : GQImageViewrBaseObject
 
+//图片信息
 @property (nonatomic, copy) id imageSource;
 
-@property (nonatomic, copy) id textSource;
+//文字信息
+@property (nonatomic, copy) NSString *textSource;
 
 @end

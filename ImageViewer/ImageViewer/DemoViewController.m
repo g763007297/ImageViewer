@@ -100,6 +100,13 @@
 //    };
 //    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;//设置推出方向
 //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
+    
+    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    topView.backgroundColor = [UIColor redColor];
+    
+    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
+    bottomView.backgroundColor = [UIColor yellowColor];
+    
     GQImageViewrConfigure *configure =
     [GQImageViewrConfigure initWithImageViewBgColor:[UIColor blackColor]
                                     textViewBgColor:nil
@@ -116,6 +123,8 @@
     .needPanGestureChain(YES)//是否需要滑动消失手势
     .selectIndexChain(5)//设置选中的索引
     .configureChain(configure)
+    .bottomViewChain(bottomView)
+    .topViewChain(topView)
     .achieveSelectIndexChain(^(NSInteger selectIndex){//获取当前选中的图片索引
         NSLog(@"%ld",selectIndex);
     })
