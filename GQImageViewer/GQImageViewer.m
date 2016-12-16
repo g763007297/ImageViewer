@@ -104,6 +104,13 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 
 #pragma mark -- set method
 
+- (void)resetConfigure {
+    _selectIndex = 0;
+    _imageArray = nil;
+    _textArray = nil;
+    _dataSources = nil;
+}
+
 - (void)setUsePageControl:(BOOL)usePageControl
 {
     _usePageControl = usePageControl;
@@ -126,6 +133,14 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     }else {
         [self.panGesture setEnabled:NO];
     }
+}
+
+- (void)setPlaceholderImage:(UIImage *)placeholderImage {
+    _placeholderImage = placeholderImage;
+    if (!_isVisible) {
+        return;
+    }
+    _collectionView.placeholderImage = placeholderImage;
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex
@@ -238,6 +253,7 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     dispatch_block_t completionBlock = ^(){
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
+        [self resetConfigure];
         _collectionView = nil;
         _textScrollView = nil;
         _collectionView.delegate = nil;
@@ -323,6 +339,7 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
     
     _collectionView.needLoopScroll = _needLoopScroll;
     _collectionView.configure = _configure;
+    _collectionView.placeholderImage = _placeholderImage;
     
     //将所有的图片url赋给tableView显示
     _collectionView.dataArray = [_dataSources copy];
@@ -363,6 +380,12 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 {
     //滚动到指定的单元格
     if (_collectionView) {
+        if (_selectIndex>[_imageArray count]-1){
+            _selectIndex = [_imageArray count]-1;
+        }else if (_selectIndex < 0){
+            _selectIndex = 0;
+        }
+        
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex+(_needLoopScroll?[_dataSources count]*maxSectionNum/2:0) inSection:0];
         [_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     }

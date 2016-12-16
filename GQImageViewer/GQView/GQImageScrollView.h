@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) id data;
 
-@property (nonatomic, copy) UIImage *placeholderImage;
+@property (nonatomic, strong) UIImage *placeholderImage;
 
 @property (nonatomic, copy) void(^singleTap)();
 

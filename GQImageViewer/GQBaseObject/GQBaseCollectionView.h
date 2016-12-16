@@ -33,6 +33,8 @@ static NSInteger const maxSectionNum = 100;
 
 @property (nonatomic, strong) GQImageViewrConfigure *configure;
 
+@property (nonatomic, strong) UIImage *placeholderImage;
+
 @property (nonatomic, assign) id<GQCollectionViewDelegate> gqDelegate;
 
 @property (nonatomic, assign) BOOL needLoopScroll;

@@ -19,10 +19,11 @@ typedef void (^GQSingleTap)();
 
 @property (nonatomic, readonly, strong) GQImageViewrConfigure *configure;
 @property (nonatomic, readonly, strong) GQImageViewerModel *data;
+@property (nonatomic, readonly, strong) UIImage *placeholderImage;
 
 @property (nonatomic, copy) GQSingleTap sigleTap;
 
-- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data;
+- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data withPlaceholderImage:(UIImage *)placeholderImage;
 
 @end
 
@@ -30,6 +31,7 @@ typedef void (^GQSingleTap)();
 
 @synthesize configure = _configure;
 @synthesize data = _data;
+@synthesize placeholderImage = _placeholderImage;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -58,14 +60,16 @@ typedef void (^GQSingleTap)();
             weak_self.sigleTap();
         };
     }
+    photoSV.placeholderImage = _placeholderImage;
     photoSV.data = _data.imageSource;
     photoSV.frame = self.bounds;
 }
 
-- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data
+- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data withPlaceholderImage:(UIImage *)placeholderImage
 {
     _data = [data copy];
     _configure = [configure copy];
+    _placeholderImage = placeholderImage;
     [self setNeedsLayout];
 }
 
@@ -96,7 +100,7 @@ typedef void (^GQSingleTap)();
         };
     }
     
-    [cell configureCell:self.configure model:self.dataArray[indexPath.row%[self.dataArray count]]];
+    [cell configureCell:self.configure model:self.dataArray[indexPath.row%[self.dataArray count]] withPlaceholderImage:self.placeholderImage];
     
     return cell;
 }
