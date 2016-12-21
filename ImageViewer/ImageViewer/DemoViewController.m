@@ -69,9 +69,9 @@
     [imageArray addObjectsFromArray:@[@"http://desk.fd.zol-img.com.cn/t_s960x600c5/g4/M00/0D/01/Cg-4y1ULoXCII6fEAAeQFx3fsKgAAXCmAPjugYAB5Av166.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/05/0F/ChMkJ1erCriIJ_opAAY8rSwt72wAAUU6gMmHKwABjzF444.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/00/ChMkJ1bKxCSIRtwrAA2uHQvukJIAALHCALaz_UADa41063.jpg",
-                                      @"http://pic1.win4000.com/mobile/d/581c3bd22e898.jpg",
-                                      @"http://img5.duitang.com/uploads/item/201610/31/20161031192742_rjhCx.thumb.700_0.jpeg",
-                                      @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/06/ChMkJ1bKyhmIQFUTABNsnM0g-twAALIWgPk0D0AE2y0479.jpg",
+                                      @"http://game2.1332255.com:80/group1/M00/00/0A/Cj2sWVhYtFqADq-LAC-3kzb4-ZY105.gif",
+                                      @"http://game2.1332255.com:80/group1/M00/00/0A/Cj2sWVhYtGeAQV15ACz1-KrKcsE448.gif",
+                                      @"http://game2.1332255.com:80/group1/M00/00/0A/Cj2sWVhYtG6AOE4pAFfzq2lUi7E423.gif",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/07/0D/ChMkJlgaksOIEZcSAAYHVJbTdlwAAXcSwNDVmYABgds319.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/03/ChMkJlbKxtqIF93BABJ066MJkLcAALHrQL_qNkAEnUD253.jpg",
                                       @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_1.jpg",
@@ -115,7 +115,7 @@
                                       maxTextHeight:200
                                      textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
     
-//    链式调用
+    //链式调用
     [GQImageViewer sharedInstance]
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
     .usePageControlChain(YES)//设置是否使用pageControl

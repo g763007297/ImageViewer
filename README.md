@@ -128,7 +128,11 @@
 
 	 添加头部和底部自定义View
 
-(10) wait a moment
+(10) 0.1.0
+ 
+    添加图片加载LoadingView
+ 
+(11) wait a moment
 
 ##Support
 
