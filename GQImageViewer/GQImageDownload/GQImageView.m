@@ -75,7 +75,9 @@
                  }complete:^(NSURL *url, UIImage *image, NSError *error) {
                      GQStrongify(self);
                      [self hideLoading];
-                     self.image = image;
+                     if (image) {
+                         self.image = image;
+                     }
                      if (self.complete) {
                          self.complete(image,error,url);
                      }
