@@ -544,8 +544,14 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
         transition = fabsf(transition);
         self.alpha = 1- transition/self.height;
         self.bottomBgView.y = _bottomBgViewY + transition;
+        if (_topView) {
+            _topView.y = -transition;
+        }
     }else {
         [UIView animateWithDuration:0.3 animations:^{
+            if (_topView) {
+                _topView.y = transition;
+            }
             self.collectionView.y = transition;
             self.alpha = 1- transition/self.height;
             [self setupTextScrollView];
