@@ -65,7 +65,7 @@
                                      @"百度百科作为知识平台，节省了人们记忆大量内容的成本，可以做到随用随取且及时准确，不会给大脑造成负担，且不会受记忆偏差的影响。在人类从认知黑箱走向科学文明的过程中，掌握更多学科知识的人，点亮了这个世界；百度百科的存在，以互联网工具让每个人都成为有望推动文明进化节点到来的那个人。\n百度百科成功做到了传播广度与深度的结合，让“词媒体”与“权威知识平台”形成完美统一。",
                                      @"百度百科，以人人可编辑的模式，将碎片化的知识重新组合起来，在不增加人脑负担的同时，建立起人们与各学科之间互通的触点，从而以更简单的方式创造跨界的可能性。\n人人可编辑，意味着人人都在贡献自己的知识，同时也意味着人人都能够轻松从中获取所需。在“百科全书式”人物基本已不可能再出现的情况下，百度百科人人可编辑带来了另一种推动文明发展的方式。",
                                      @"百度百科"]];
-    
+     
     [imageArray addObjectsFromArray:@[@"http://desk.fd.zol-img.com.cn/t_s960x600c5/g4/M00/0D/01/Cg-4y1ULoXCII6fEAAeQFx3fsKgAAXCmAPjugYAB5Av166.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/05/0F/ChMkJ1erCriIJ_opAAY8rSwt72wAAUU6gMmHKwABjzF444.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/00/ChMkJ1bKxCSIRtwrAA2uHQvukJIAALHCALaz_UADa41063.jpg",
