@@ -9,14 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-typedef void(^completeBlock)(NSURL *url, UIImage* image, NSError *error);
-typedef void(^progressBlock)(CGFloat progress);
+typedef void(^GQImageViwerCompleteBlock)(NSURL *url, UIImage* image, NSError *error);
+typedef void(^GQImageViwerProgressBlock)(CGFloat progress);
+typedef void(^GQImageViwerNoParamsBlock)();
 
 @interface GQImageDataDownload : NSObject
 
 @property (nonatomic, strong) NSURL *imageUrl;
 
-- (void)cancel;
++ (instancetype)sharedDownloadManager;
 
 /**
  设置图片处理请求class
@@ -25,6 +26,12 @@ typedef void(^progressBlock)(CGFloat progress);
  */
 - (void)setURLRequestClass:(Class)requestClass;
 
-- (id)initWithURL:(NSURL *)url progress:(progressBlock)progress complete:(completeBlock)complete;
+- (id)initWithURL:(NSURL *)url progress:(GQImageViwerProgressBlock)progress complete:(GQImageViwerCompleteBlock)complete;
+
+- (void)suspendLoading;
+
+- (void)restoreLoading;
+
+- (void)cancel;
 
 @end

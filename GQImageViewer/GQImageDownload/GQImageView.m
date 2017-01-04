@@ -68,7 +68,7 @@
     
     self.image = placeHolderImage;
     GQWeakify(self);
-    _download = [[GQImageDataDownload alloc]
+    _download = [[GQImageDataDownload sharedDownloadManager]
                  initWithURL:_imageUrl
                  progress:^(CGFloat progress) {
                      

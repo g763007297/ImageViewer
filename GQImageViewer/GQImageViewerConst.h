@@ -35,7 +35,6 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     return z##_shared_obj_name_;                                            \
 }
 
-
 #define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)  \
 - (_block_type_)_key_name_                                              \
 {                                                                       \
@@ -49,6 +48,18 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     }                                                                   \
     return _##_key_name_;                                               \
 }
+
+#if OS_OBJECT_USE_OBJC
+    #undef GQDispatchQueueRelease
+    #undef GQDispatchQueueSetterSementics
+    #define GQDispatchQueueRelease(q)
+    #define GQDispatchQueueSetterSementics strong
+#else
+    #undef GQDispatchQueueRelease
+    #undef GQDispatchQueueSetterSementics
+    #define GQDispatchQueueRelease(q) (dispatch_release(q))
+    #define GQDispatchQueueSetterSementics assign
+#endif
 
 //强弱引用
 #ifndef GQWeakify

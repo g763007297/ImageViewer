@@ -229,7 +229,7 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 
 - (void)showInView:(UIView *)showView animation:(BOOL)animation
 {
-    if ([_dataSources count]==0) {
+    if ([_dataSources count] == 0) {
         return;
     }
     
