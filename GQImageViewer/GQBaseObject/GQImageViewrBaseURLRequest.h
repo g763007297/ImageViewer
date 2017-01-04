@@ -15,8 +15,25 @@
  */
 - (void)configureRequestData;
 
+/**
+ User-Agent
+
+ @return User-Agent
+ */
 - (NSString *)userAgentString;
 
+/**
+ Cookie
+
+ @return Cookie
+ */
 - (NSString *)storageCookies;
+
+/**
+ 请求接收类型
+
+ @return 接收类型
+ */
+- (NSString *)acceptType;
 
 @end
