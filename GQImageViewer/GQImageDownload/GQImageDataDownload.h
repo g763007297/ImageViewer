@@ -18,6 +18,13 @@ typedef void(^progressBlock)(CGFloat progress);
 
 - (void)cancel;
 
+/**
+ 设置图片处理请求class
+
+ @param requestClass
+ */
+- (void)setURLRequestClass:(Class)requestClass;
+
 - (id)initWithURL:(NSURL *)url progress:(progressBlock)progress complete:(completeBlock)complete;
 
 @end

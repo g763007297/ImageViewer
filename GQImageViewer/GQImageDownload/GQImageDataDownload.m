@@ -12,12 +12,14 @@
 #import "GQImageRequestOperation.h"
 #import "GQImageHttpRequestManager.h"
 #import "NSData+GQImageViewrCategory.h"
+#import "GQBaseURLRequest.h"
 
 @interface GQImageDataDownload()
 
 @property (nonatomic, copy) completeBlock complete;
 @property (nonatomic, copy) progressBlock progress;
 @property (nonatomic, copy) GQImageRequestOperation *operation;
+@property (assign, nonatomic) Class requstClass;
 
 @end
 
@@ -27,6 +29,7 @@
 {
     self = [super init];
     if (self) {
+        _requstClass = [GQBaseURLRequest class];
         _imageUrl = url;
         _complete = [complete copy];
         _progress = [progress copy];
@@ -43,12 +46,16 @@
     _progress = nil;
 }
 
+- (void)setURLRequestClass:(Class)requestClass {
+    _requstClass = requestClass ?: [GQBaseURLRequest class];
+}
+
 - (void)startRequest
 {
     __block UIImage *image = nil;
     if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:_imageUrl.absoluteString]){
         GQWeakify(self);
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:_imageUrl];
+        GQBaseURLRequest *request = [[_requstClass alloc] initWithURL:_imageUrl];
         _operation = [[GQImageRequestOperation alloc]
                       initWithURLRequest:request
                       progress:^(float progress) {
