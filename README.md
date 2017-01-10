@@ -133,6 +133,7 @@
     添加图片加载LoadingView
  
 (11)0.1.1
+
 	 修复无网络状态下缺省图不显示的bug,topView滑动手势兼容。
  
 (12) wait a moment
