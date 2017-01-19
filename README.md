@@ -4,7 +4,7 @@
 # ImageViewer
 一款多图文浏览器，支持图文混合浏览和单图片浏览，增加底部文字，仿今日头条效果;
 
-图片原尺寸显示，不会变形，双击放大缩小，支持文本配置，支持多张本地及网络图片混合查看;
+图片原尺寸显示，不会变形，双击放大缩小，支持文本配置，支持多张本地及网络图片混合查看，支持WebP图片浏览;
 
 单图片浏览时单击消失，图文混合浏览时单击控制文字的显示和隐藏;
 
@@ -19,6 +19,10 @@
 1.在 Podfile 中添加 pod 'GQImageViewer'。
 2.执行 pod install 或 pod update。
 3.导入 GQImageViewer.h。
+
+## WebP图片支持
+ 
+使用: pod 'GQImageViewer/WebP'
 
 ## Basic usage
 
@@ -132,11 +136,15 @@
  
     添加图片加载LoadingView
  
-(11)0.1.1
+(11) 0.1.1
 
 	 修复无网络状态下缺省图不显示的bug,topView滑动手势兼容。
  
-(12) wait a moment
+(12) 1.0.0
+
+	添加WebP支持
+ 
+(13) wait a moment
 
 ##Support
 
