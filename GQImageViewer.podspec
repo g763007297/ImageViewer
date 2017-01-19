@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   
   s.platform     = :ios, "6.0"
 
-  s.source       = { :git => "https://github.com/g763007297/ImageViewer.git" }
+  s.source       = { :git => "https://github.com/g763007297/ImageViewer.git" , :tag => "0.1.2"}
 
   s.requires_arc = true
 
@@ -22,14 +22,14 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |core|
     core.source_files = "GQImageViewer/**/*.{h,m}"
-    core.exclude_files = 'GQImageViewer/GQCategory/UIImage+GQImageViewrCategory.{h,m}'
   end
 
   s.subspec 'WebP' do |webp|
     webp.source_files = 'GQImageViewer/GQCategory/UIImage+GQImageViewrCategory.{h,m}'
     
     webp.xcconfig = { 
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SD_WEBP=1',
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GQ_WEBP=1',
+      'USER_FRAMEWORK_SEARCH_PATHS' => '$(inherited) $(SRCROOT)/GQImageViewer/GQThirdPart'
     }
     
     webp.dependency 'GQImageViewer/Core'
