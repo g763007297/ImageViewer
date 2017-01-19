@@ -9,7 +9,7 @@
 #import "NSData+GQImageViewrCategory.h"
 #import <ImageIO/ImageIO.h>
 
-#ifdef SD_WEBP
+#ifdef GQ_WEBP
 #import "UIImage+GQImageViewrCategory.h"
 #endif
 
@@ -23,9 +23,9 @@
     {
         image = [self animatedGIFWithData];
     }
-#ifdef SD_WEBP
+#ifdef GQ_WEBP
     else if ([imageContentType isEqualToString:@"image/webp"]) {
-        image = [UIImage gq_imageWithWebPData:data];
+        image = [UIImage gq_imageWithWebPData:self];
     }
 #endif
     else {

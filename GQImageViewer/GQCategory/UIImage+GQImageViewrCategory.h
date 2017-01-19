@@ -10,7 +10,7 @@
 
 @interface UIImage (GQImageViewrCategory)
 
-#ifdef SD_WEBP
+#ifdef GQ_WEBP
 
 + (UIImage *)gq_imageWithWebPData:(NSData *)data;
 

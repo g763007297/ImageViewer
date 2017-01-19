@@ -8,12 +8,11 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
-#ifdef SD_WEBP
+#ifdef GQ_WEBP
 
-#import "webp/decode.h"
-#import "webp/mux_types.h"
-#import "webp/demux.h"
-#import "NSImage+WebCache.h"
+#import <WebP/decode.h>
+#import <WebP/mux_types.h>
+#import <WebP/demux.h>
 
 static void FreeImageData(void *info, const void *data, size_t size) {
     free((void *)data);
@@ -23,7 +22,7 @@ static void FreeImageData(void *info, const void *data, size_t size) {
 
 @implementation UIImage (GQImageViewrCategory)
 
-#ifdef SD_WEBP
+#ifdef GQ_WEBP
 
 + (UIImage *)gq_imageWithWebPData:(NSData *)data {
     if (!data) {
