@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GQImageViewer"
-  s.version      = "0.1.1"
+  s.version      = "1.0.0"
   s.summary      = "一款多图文浏览器，支持图文混合浏览和单图片浏览，增加底部文字，仿今日头条效果，图片原尺寸显示，不会变形，双击放大缩小，单击消失，支持多张本地及网络图片混合查看，支持链式调用。"
 
   s.homepage     = "https://github.com/g763007297/ImageViewer"
@@ -18,8 +18,21 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.source_files  = "GQImageViewer/**/*.{h,m}"
+  s.default_subspec = 'Core'
 
-  #s.public_header_files = "GQImageViewer/**/*.h"
+  s.subspec 'Core' do |core|
+    core.source_files = "GQImageViewer/**/*.{h,m}"
+    core.exclude_files = 'GQImageViewer/GQCategory/UIImage+GQImageViewrCategory.{h,m}'
+  end
+
+  s.subspec 'WebP' do |webp|
+    webp.source_files = 'GQImageViewer/GQCategory/UIImage+GQImageViewrCategory.{h,m}'
+    
+    webp.xcconfig = { 
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SD_WEBP=1',
+    }
+    webp.dependency 'GQImageViewer/Core'
+    webp.ios.vendored_frameworks = 'GQThirdPart/WebP.framework'
+  end
 
 end

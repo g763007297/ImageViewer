@@ -36,7 +36,11 @@ static NSString *defaultUserAgent = nil;
 }
 
 - (NSString *)acceptType {
+#ifdef SD_WEBP
+    return @"image/webp,image/*;q=0.8"
+#else
     return @"image/*;q=0.8";
+#endif
 }
 
 - (NSString *)userAgentString

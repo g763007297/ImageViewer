@@ -27,6 +27,7 @@
 		B60B3FC91DF0FC6C00EBF9DA /* 9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FBE1DF0FC6C00EBF9DA /* 9.jpg */; };
 		B60B3FCA1DF0FC6C00EBF9DA /* 10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FBF1DF0FC6C00EBF9DA /* 10.jpg */; };
 		B60B3FCB1DF0FC6C00EBF9DA /* 11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FC01DF0FC6C00EBF9DA /* 11.jpg */; };
+		B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */; };
 		B65C1FFB1D816CF600F1711B /* GQGobalPaths.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF11D816CF600F1711B /* GQGobalPaths.m */; };
 		B65C1FFC1D816CF600F1711B /* GQImageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF31D816CF600F1711B /* GQImageCacheManager.m */; };
 		B65C1FFD1D816CF600F1711B /* GQImageDataDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF51D816CF600F1711B /* GQImageDataDownload.m */; };
@@ -83,6 +84,8 @@
 		B60B3FBE1DF0FC6C00EBF9DA /* 9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 9.jpg; sourceTree = "<group>"; };
 		B60B3FBF1DF0FC6C00EBF9DA /* 10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10.jpg; sourceTree = "<group>"; };
 		B60B3FC01DF0FC6C00EBF9DA /* 11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11.jpg; sourceTree = "<group>"; };
+		B646A70C1E306A9300C90BAC /* UIImage+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GQImageViewrCategory.h"; sourceTree = "<group>"; };
+		B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GQImageViewrCategory.m"; sourceTree = "<group>"; };
 		B65C1FF01D816CF600F1711B /* GQGobalPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQGobalPaths.h; sourceTree = "<group>"; };
 		B65C1FF11D816CF600F1711B /* GQGobalPaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQGobalPaths.m; sourceTree = "<group>"; };
 		B65C1FF21D816CF600F1711B /* GQImageCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageCacheManager.h; sourceTree = "<group>"; };
@@ -139,6 +142,8 @@
 				B6032E1F1DEE64EA0060FB0E /* NSString+GQImageViewrCategory.m */,
 				B6FB8CB11DF01F4E009C4494 /* UIView+GQImageViewrCategory.h */,
 				B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */,
+				B646A70C1E306A9300C90BAC /* UIImage+GQImageViewrCategory.h */,
+				B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */,
 			);
 			path = GQCategory;
 			sourceTree = "<group>";
@@ -404,6 +409,7 @@
 				B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */,
 				B6032E361DEE67290060FB0E /* GQTextScrollView.m in Sources */,
 				B65C1FFD1D816CF600F1711B /* GQImageDataDownload.m in Sources */,
+				B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */,
 				B6032E391DEE67DA0060FB0E /* GQImageViewrConfigure.m in Sources */,
 				B65C1FFE1D816CF600F1711B /* GQImageView.m in Sources */,
 				B6032E341DEE67290060FB0E /* GQImageCollectionView.m in Sources */,

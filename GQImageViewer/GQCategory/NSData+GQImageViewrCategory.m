@@ -9,6 +9,10 @@
 #import "NSData+GQImageViewrCategory.h"
 #import <ImageIO/ImageIO.h>
 
+#ifdef SD_WEBP
+#import "UIImage+GQImageViewrCategory.h"
+#endif
+
 @implementation NSData (GQImageViewrCategory)
 
 - (UIImage *)gqImageWithData
@@ -19,6 +23,11 @@
     {
         image = [self animatedGIFWithData];
     }
+#ifdef SD_WEBP
+    else if ([imageContentType isEqualToString:@"image/webp"]) {
+        image = [UIImage gq_imageWithWebPData:data];
+    }
+#endif
     else {
         image = [[UIImage alloc] initWithData:self];
         UIImageOrientation orientation = [self imageOrientationFromImageData];
