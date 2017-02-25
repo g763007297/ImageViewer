@@ -159,4 +159,19 @@ static void FreeImageData(void *info, const void *data, size_t size) {
 
 #endif
 
+- (CGRect)gq_imageSizeCompareWithSize:(CGSize)size {
+    CGSize originSize = size;
+    CGSize imageSize = self.size;
+    
+    CGFloat HScale = imageSize.height / originSize.height;
+    CGFloat WScale = imageSize.width / originSize.width;
+    CGFloat scale = (HScale > WScale) ? HScale : WScale;
+    
+    CGFloat height = imageSize.height / scale;
+    CGFloat width = imageSize.width / scale;
+    
+    CGRect confirmRect = CGRectMake((size.width - width) / 2, (size.height - height) / 2, width, height);
+    return confirmRect;
+}
+
 @end

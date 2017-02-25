@@ -14,6 +14,8 @@
 
 #import "GQImageViewerConst.h"
 
+#import "UIImage+GQImageViewrCategory.h"
+
 @interface GQImageScrollView()
 
 @end
@@ -61,6 +63,10 @@
 {
     [super layoutSubviews];
     if (self.zoomScale == 1) {
+        if (_imageView.image) {
+            CGRect rect = [_imageView.image gq_imageSizeCompareWithSize:self.bounds.size];
+            _imageView.frame = rect;
+        }else
         _imageView.frame = self.bounds;
     }
 }
@@ -82,7 +88,14 @@
             imageUrl = [NSURL URLWithString:data];
         }
         [_imageView cancelCurrentImageRequest];
-        [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:nil];
+        GQWeakify(self);
+        [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
+            GQStrongify(self);
+            if (image) {
+                CGRect rect = [image gq_imageSizeCompareWithSize:self.bounds.size];
+                _imageView.frame = rect;
+            }
+        }];
     }else if ([data isKindOfClass:[UIImageView class]])
     {
         UIImageView *imageView = (UIImageView *)data;
@@ -98,6 +111,22 @@
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
     return _imageView;
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view atScale:(CGFloat)scale
+{
+    if (scale == 1) {
+        CGRect rect = [_imageView.image gq_imageSizeCompareWithSize:self.bounds.size];
+        [UIView animateWithDuration:0.3 animations:^{
+            _imageView.frame = rect;
+        }];
+    }else {
+        CGFloat gapHeight = (self.frame.size.height - view.frame.size.height);
+        CGFloat gapWidth = (self.frame.size.width - view.frame.size.width);
+        [UIView animateWithDuration:0.3 animations:^{
+            _imageView.frame = CGRectMake((gapWidth > 0 ? gapWidth : 0) / 2, (gapHeight > 0 ? gapHeight : 0) / 2, view.frame.size.width, view.frame.size.height);
+        }];
+    }
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap

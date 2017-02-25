@@ -63,6 +63,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
 @synthesize configureChain = _configureChain;
 @synthesize showInViewChain = _showInViewChain;
 @synthesize launchDirectionChain = _launchDirectionChain;
+@synthesize placeholderImageChain = _placeholderImageChain;
 @synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
 @synthesize singleTapChain = _singleTapChain;
 @synthesize longTapIndexChain = _longTapIndexChain;
@@ -74,6 +75,7 @@ GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQBOOLChain);
 GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQBOOLChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
 GQChainObjectDefine(configureChain, Configure, GQImageViewrConfigure*, GQConfigureChain);
+GQChainObjectDefine(placeholderImageChain, PlaceholderImage, UIImage *, GQPlaceholderImageChain);
 GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQLaunchDirectionChain);
 GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(singleTapChain, SingleTap, GQAchieveIndexBlock, GQAchieveIndexChain);

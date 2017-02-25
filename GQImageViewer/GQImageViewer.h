@@ -25,6 +25,7 @@ typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 //链式调用block
 typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
 typedef GQImageViewer * (^GQSubViewChain)(UIView *bottomView);
+typedef GQImageViewer * (^GQPlaceholderImageChain)(UIImage *placeholderImage);
 typedef GQImageViewer * (^GQDataSouceArrayChain)(NSArray *imageArray ,NSArray *textArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
 typedef GQImageViewer * (^GQConfigureChain) (GQImageViewrConfigure *configure);
@@ -72,6 +73,11 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  *  显示GQImageViewer到指定view上   type: UIView *
  */
 @property (nonatomic, copy, readonly) GQShowViewChain showInViewChain;
+
+/**
+ 缺省图   type : UIImage *
+ */
+@property (nonatomic, copy, readonly) GQPlaceholderImageChain placeholderImageChain;
 
 /**
  *  获取当前选中的图片index  type: void (^GQAchieveIndexBlock)(NSInteger selectIndex)

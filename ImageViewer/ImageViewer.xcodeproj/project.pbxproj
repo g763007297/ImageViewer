@@ -28,6 +28,7 @@
 		B60B3FCA1DF0FC6C00EBF9DA /* 10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FBF1DF0FC6C00EBF9DA /* 10.jpg */; };
 		B60B3FCB1DF0FC6C00EBF9DA /* 11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FC01DF0FC6C00EBF9DA /* 11.jpg */; };
 		B61C26CA1E30742700D2F94B /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61C26C91E30742700D2F94B /* WebP.framework */; };
+		B61C26D21E30889F00D2F94B /* Rosetta.webp in Resources */ = {isa = PBXBuildFile; fileRef = B61C26D11E30889F00D2F94B /* Rosetta.webp */; };
 		B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */; };
 		B65C1FFB1D816CF600F1711B /* GQGobalPaths.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF11D816CF600F1711B /* GQGobalPaths.m */; };
 		B65C1FFC1D816CF600F1711B /* GQImageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF31D816CF600F1711B /* GQImageCacheManager.m */; };
@@ -86,6 +87,7 @@
 		B60B3FBF1DF0FC6C00EBF9DA /* 10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10.jpg; sourceTree = "<group>"; };
 		B60B3FC01DF0FC6C00EBF9DA /* 11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11.jpg; sourceTree = "<group>"; };
 		B61C26C91E30742700D2F94B /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
+		B61C26D11E30889F00D2F94B /* Rosetta.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = Rosetta.webp; sourceTree = "<group>"; };
 		B646A70C1E306A9300C90BAC /* UIImage+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GQImageViewrCategory.h"; sourceTree = "<group>"; };
 		B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GQImageViewrCategory.m"; sourceTree = "<group>"; };
 		B65C1FF01D816CF600F1711B /* GQGobalPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQGobalPaths.h; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 		B60B3FB51DF0FB9B00EBF9DA /* image */ = {
 			isa = PBXGroup;
 			children = (
+				B61C26D11E30889F00D2F94B /* Rosetta.webp */,
 				B60B3FB61DF0FC6C00EBF9DA /* 1.jpg */,
 				B60B3FB71DF0FC6C00EBF9DA /* 2.jpg */,
 				B60B3FB81DF0FC6C00EBF9DA /* 3.jpg */,
@@ -398,6 +401,7 @@
 				B60B3FC81DF0FC6C00EBF9DA /* 8.jpg in Resources */,
 				B60B3FC71DF0FC6C00EBF9DA /* 7.jpg in Resources */,
 				B60B3FC11DF0FC6C00EBF9DA /* 1.jpg in Resources */,
+				B61C26D21E30889F00D2F94B /* Rosetta.webp in Resources */,
 				B60B3FC51DF0FC6C00EBF9DA /* 5.jpg in Resources */,
 				B60B3FC41DF0FC6C00EBF9DA /* 4.jpg in Resources */,
 				B60B3FC31DF0FC6C00EBF9DA /* 3.jpg in Resources */,
