@@ -121,7 +121,7 @@
     //链式调用
     [GQImageViewer sharedInstance]
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
-    .usePageControlChain(YES)//设置是否使用pageControl
+    .usePageControlChain(NO)//设置是否使用pageControl
     .needLoopScrollChain(NO)//设置是否需要循环滚动
     .needPanGestureChain(YES)//是否需要滑动消失手势
     .selectIndexChain(5)//设置选中的索引

@@ -44,7 +44,7 @@
 
 - (void)cancelCurrentImageRequest
 {
-    [_download cancel];
+    [_download cancelAllOpration];
     [self hideLoading];
 }
 

@@ -32,6 +32,6 @@ typedef void(^GQImageViwerNoParamsBlock)();
 
 - (void)restoreLoading;
 
-- (void)cancel;
+- (void)cancelAllOpration;
 
 @end

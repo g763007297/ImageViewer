@@ -24,7 +24,6 @@ static NSString *const kCompletedCallbackKey = @"completed";
 @property (nonatomic,strong) NSOperationQueue *connectionQueue;
 
 @property (nonatomic, strong) NSMutableDictionary *callBackDic;
-@property (nonatomic, copy) GQImageRequestOperation *operation;
 @property (GQDispatchQueueSetterSementics, nonatomic) dispatch_queue_t barrierQueue;
 @property (assign, nonatomic) Class requstClass;
 
@@ -46,8 +45,8 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
 }
 
 - (void)dealloc {
-    [_operation cancel];
-    _operation = nil;
+    [_connectionQueue cancelAllOperations];
+    _connectionQueue = nil;
     _callBackDic = nil;
 }
 
@@ -68,36 +67,36 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
     if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:_imageUrl.absoluteString]){
         GQWeakify(self);
         GQImageViewrBaseURLRequest *request = [[_requstClass alloc] initWithURL:_imageUrl];
-        _operation = [[GQImageRequestOperation alloc]
-                      initWithURLRequest:request
-                      progress:^(float progress) {
-                          __block NSArray *callbacksForURL;
-                          dispatch_barrier_sync(weak_self.barrierQueue, ^{
-                              callbacksForURL = weak_self.callBackDic[weak_self.imageUrl];
-                          });
-                          for (NSDictionary *callbacks in callbacksForURL) {
-                              dispatch_async(dispatch_get_main_queue(), ^{
-                                  GQImageViwerProgressBlock callback = callbacks[kProgressCallbackKey];
-                                  if (callback) callback(progress);
-                              });
-                          }
-                      } completion:^(GQImageRequestOperation *urlOperation, BOOL requestSuccess, NSError *error) {
-                          NSData *data = urlOperation.operationData;
-                          image = [data gqImageWithData];
-                          if (image) {
-                              [[GQImageCacheManager sharedManager] saveImage:image withUrl:_imageUrl.absoluteString];
-                          }
-                          __block NSArray *callbacksForURL;
-                          dispatch_barrier_sync(weak_self.barrierQueue, ^{
-                              callbacksForURL = weak_self.callBackDic[weak_self.imageUrl];
-                          });
-                          for (NSDictionary *callbacks in callbacksForURL) {
-                              GQImageViwerCompleteBlock callback = callbacks[kCompletedCallbackKey];
-                              if (callback) callback(weak_self.imageUrl,image,error);
-                          }
-                          [weak_self.callBackDic removeObjectForKey:weak_self.imageUrl];
-                      }];
-        [self.connectionQueue addOperation:_operation];
+        GQImageRequestOperation *operation = [[GQImageRequestOperation alloc]
+                                              initWithURLRequest:request
+                                              progress:^(float progress) {
+                                                  __block NSArray *callbacksForURL;
+                                                  dispatch_barrier_sync(weak_self.barrierQueue, ^{
+                                                      callbacksForURL = weak_self.callBackDic[weak_self.imageUrl];
+                                                  });
+                                                  for (NSDictionary *callbacks in callbacksForURL) {
+                                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                                          GQImageViwerProgressBlock callback = callbacks[kProgressCallbackKey];
+                                                          if (callback) callback(progress);
+                                                      });
+                                                  }
+                                              } completion:^(GQImageRequestOperation *urlOperation, BOOL requestSuccess, NSError *error) {
+                                                  NSData *data = urlOperation.operationData;
+                                                  image = [data gqImageWithData];
+                                                  if (image) {
+                                                      [[GQImageCacheManager sharedManager] saveImage:image withUrl:_imageUrl.absoluteString];
+                                                  }
+                                                  __block NSArray *callbacksForURL;
+                                                  dispatch_barrier_sync(weak_self.barrierQueue, ^{
+                                                      callbacksForURL = weak_self.callBackDic[weak_self.imageUrl];
+                                                  });
+                                                  for (NSDictionary *callbacks in callbacksForURL) {
+                                                      GQImageViwerCompleteBlock callback = callbacks[kCompletedCallbackKey];
+                                                      if (callback) callback(weak_self.imageUrl,image,error);
+                                                  }
+                                                  [weak_self.callBackDic removeObjectForKey:weak_self.imageUrl];
+                                              }];
+        [self.connectionQueue addOperation:operation];
     }else{
         image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:_imageUrl.absoluteString];
         NSArray *callbacksForURL = self.callBackDic[self.imageUrl];
@@ -109,7 +108,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
     }
 }
 
-- (void)addBlockToCallBackDicProgress:(GQImageViwerProgressBlock )progressBlock complete:(GQImageViwerCompleteBlock)completeBlock finishAdd:(GQImageViwerNoParamsBlock)callBackBlock{
+- (void)addBlockToCallBackDicProgress:(GQImageViwerProgressBlock )progressBlock complete:(GQImageViwerCompleteBlock)completeBlock finishAdd:(GQImageViwerNoParamsBlock)callBackBlock {
     if (!self.imageUrl) {
         if (completeBlock) {
             completeBlock(nil,nil,nil);
@@ -151,11 +150,10 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
     return self;
 }
 
-- (void)cancel
+- (void)cancelAllOpration
 {
-    [_operation cancel];
-    _operation = nil;
-    [self.callBackDic removeObjectForKey:self.imageUrl];
+    [_connectionQueue cancelAllOperations];
+    _callBackDic = nil;
 }
 
 - (void)suspendLoading
