@@ -8,14 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "GQImageRequestOperation.h"
 
 typedef void(^GQImageViwerCompleteBlock)(NSURL *url, UIImage* image, NSError *error);
 typedef void(^GQImageViwerProgressBlock)(CGFloat progress);
 typedef void(^GQImageViwerNoParamsBlock)();
 
 @interface GQImageDataDownload : NSObject
-
-@property (nonatomic, strong) NSURL *imageUrl;
 
 + (instancetype)sharedDownloadManager;
 
@@ -26,7 +25,7 @@ typedef void(^GQImageViwerNoParamsBlock)();
  */
 - (void)setURLRequestClass:(Class)requestClass;
 
-- (id)initWithURL:(NSURL *)url progress:(GQImageViwerProgressBlock)progress complete:(GQImageViwerCompleteBlock)complete;
+- (id<GQImageViwerOperationDelegate>)downloadWithURL:(NSURL *)url progress:(GQImageViwerProgressBlock)progress complete:(GQImageViwerCompleteBlock)complete;
 
 - (void)suspendLoading;
 

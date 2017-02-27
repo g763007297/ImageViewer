@@ -7,13 +7,13 @@
 //
 
 #import "GQImageView.h"
-#import "GQImageDataDownload.h"
+#import "GQImageViewerOperationManager.h"
 #import "GQImageViewerConst.h"
 
 @interface GQImageView()
 
 @property (nonatomic, copy) GQImageCompletionBlock complete;
-@property (nonatomic, strong) GQImageDataDownload *download;
+@property (nonatomic, strong) id<GQImageViwerOperationDelegate> downloadOperation;
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicator;
 
@@ -24,7 +24,6 @@
 - (void)dealloc
 {
     [self cancelCurrentImageRequest];
-    _download = nil;
 }
 
 - (void)awakeFromNib
@@ -44,7 +43,8 @@
 
 - (void)cancelCurrentImageRequest
 {
-    [_download cancelAllOpration];
+    [_downloadOperation cancel];
+    _downloadOperation = nil;
     [self hideLoading];
 }
 
@@ -68,8 +68,8 @@
     
     self.image = placeHolderImage;
     GQWeakify(self);
-    _download = [[GQImageDataDownload sharedDownloadManager]
-                 initWithURL:_imageUrl
+    _downloadOperation = [[GQImageViewerOperationManager sharedManager]
+                 loadWithURL:_imageUrl
                  progress:^(CGFloat progress) {
                      
                  }complete:^(NSURL *url, UIImage *image, NSError *error) {

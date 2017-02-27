@@ -114,8 +114,10 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (void)saveToMemory:(UIImage*)image forKey:(NSString*)key
 {
-    if (image) {
-        _memoryCache[key] = image;
+    @synchronized (_memoryCache) {
+        if (image) {
+            _memoryCache[key] = image;
+        }
     }
 }
 

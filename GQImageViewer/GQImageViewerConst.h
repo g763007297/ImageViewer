@@ -61,6 +61,13 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     #define GQDispatchQueueSetterSementics assign
 #endif
 
+#define dispatch_main_async_safe(block)\
+    if ([NSThread isMainThread]) {\
+    block();\
+    } else {\
+    dispatch_async(dispatch_get_main_queue(), block);\
+}
+
 //强弱引用
 #ifndef GQWeakify
 #define GQWeakify(object) __weak __typeof__(object) weak##_##object = object

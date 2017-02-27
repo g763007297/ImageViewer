@@ -27,6 +27,7 @@
 		B60B3FC91DF0FC6C00EBF9DA /* 9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FBE1DF0FC6C00EBF9DA /* 9.jpg */; };
 		B60B3FCA1DF0FC6C00EBF9DA /* 10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FBF1DF0FC6C00EBF9DA /* 10.jpg */; };
 		B60B3FCB1DF0FC6C00EBF9DA /* 11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B60B3FC01DF0FC6C00EBF9DA /* 11.jpg */; };
+		B61787D31E63B5920042DF60 /* GQImageViewerOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B61787D21E63B5920042DF60 /* GQImageViewerOperationManager.m */; };
 		B61C26CA1E30742700D2F94B /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61C26C91E30742700D2F94B /* WebP.framework */; };
 		B61C26D21E30889F00D2F94B /* Rosetta.webp in Resources */ = {isa = PBXBuildFile; fileRef = B61C26D11E30889F00D2F94B /* Rosetta.webp */; };
 		B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */; };
@@ -86,6 +87,9 @@
 		B60B3FBE1DF0FC6C00EBF9DA /* 9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 9.jpg; sourceTree = "<group>"; };
 		B60B3FBF1DF0FC6C00EBF9DA /* 10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10.jpg; sourceTree = "<group>"; };
 		B60B3FC01DF0FC6C00EBF9DA /* 11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11.jpg; sourceTree = "<group>"; };
+		B61787D01E63B3B60042DF60 /* GQImageViwerOperationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViwerOperationDelegate.h; sourceTree = "<group>"; };
+		B61787D11E63B5920042DF60 /* GQImageViewerOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViewerOperationManager.h; sourceTree = "<group>"; };
+		B61787D21E63B5920042DF60 /* GQImageViewerOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageViewerOperationManager.m; sourceTree = "<group>"; };
 		B61C26C91E30742700D2F94B /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		B61C26D11E30889F00D2F94B /* Rosetta.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = Rosetta.webp; sourceTree = "<group>"; };
 		B646A70C1E306A9300C90BAC /* UIImage+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GQImageViewrCategory.h"; sourceTree = "<group>"; };
@@ -225,8 +229,11 @@
 				B65C1FF91D816CF600F1711B /* GQImageRequestOperation.m */,
 				B65C1FF41D816CF600F1711B /* GQImageDataDownload.h */,
 				B65C1FF51D816CF600F1711B /* GQImageDataDownload.m */,
+				B61787D11E63B5920042DF60 /* GQImageViewerOperationManager.h */,
+				B61787D21E63B5920042DF60 /* GQImageViewerOperationManager.m */,
 				B65C1FF61D816CF600F1711B /* GQImageView.h */,
 				B65C1FF71D816CF600F1711B /* GQImageView.m */,
+				B61787D01E63B3B60042DF60 /* GQImageViwerOperationDelegate.h */,
 			);
 			path = GQImageDownload;
 			sourceTree = "<group>";
@@ -423,6 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */,
+				B61787D31E63B5920042DF60 /* GQImageViewerOperationManager.m in Sources */,
 				B6032E361DEE67290060FB0E /* GQTextScrollView.m in Sources */,
 				B65C1FFD1D816CF600F1711B /* GQImageDataDownload.m in Sources */,
 				B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */,

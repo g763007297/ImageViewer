@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "GQImageViwerOperationDelegate.h"
 @class GQImageRequestOperation;
 
 enum {
@@ -18,9 +19,10 @@ enum {
 typedef NSUInteger GQImageRequestState;
 
 typedef void (^GQImageRequestChangeHandler) (float progress);
+typedef void (^GQImageRequestCancelHandler) ();
 typedef void (^GQImageRequestCompletionHandler)(GQImageRequestOperation *urlOperation,BOOL requestSuccess, NSError *error);
 
-@interface GQImageRequestOperation : NSOperation
+@interface GQImageRequestOperation : NSOperation <GQImageViwerOperationDelegate>
 
 @property (nonatomic, strong) NSURLRequest                      *operationRequest;
 @property (nonatomic, strong) NSData                            *responseData;
@@ -41,10 +43,12 @@ typedef void (^GQImageRequestCompletionHandler)(GQImageRequestOperation *urlOper
 @property (nonatomic, readwrite) float                          receivedContentLength;
 
 @property (nonatomic, copy) GQImageRequestChangeHandler          operationProgressBlock;
+@property (nonatomic, copy) GQImageRequestCancelHandler          operationCancelBlock;
 @property (nonatomic, copy) GQImageRequestCompletionHandler      operationCompletionBlock;
 
 - (GQImageRequestOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
-                              progress:(GQImageRequestChangeHandler)onProgressBlock
-                            completion:(GQImageRequestCompletionHandler)onCompletionBlock;
+                                       progress:(GQImageRequestChangeHandler)onProgressBlock
+                                         cancel:(GQImageRequestCancelHandler)onCancelBlock
+                                     completion:(GQImageRequestCompletionHandler)onCompletionBlock;
 
 @end

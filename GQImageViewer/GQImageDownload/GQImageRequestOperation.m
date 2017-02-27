@@ -29,16 +29,12 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     self.operationSession = nil;
     self.operationSessionTask = nil;
     self.operationConnection = nil;
-    
-#if !OS_OBJECT_USE_OBJC
-    dispatch_release(_saveDataDispatchGroup);
-    dispatch_release(_saveDataDispatchQueue);
-#endif
 }
 
 - (GQImageRequestOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
-                              progress:(GQImageRequestChangeHandler)onProgressBlock
-                            completion:(GQImageRequestCompletionHandler)onCompletionBlock;
+                                       progress:(GQImageRequestChangeHandler)onProgressBlock
+                                         cancel:(GQImageRequestCancelHandler)onCancelBlock
+                                     completion:(GQImageRequestCompletionHandler)onCompletionBlock;
 
 {
     self = [super init];
@@ -47,6 +43,9 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     
     if (onProgressBlock) {
         _operationProgressBlock = [onProgressBlock copy];
+    }
+    if (onCancelBlock) {
+        _operationCancelBlock = [onCancelBlock copy];
     }
     if (onCompletionBlock) {
         _operationCompletionBlock = [onCompletionBlock copy];
@@ -58,6 +57,9 @@ static NSInteger GQHTTPRequestTaskCount = 0;
 {
     if(![self isFinished]){
         return;
+    }
+    if (_operationCancelBlock) {
+        _operationCancelBlock();
     }
     [super cancel];
     [self finish];
@@ -342,19 +344,18 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     if(self.operationRunLoop){
         CFRunLoopStop(self.operationRunLoop);
     }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.responseData = self.operationData;
-        NSError *serverError = error;
-        if(!serverError) {
-            serverError = [NSError errorWithDomain:NSURLErrorDomain
-                                              code:NSURLErrorBadServerResponse
-                                          userInfo:nil];
-        }
-        if(self.operationCompletionBlock && !self.isCancelled){
-            self.operationCompletionBlock(self,requestSuccess,requestSuccess?nil:serverError);
-        }
-        [self finish];
-    });
+
+    self.responseData = self.operationData;
+    NSError *serverError = error;
+    if(!serverError) {
+        serverError = [NSError errorWithDomain:NSURLErrorDomain
+                                          code:NSURLErrorBadServerResponse
+                                      userInfo:nil];
+    }
+    if(self.operationCompletionBlock && !self.isCancelled){
+        self.operationCompletionBlock(self,requestSuccess,requestSuccess?nil:serverError);
+    }
+    [self finish];
 }
 
 @end
