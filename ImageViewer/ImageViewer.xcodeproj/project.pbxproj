@@ -225,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				B65C1FEF1D816CF600F1711B /* GQImageCache */,
+				B61787D01E63B3B60042DF60 /* GQImageViwerOperationDelegate.h */,
 				B65C1FF81D816CF600F1711B /* GQImageRequestOperation.h */,
 				B65C1FF91D816CF600F1711B /* GQImageRequestOperation.m */,
 				B65C1FF41D816CF600F1711B /* GQImageDataDownload.h */,
@@ -233,7 +234,6 @@
 				B61787D21E63B5920042DF60 /* GQImageViewerOperationManager.m */,
 				B65C1FF61D816CF600F1711B /* GQImageView.h */,
 				B65C1FF71D816CF600F1711B /* GQImageView.m */,
-				B61787D01E63B3B60042DF60 /* GQImageViwerOperationDelegate.h */,
 			);
 			path = GQImageDownload;
 			sourceTree = "<group>";

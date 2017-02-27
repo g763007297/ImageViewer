@@ -104,6 +104,7 @@
     {
         _imageView.image = nil;
     }
+    [self layoutSubviews];
 }
 
 #pragma mark - UIScrollView delegate
