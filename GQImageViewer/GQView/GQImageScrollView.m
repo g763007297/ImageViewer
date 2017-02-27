@@ -91,10 +91,7 @@
         GQWeakify(self);
         [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
             GQStrongify(self);
-            if (image) {
-                CGRect rect = [image gq_imageSizeCompareWithSize:self.bounds.size];
-                _imageView.frame = rect;
-            }
+            [self layoutSubviews];
         }];
     }else if ([data isKindOfClass:[UIImageView class]])
     {

@@ -8,12 +8,16 @@
 
 #import "GQImageCacheManager.h"
 #import "GQGobalPaths.H"
-#import "GQImageViewerConst.h"
 
 @interface GQImageCacheManager()
 {
     NSMutableDictionary *_memoryCache;
+    NSFileManager *_fileManager;
 }
+@property (nonatomic, strong) dispatch_queue_t ioDispatchQueue;
+
+@property (nonatomic, strong) dispatch_group_t ioDispatchGroup;
+
 @end
 
 @implementation GQImageCacheManager
@@ -31,6 +35,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     self = [super init];
     if (self) {
         [self restore];
+        self.ioDispatchGroup = dispatch_group_create();
+        self.ioDispatchQueue = dispatch_queue_create("com.ISS.GQImageCacheManager", DISPATCH_QUEUE_SERIAL);
+        _fileManager = [NSFileManager defaultManager];
     }
     return self;
 }
@@ -41,7 +48,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     _memoryCache = nil;
     _memoryCache = [[NSMutableDictionary alloc] init];
     NSString *path = [self getImageFolder];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+    if (![_fileManager fileExistsAtPath:path]) {
         [self createDirectorysAtPath:path];
     }
 }
@@ -81,10 +88,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 - (BOOL)createDirectorysAtPath:(NSString *)path
 {
     @synchronized(self){
-        NSFileManager* manager = [NSFileManager defaultManager];
-        if (![manager fileExistsAtPath:path]) {
+        if (![_fileManager fileExistsAtPath:path]) {
             NSError *error = nil;
-            if (![manager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]) {
+            if (![_fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]) {
                 return NO;
             }
         }
@@ -144,7 +150,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (void)saveImage:(UIImage*)image withKey:(NSString*)key
 {
-    dispatch_group_async(dispatch_group_create(), dispatch_queue_create("com.ISS.GQImageCacheManager", DISPATCH_QUEUE_SERIAL), ^{
+    dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
         @try {
             NSData* imageData = UIImagePNGRepresentation(image);
             NSString *imageFilePath = [self getPathByFileName:key];
@@ -178,7 +184,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 - (void)clearDiskCache
 {
     NSString *imageFolderPath = [self getImageFolder];
-    [[NSFileManager defaultManager] removeItemAtPath:imageFolderPath error:nil];
+    [_fileManager removeItemAtPath:imageFolderPath error:nil];
     [self createDirectorysAtPath:imageFolderPath];
 }
 
@@ -199,9 +205,52 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
         [_memoryCache removeObjectForKey:key];
     }
     NSString *imageFilePath = [self getPathByFileName:key];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:imageFilePath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:imageFilePath error:nil];
+    if ([_fileManager fileExistsAtPath:imageFilePath]) {
+        [_fileManager removeItemAtPath:imageFilePath error:nil];
     }
+}
+
+- (NSUInteger)getSize {
+    __block NSUInteger size = 0;
+    dispatch_sync(self.ioDispatchQueue, ^{
+        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:[self getImageFolder]];
+        for (NSString *fileName in fileEnumerator) {
+            NSString *filePath = [self.getImageFolder stringByAppendingPathComponent:fileName];
+            NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+            size += [attrs fileSize];
+        }
+    });
+    return size;
+}
+
+- (NSUInteger)getDiskCount {
+    __block NSUInteger count = 0;
+    dispatch_sync(self.ioDispatchQueue, ^{
+        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:[self getImageFolder]];
+        count = [[fileEnumerator allObjects] count];
+    });
+    return count;
+}
+
+- (void)clearDisk {
+    [self clearDiskOnCompletion:nil];
+}
+
+- (void)clearDiskOnCompletion:(GGWebImageNoParamsBlock)completion
+{
+    dispatch_async(self.ioDispatchQueue, ^{
+        [_fileManager removeItemAtPath:[self getImageFolder] error:nil];
+        [_fileManager createDirectoryAtPath:[self getImageFolder]
+                withIntermediateDirectories:YES
+                                 attributes:nil
+                                      error:NULL];
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    });
 }
 
 @end

@@ -77,4 +77,6 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
 #define GQStrongify(object) __typeof__(object) object = weak##_##object
 #endif
 
+typedef void(^GGWebImageNoParamsBlock)();
+
 #endif /* GQImageViewerConst_h */

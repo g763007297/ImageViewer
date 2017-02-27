@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "GQImageViewerConst.h"
 
 @interface GQImageCacheManager : NSObject
 
@@ -63,5 +64,26 @@
  */
 - (void)removeImageFromCacheWithUrl:(NSString *)url;
 - (void)removeImageFromCacheWithKey:(NSString *)key;
+
+
+/**
+ 获取文件缓存总大小
+
+ @return 文件大小
+ */
+- (NSUInteger)getSize;
+
+/**
+ 获取文件总数
+
+ @return 文件数
+ */
+- (NSUInteger)getDiskCount;
+
+/**
+ 删除disk缓存
+ */
+- (void)clearDisk;
+- (void)clearDiskOnCompletion:(GGWebImageNoParamsBlock)completion;
 
 @end
