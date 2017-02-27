@@ -148,7 +148,7 @@
 
 	修复放大留白问题，修复新版本单例下载时复用问题
  
-(13) wait a moment
+(14) wait a moment
 
 ##Support
 
