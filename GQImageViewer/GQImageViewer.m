@@ -407,8 +407,6 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     _collectionView.needLoopScroll = _needLoopScroll;
     _collectionView.placeholderImage = _placeholderImage;
     
-    _collectionView.gqDataSource = self;
-    
     if (self.topView) {
         [self addSubview:self.topView];
     }
@@ -594,6 +592,7 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     if (!_collectionView) {
         _collectionView = [[GQImageCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect) ,CGRectGetHeight(_superViewRect)) collectionViewLayout:[UICollectionViewLayout new]];
         _collectionView.gqDelegate = self;
+        _collectionView.gqDataSource = self;
         _collectionView.pagingEnabled  = YES;
     }
     return _collectionView;

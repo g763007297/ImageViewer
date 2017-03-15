@@ -12,7 +12,6 @@
 
 #ifdef GQ_WEBP
 
-
 /**
  data转换成UIImage
  
@@ -27,7 +26,15 @@
  @param filePath
  @return
  */
-+ (UIImage*)gq_imageWithWebPFile:(NSString*)filePath;
++ (UIImage *)gq_imageWithWebPFile:(NSString*)filePath;
+
+/**
+ WebP图片转换成UIImage
+
+ @param imageName
+ @return
+ */
++ (UIImage *)gq_imageWithWebPImageName:(NSString *)imageName;
 
 #endif
 

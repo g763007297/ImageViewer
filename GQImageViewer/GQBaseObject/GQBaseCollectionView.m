@@ -73,11 +73,6 @@
     [_layouts prepareLayout];
 }
 
-- (void)setGqDataSource:(id<GQCollectionViewDataSource>)gqDataSource {
-    _gqDataSource = gqDataSource;
-    [self reloadData];
-}
-
 #pragma mark -- UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

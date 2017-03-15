@@ -24,6 +24,11 @@ static void FreeImageData(void *info, const void *data, size_t size) {
 
 #ifdef GQ_WEBP
 
++ (UIImage *)gq_imageWithWebPImageName:(NSString *)imageName {
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:imageName ofType:@"webp"];
+    return [self gq_imageWithWebPFile:filePath];
+}
+
 + (UIImage*)gq_imageWithWebPFile:(NSString*)filePath {
     if (!filePath||![filePath length] ) {
         return nil;
