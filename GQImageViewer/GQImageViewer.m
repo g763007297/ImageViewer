@@ -16,7 +16,7 @@
 
 #import "UIView+GQImageViewrCategory.h"
 
-@interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource>
+@interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
@@ -54,6 +54,12 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
         self.needLoopScroll = NO;
     }
     return self;
+}
+
+//清除通知，防止崩溃
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 @synthesize usePageControlChain = _usePageControlChain;
@@ -116,6 +122,14 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     _imageArray = nil;
     _textArray = nil;
     _dataSources = nil;
+    _bottomBgView = nil;
+    _bottomView = nil;
+    _topView = nil;
+    _collectionView = nil;
+    _textScrollView = nil;
+    _collectionView.gqDelegate = nil;
+    _collectionView.gqDataSource = nil;
+    _isVisible = NO;
 }
 
 - (void)setUsePageControl:(BOOL)usePageControl
@@ -170,12 +184,6 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 {
     _selectIndex = selectIndex;
     
-    if (selectIndex>[_imageArray count]-1){
-        _selectIndex = [_imageArray count]-1;
-    }else if (selectIndex < 0){
-        _selectIndex = 0;
-    }
-    
     if (!_isVisible) {
         return;
     }
@@ -223,78 +231,6 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     if (_longTapIndex) {
         //长按手势
         [self addGestureRecognizer:self.longTapGesture];
-    }
-}
-
-- (void)showInView:(UIView *)showView animation:(BOOL)animation
-{
-    if ([_dataSources count] == 0) {
-        return;
-    }
-    
-    if (_isVisible) {
-        [self dissMissWithAnimation:YES];
-        return;
-    }else{
-        _isVisible = YES;
-    }
-    
-    //设置superview的rect
-    _superViewRect = showView.bounds;
-    
-    //初始化子view
-    [self initSubViews];
-    
-    //更新初始化rect
-    [self updateInitialRect];
-    
-    if (animation) {
-        //设置初始值
-        self.alpha = 0;
-        self.frame = _initialRect;
-        
-        [showView addSubview:self];
-        
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             self.alpha = 1;
-                             self.frame = _superViewRect;
-                         }];
-    }else {
-        self.alpha = 1;
-        self.frame = _superViewRect;
-        [showView addSubview:self];
-    }
-}
-
-//view消失
-- (void)dissMissWithAnimation:(BOOL)animation
-{
-    GQWeakify(self);
-    dispatch_block_t completionBlock = ^(){
-        GQStrongify(self);
-        [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        [self removeFromSuperview];
-        [self resetConfigure];
-        _bottomBgView = nil;
-        _bottomView = nil;
-        _topView = nil;
-        _collectionView = nil;
-        _textScrollView = nil;
-        _collectionView.gqDelegate = nil;
-        _isVisible = NO;
-    };
-    
-    if (animation) {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             self.alpha = 0;
-                             self.frame = _initialRect;
-                         } completion:^(BOOL finished) {
-                             dispatch_async(dispatch_get_main_queue(), completionBlock);
-                         }];
-    }else {
-        completionBlock();
     }
 }
 
@@ -358,8 +294,94 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     }
 }
 
+#pragma mark -- public method
+
+- (void)showInView:(UIView *)showView animation:(BOOL)animation
+{
+    if ([_dataSources count] == 0) {
+        return;
+    }
+    
+    if (_isVisible) {
+        [self dissMissWithAnimation:YES];
+        return;
+    }else{
+        _isVisible = YES;
+    }
+    
+    //设置superview的rect
+    _superViewRect = showView.bounds;
+    
+    //初始化子view
+    [self initSubViews];
+    
+    //更新初始化rect
+    [self updateInitialRect];
+    
+    if (animation) {
+        //设置初始值
+        self.alpha = 0;
+        self.frame = _initialRect;
+        
+        [showView addSubview:self];
+        
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             self.alpha = 1;
+                             self.frame = _superViewRect;
+                         }];
+    }else {
+        self.alpha = 1;
+        self.frame = _superViewRect;
+        [showView addSubview:self];
+    }
+}
+
+//view消失
+- (void)dissMissWithAnimation:(BOOL)animation
+{
+    GQWeakify(self);
+    dispatch_block_t completionBlock = ^(){
+        GQStrongify(self);
+        [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self removeFromSuperview];
+        [self resetConfigure];
+    };
+    
+    if (animation) {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             self.alpha = 0;
+                             self.frame = _initialRect;
+                         } completion:^(BOOL finished) {
+                             dispatch_async(dispatch_get_main_queue(), completionBlock);
+                         }];
+    }else {
+        completionBlock();
+    }
+}
+
 #pragma mark -- privateMethod
 
+//屏幕旋转通知
+- (void)statusBarOrientationChange:(NSNotification *)noti
+{
+    if (_isVisible) {
+        _superViewRect = self.superview.bounds;
+        [self orientationChange];
+    }
+}
+
+//屏幕旋转调整frame
+- (void)orientationChange
+{
+    self.frame = _superViewRect;
+    _collectionView.frame = _superViewRect;
+    [self setupTextScrollView];
+    [self updateInitialRect];
+}
+
+//设置文字View
 - (void)setupTextScrollView
 {
     CGFloat height = [_textScrollView configureSource:_dataSources
@@ -381,28 +403,11 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     _bottomBgView.frame = CGRectMake(0, _superViewRect.size.height - height - bottomViewHeight, _superViewRect.size.width, height + bottomViewHeight);
 }
 
-//屏幕旋转通知
-- (void)statusBarOrientationChange:(NSNotification *)noti
-{
-    if (_isVisible) {
-        _superViewRect = self.superview.bounds;
-        [self orientationChange];
-    }
-}
-
-//屏幕旋转调整frame
-- (void)orientationChange
-{
-    self.frame = _superViewRect;
-    _collectionView.frame = _superViewRect;
-    [self setupTextScrollView];
-    [self updateInitialRect];
-}
-
 //初始化子view
 - (void)initSubViews
 {
     [self insertSubview:self.collectionView atIndex:0];
+    [_collectionView addGestureRecognizer:self.panGesture];
     
     _collectionView.needLoopScroll = _needLoopScroll;
     _collectionView.placeholderImage = _placeholderImage;
@@ -480,12 +485,6 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     return handleSouces;
 }
 
-//清除通知，防止崩溃
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-}
-
 #pragma mark -- 长按手势响应处理
 - (void)longTapAction:(UILongPressGestureRecognizer *)ges
 {
@@ -521,6 +520,21 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 }
 
 #pragma mark -- 滑动手势处理
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer isEqual:_panGesture]) {
+        UIView *view = [gestureRecognizer view];
+        CGPoint velocity = [_panGesture velocityInView:view];
+        CGFloat ratio = (fabs(velocity.x)/fabs(velocity.y));
+        //判断滑动手势消失的角度决定是否响应
+        if (ratio > 0.68) {
+            return NO;
+        }else {
+            return YES;
+        }
+    }
+    return YES;
+}
 
 - (void)panGestureAction:(UIPanGestureRecognizer *)gesture {
     float transitionY = [gesture translationInView:gesture.view].y;
@@ -608,7 +622,7 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 - (UIPanGestureRecognizer *)panGesture {
     if (!_panGesture) {
         _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureAction:)];
-        [self addGestureRecognizer:self.panGesture];
+        _panGesture.delegate = self;
     }
     return _panGesture;
 }

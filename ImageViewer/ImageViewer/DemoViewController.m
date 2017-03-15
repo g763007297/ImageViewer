@@ -120,7 +120,7 @@
                                     textViewBgColor:nil
                                           textColor:[UIColor whiteColor]
                                            textFont:[UIFont systemFontOfSize:12]
-                                      maxTextHeight:200
+                                      maxTextHeight:100
                                      textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
     
     //链式调用
