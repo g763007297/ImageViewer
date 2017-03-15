@@ -24,15 +24,23 @@ static void FreeImageData(void *info, const void *data, size_t size) {
 
 #ifdef GQ_WEBP
 
-+ (UIImage *)gq_imageWithWebPData:(NSData *)data {
-    if (!data) {
++ (UIImage*)gq_imageWithWebPFile:(NSString*)filePath {
+    if (!filePath||![filePath length] ) {
+        return nil;
+    }
+    NSData *imgData = [NSData dataWithContentsOfFile:filePath];
+    return [self gq_imageWithWebPData:imgData];
+}
+
++ (UIImage *)gq_imageWithWebPData:(NSData *)imgData {
+    if (!imgData) {
         return nil;
     }
     
     WebPData webpData;
     WebPDataInit(&webpData);
-    webpData.bytes = data.bytes;
-    webpData.size = data.length;
+    webpData.bytes = imgData.bytes;
+    webpData.size = imgData.length;
     WebPDemuxer *demuxer = WebPDemux(&webpData);
     if (!demuxer) {
         return nil;

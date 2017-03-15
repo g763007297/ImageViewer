@@ -15,8 +15,8 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     @synchronized(self) {                                                   \
         if (z##_shared_obj_name_ == nil) {                                  \
             static dispatch_once_t done;                                    \
-            dispatch_once(&done, ^{ z##_shared_obj_name_                    \
-            = [[super allocWithZone:nil] init]; });                         \
+            dispatch_once(&done, ^{                                         \
+            z##_shared_obj_name_ = [[super allocWithZone:nil] init]; });    \
         }                                                                   \
     }                                                                       \
     return z##_shared_obj_name_;                                            \

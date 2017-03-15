@@ -11,7 +11,7 @@
 @class GQImageViewrConfigure;
 @class GQImageViewerModel;
 
-@interface GQTextScrollView : UIScrollView<UIScrollViewDelegate>
+@interface GQTextScrollView : UIScrollView
 
 - (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
              withConfigure:(GQImageViewrConfigure *)configure

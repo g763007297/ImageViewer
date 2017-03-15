@@ -16,7 +16,7 @@
 
 #import "UIView+GQImageViewrCategory.h"
 
-@interface GQImageViewer()<GQCollectionViewDelegate>
+@interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource>
 {
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
@@ -202,8 +202,6 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
         return;
     }
     
-    _collectionView.dataArray = [_dataSources copy];
-    
     if (_selectIndex>[imageArray count]-1&&[_imageArray count]>0){
         _selectIndex = [imageArray count]-1;
         
@@ -216,7 +214,6 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 {
     _configure = [configure copy];
     self.backgroundColor = self.configure.imageViewBgColor?:[UIColor clearColor];
-    _collectionView.configure = _configure;
 }
 
 - (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
@@ -273,14 +270,18 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 //view消失
 - (void)dissMissWithAnimation:(BOOL)animation
 {
+    GQWeakify(self);
     dispatch_block_t completionBlock = ^(){
+        GQStrongify(self);
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
         [self resetConfigure];
         _bottomBgView = nil;
+        _bottomView = nil;
+        _topView = nil;
         _collectionView = nil;
         _textScrollView = nil;
-        _collectionView.delegate = nil;
+        _collectionView.gqDelegate = nil;
         _isVisible = NO;
     };
     
@@ -295,6 +296,20 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     }else {
         completionBlock();
     }
+}
+
+#pragma mark -- GQCollectionViewDataSource
+
+- (NSInteger)totalPagesInGQCollectionView:(GQBaseCollectionView *)collectionView {
+    return [self.dataSources count];
+}
+
+- (GQImageViewerModel *)GQCollectionView:(GQBaseCollectionView *)collectionView dataSourceInIndex:(NSInteger)index {
+    return self.dataSources[index];
+}
+
+- (GQImageViewrConfigure *)configureOfGQCollectionView:(GQBaseCollectionView *)collectionView {
+    return _configure;
 }
 
 #pragma mark -- GQCollectionViewDelegate
@@ -390,11 +405,9 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     [self insertSubview:self.collectionView atIndex:0];
     
     _collectionView.needLoopScroll = _needLoopScroll;
-    _collectionView.configure = _configure;
     _collectionView.placeholderImage = _placeholderImage;
     
-    //将所有的图片url赋给tableView显示
-    _collectionView.dataArray = [_dataSources copy];
+    _collectionView.gqDataSource = self;
     
     if (self.topView) {
         [self addSubview:self.topView];

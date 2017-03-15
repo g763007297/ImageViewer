@@ -100,7 +100,7 @@ typedef void (^GQSingleTap)();
         };
     }
     
-    [cell configureCell:self.configure model:self.dataArray[indexPath.row%[self.dataArray count]] withPlaceholderImage:self.placeholderImage];
+    [cell configureCell:[self configure] model:[self dataSourceInIndex:indexPath.row%[self numberOfPages]] withPlaceholderImage:self.placeholderImage];
     
     return cell;
 }

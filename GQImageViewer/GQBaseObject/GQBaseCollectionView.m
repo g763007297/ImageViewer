@@ -29,15 +29,16 @@
 
 @implementation GQBaseCollectionView
 {
-     GQReuseTabViewFlowLayout *layouts;
+    GQReuseTabViewFlowLayout *_layouts;
 }
+
+@synthesize selectedInexPath = _selectedInexPath;
 
 - (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout
 {
+    _layouts  = [[GQReuseTabViewFlowLayout alloc] init];
     
-    layouts  = [[GQReuseTabViewFlowLayout alloc] init];
-    
-    self = [super initWithFrame:frame collectionViewLayout:layouts];
+    self = [super initWithFrame:frame collectionViewLayout:_layouts];
     if (self) {
         [self _initViews:frame];
     }
@@ -63,25 +64,18 @@
     //设置减速的方式， UIScrollViewDecelerationRateFast 为快速减速
     self.decelerationRate = UIScrollViewDecelerationRateFast;
     
-    self.selectedInexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    _selectedInexPath = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [layouts prepareLayout];
+    [_layouts prepareLayout];
 }
 
-- (void)setDataArray:(NSArray <GQImageViewerModel *>*)dataArray
-{
-    _dataArray = [dataArray copy];
+- (void)setGqDataSource:(id<GQCollectionViewDataSource>)gqDataSource {
+    _gqDataSource = gqDataSource;
     [self reloadData];
-}
-
-- (void)setConfigure:(GQImageViewrConfigure *)configure
-{
-    _configure = [configure copy];
-    [layouts prepareLayout];
 }
 
 #pragma mark -- UICollectionViewDataSource
@@ -93,12 +87,38 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return _dataArray.count*(_needLoopScroll?maxSectionNum:1);
+   return [self numberOfPages]*(_needLoopScroll?maxSectionNum:1);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return nil;
+}
+
+#pragma mark -- GQCollectionViewDataSource Configure
+
+- (NSInteger)numberOfPages {
+    if (self.gqDataSource && [self.gqDataSource respondsToSelector:@selector(totalPagesInGQCollectionView:)]) {
+        return [self.gqDataSource totalPagesInGQCollectionView:self];
+    }else {
+        return 0;
+    }
+}
+
+- (GQImageViewerModel *)dataSourceInIndex:(NSInteger)index {
+    if (self.gqDataSource && [self.gqDataSource respondsToSelector:@selector(GQCollectionView:dataSourceInIndex:)]) {
+        return [self.gqDataSource GQCollectionView:self dataSourceInIndex:index];
+    }else {
+        return nil;
+    }
+}
+
+- (GQImageViewrConfigure *)configure {
+    if (self.gqDataSource && [self.gqDataSource respondsToSelector:@selector(configureOfGQCollectionView:)]) {
+        return [self.gqDataSource configureOfGQCollectionView:self];
+    }else {
+        return nil;
+    }
 }
 
 #pragma mark - UIScrollView delegate
@@ -131,17 +151,19 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
+    NSInteger totalPages = [self numberOfPages];
+    
     if (_needLoopScroll) {
-        if (row >= _dataArray.count) {
-            row = row%_dataArray.count;
+        if (row >= totalPages) {
+            row = row%totalPages;
         }
     }else {
-        if (row >= self.dataArray.count || row < 0) {
+        if (row >= totalPages || row < 0) {
             return;
         }
     }
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row+(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0) inSection:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row+(_needLoopScroll?totalPages*maxSectionNum/2:0) inSection:0];
     
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     
@@ -157,32 +179,32 @@
     float y = self.contentOffset.x + edge + self.frame.size.width/2;
     int row = y/self.frame.size.width;
     
+    NSInteger totalPages = [self numberOfPages];
     if (_needLoopScroll) {
         //如果超过边界则返回中间位置
         if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
-            row = (int)(_needLoopScroll?[_dataArray count]*maxSectionNum/2:0);
+            row = (int)(_needLoopScroll?totalPages*maxSectionNum/2:0);
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
             [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         }else if (self.contentOffset.x < 0){
-            row = (int)(self.dataArray.count - 1 + (_needLoopScroll?[_dataArray count]*maxSectionNum/2:0));
+            row = (int)(totalPages - 1 + (_needLoopScroll?totalPages*maxSectionNum/2:0));
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
             [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         }
     }else {
-        if (row >= _dataArray.count || row < 0) {
+        if (row >= totalPages || row < 0) {
             return;
         }
     }
     
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row%totalPages inSection:0];
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row%self.dataArray.count inSection:0];
-    
-    if (indexPath.row != self.selectedInexPath.row) {
+    if (indexPath.row != _selectedInexPath.row) {
         if (self.gqDelegate&&[self.gqDelegate respondsToSelector:@selector(GQCollectionViewCurrentSelectIndex:)]) {
-            [self.gqDelegate GQCollectionViewCurrentSelectIndex:row%self.dataArray.count];
+            [self.gqDelegate GQCollectionViewCurrentSelectIndex:row%totalPages];
         }
         //记录选中的单元格IndexPath
-        self.selectedInexPath = indexPath;
+        _selectedInexPath = indexPath;
     }
 }
 

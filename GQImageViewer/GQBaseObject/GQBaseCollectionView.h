@@ -8,6 +8,19 @@
 
 #import <UIKit/UIKit.h>
 @class GQBaseCollectionView;
+@class GQImageViewerModel;
+@class GQImageViewrConfigure;
+
+@protocol GQCollectionViewDataSource <NSObject>
+
+@required
+- (NSInteger)totalPagesInGQCollectionView:(GQBaseCollectionView *)collectionView;
+
+- (GQImageViewerModel *)GQCollectionView:(GQBaseCollectionView *)collectionView dataSourceInIndex:(NSInteger)index;
+
+- (GQImageViewrConfigure *)configureOfGQCollectionView:(GQBaseCollectionView *)collectionView;
+
+@end
 
 @protocol GQCollectionViewDelegate <NSObject>
 
@@ -24,22 +37,26 @@
 
 static NSInteger const maxSectionNum = 100;
 
-@class GQImageViewerModel;
-@class GQImageViewrConfigure;
-
 @interface GQBaseCollectionView : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource>
-
-@property (nonatomic, strong) NSArray <GQImageViewerModel *>*dataArray;
-
-@property (nonatomic, strong) GQImageViewrConfigure *configure;
 
 @property (nonatomic, strong) UIImage *placeholderImage;
 
-@property (nonatomic, assign) id<GQCollectionViewDelegate> gqDelegate;
+@property (nonatomic, weak) id<GQCollectionViewDelegate> gqDelegate;
+
+@property (nonatomic, weak) id<GQCollectionViewDataSource> gqDataSource;
 
 @property (nonatomic, assign) BOOL needLoopScroll;
 
 //当前选中的单元格IndexPath
-@property (nonatomic, copy) NSIndexPath *selectedInexPath;
+@property (nonatomic, strong, readonly) NSIndexPath *selectedInexPath;
+
+//获取当前配置
+- (GQImageViewrConfigure *)configure;
+
+//获取指定页的datasource
+- (GQImageViewerModel *)dataSourceInIndex:(NSInteger)index;
+
+//获取总页数
+- (NSInteger)numberOfPages;
 
 @end

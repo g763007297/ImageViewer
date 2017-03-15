@@ -41,17 +41,11 @@ static const CGFloat maxTextHight = 200;
         [self addSubview:self.pageControl];
         [self addSubview:self.pageLabel];
         
-        //设置最大放大倍数
-        self.maximumZoomScale = 3.0;
-        self.minimumZoomScale = 1.0;
-        
         self.scrollEnabled = YES;
         
         //隐藏滚动条
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
-        
-        self.delegate = self;
     }
     return self;
 }
