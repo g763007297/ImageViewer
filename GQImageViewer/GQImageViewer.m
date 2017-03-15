@@ -62,21 +62,6 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
-@synthesize usePageControlChain = _usePageControlChain;
-@synthesize needLoopScrollChain = _needLoopScrollChain;
-@synthesize dataSouceArrayChain =_dataSouceArrayChain;
-@synthesize selectIndexChain = _selectIndexChain;
-@synthesize configureChain = _configureChain;
-@synthesize showInViewChain = _showInViewChain;
-@synthesize launchDirectionChain = _launchDirectionChain;
-@synthesize placeholderImageChain = _placeholderImageChain;
-@synthesize achieveSelectIndexChain = _achieveSelectIndexChain;
-@synthesize singleTapChain = _singleTapChain;
-@synthesize longTapIndexChain = _longTapIndexChain;
-@synthesize needPanGestureChain = _needPanGestureChain;
-@synthesize bottomViewChain = _bottomViewChain;
-@synthesize topViewChain = _topViewChain;
-
 GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQBOOLChain);
 GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQBOOLChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
@@ -89,6 +74,9 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 GQChainObjectDefine(bottomViewChain, BottomView, UIView *, GQSubViewChain);
 GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
+
+@synthesize dataSouceArrayChain =_dataSouceArrayChain;
+@synthesize showInViewChain = _showInViewChain;
 
 - (GQShowViewChain)showInViewChain
 {

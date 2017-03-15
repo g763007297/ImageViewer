@@ -24,7 +24,7 @@ typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 
 //链式调用block
 typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
-typedef GQImageViewer * (^GQSubViewChain)(UIView *bottomView);
+typedef GQImageViewer * (^GQSubViewChain)(UIView *subView);
 typedef GQImageViewer * (^GQPlaceholderImageChain)(UIImage *placeholderImage);
 typedef GQImageViewer * (^GQDataSouceArrayChain)(NSArray *imageArray ,NSArray *textArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
@@ -33,7 +33,6 @@ typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirect
 typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock achieveIndexBlock);
 typedef GQImageViewer * (^GQLongTapIndexChain)(GQLongTapIndexBlock longTapIndexBlock);
 typedef GQImageViewer * (^GQSingleTapChain)(GQAchieveIndexBlock singleTapBlock);
-typedef GQImageViewer * (^GQPanTapGesChain) (BOOL needPanTapBlock);
 typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 
 @interface GQImageViewer : UIView
