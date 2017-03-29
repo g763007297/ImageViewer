@@ -7,7 +7,7 @@
 //
 
 #import "GQImageCacheManager.h"
-#import "GQGobalPaths.H"
+#import "GQGobalPaths.h"
 
 @interface GQImageCacheManager()
 {
