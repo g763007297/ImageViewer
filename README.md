@@ -24,6 +24,60 @@
  
 使用: pod 'GQImageViewer/WebP'
 
+本地Webp图片支持,使用以下两个方法进行获取：
+
+```objc
+#improt "UIImage+GQImageViewrCategory.h"
+
++ (UIImage *)gq_imageWithWebPFile:(NSString*)filePath;
++ (UIImage *)gq_imageWithWebPImageName:(NSString *)imageName;
+
+```
+
+如果不使用pod管理则需要在你的工程target->Build Settings->Prepeocessor Macros里添加一行:
+
+```objc
+GQ_WEBP=1
+
+```
+
+## 缓存数据
+
+详情见:GQImageCacheManager头文件
+
+```objc
+/**
+ *  清除内存中的缓存
+ */
+- (void)clearMemoryCache;
+
+/**
+ *  清除硬盘中的缓存
+ */
+- (void)clearDiskCache;
+
+/**
+ 获取文件缓存总大小
+
+ @return 文件大小
+ */
+- (NSUInteger)getSize;
+
+/**
+ 获取文件总数
+
+ @return 文件数
+ */
+- (NSUInteger)getDiskCount;
+
+/**
+ 删除disk缓存
+ */
+- (void)clearDisk;
+- (void)clearDiskOnCompletion:(GGWebImageNoParamsBlock)completion;
+
+```
+
 ## Basic usage
 
 1.将GQImageViewer文件夹加入到工程中。
@@ -36,7 +90,7 @@
 ```objc
 
     //基本调用
-        [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
+     [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
     [GQImageViewer sharedInstance].usePageControl = YES;//设置是否使用pageControl
     [GQImageViewer sharedInstance].needLoopScroll = NO;//设置是否需要循环滚动
     [GQImageViewer sharedInstance].needPanGesture = YES;//是否需要滑动消失手势
@@ -148,7 +202,14 @@
 
 	修复放大留白问题，修复新版本单例下载时复用问题
  
-(14) wait a moment
+(14) 1.0.2
+
+	1.添加获取缓存大小，清除缓存接口；
+	2.本地webp图片支持；
+	3.滑动消失手势响应区域修改为图片区域；
+	4.代码优化。
+
+(15) wait a moment
 
 ##Support
 
