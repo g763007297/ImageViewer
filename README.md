@@ -14,7 +14,7 @@
 
 ![Demo Overview](https://github.com/g763007297/ImageViewer/blob/master/Screenshot/demo.gif)
 
-##CocoaPods
+## CocoaPods
 
 1.在 Podfile 中添加 pod 'GQImageViewer'。
 2.执行 pod install 或 pod update。
@@ -211,6 +211,6 @@ GQ_WEBP=1
 
 (15) wait a moment
 
-##Support
+## Support
 
 欢迎指出bug或者需要改善的地方，欢迎提出issues，或者联系qq：763007297， 我会及时的做出回应，觉得好用的话不妨给个star吧，你的每个star是我持续维护的强大动力。
