@@ -152,7 +152,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 {
     dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
         @try {
-            NSData* imageData = UIImagePNGRepresentation(image);
+            NSData* imageData = UIImageJPEGRepresentation(image);
             NSString *imageFilePath = [self getPathByFileName:key];
             [imageData writeToFile:imageFilePath atomically:YES];
         }@catch (NSException *exception) {
