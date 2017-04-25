@@ -11,7 +11,7 @@
 
 @interface GQImageCacheManager()
 {
-    NSMutableDictionary *_memoryCache;
+    NSCache *_memoryCache;
     NSFileManager *_fileManager;
 }
 @property (nonatomic, strong) dispatch_queue_t ioDispatchQueue;
@@ -46,7 +46,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 {
     [self registerMemoryWarningNotification];
     _memoryCache = nil;
-    _memoryCache = [[NSMutableDictionary alloc] init];
+    _memoryCache = [[NSCache alloc] init];
     NSString *path = [self getImageFolder];
     if (![_fileManager fileExistsAtPath:path]) {
         [self createDirectorysAtPath:path];
@@ -108,7 +108,8 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     return [NSString stringWithFormat:@"%@/%@",[self getImageFolder],fileName];
 }
 
-- (NSString*)getKeyFromUrl:(NSString*)url{
+- (NSString*)getKeyFromUrl:(NSString*)url
+{
     return [self encodeURL:url];
 }
 
@@ -122,14 +123,14 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 {
     @synchronized (_memoryCache) {
         if (image) {
-            _memoryCache[key] = image;
+            [_memoryCache setObject:image forKey:key];
         }
     }
 }
 
 - (UIImage*)getImageFromMemoryCache:(NSString*)key
 {
-    return _memoryCache[key];
+    return [_memoryCache objectForKey:key];
 }
 
 - (BOOL)isImageInMemoryCacheWithUrl:(NSString*)url
@@ -152,7 +153,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 {
     dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
         @try {
-            NSData* imageData = UIImageJPEGRepresentation(image);
+            NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
             NSString *imageFilePath = [self getPathByFileName:key];
             [imageData writeToFile:imageFilePath atomically:YES];
         }@catch (NSException *exception) {
@@ -190,8 +191,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (void)clearMemoryCache
 {
+    [_memoryCache removeAllObjects];
     _memoryCache = nil;
-    _memoryCache = [[NSMutableDictionary alloc] init];
+    _memoryCache = [[NSCache alloc] init];
 }
 
 - (void)removeImageFromCacheWithUrl:(NSString *)url
