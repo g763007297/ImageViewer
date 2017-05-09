@@ -74,6 +74,7 @@ GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLong
 GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 GQChainObjectDefine(bottomViewChain, BottomView, UIView *, GQSubViewChain);
 GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
+GQChainObjectDefine(dissMissChain, DissMiss, GQVoidBlock, GQVoidChain);
 
 @synthesize dataSouceArrayChain =_dataSouceArrayChain;
 @synthesize showInViewChain = _showInViewChain;
@@ -331,6 +332,9 @@ GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
     GQWeakify(self);
     dispatch_block_t completionBlock = ^(){
         GQStrongify(self);
+        if (self.dissMiss) {
+            self.dissMiss();
+        }
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
         [self resetConfigure];

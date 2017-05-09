@@ -76,13 +76,13 @@
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g4/M00/0D/01/Cg-4y1ULoXCII6fEAAeQFx3fsKgAAXCmAPjugYAB5Av166.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/05/0F/ChMkJ1erCriIJ_opAAY8rSwt72wAAUU6gMmHKwABjzF444.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/00/ChMkJ1bKxCSIRtwrAA2uHQvukJIAALHCALaz_UADa41063.jpg",
-                                      @"http://game2.1332255.com:80/group1/M00/00/0A/Cj2sWVhYtFqADq-LAC-3kzb4-ZY105.gif",
-                                      @"http://game2.1332255.com:80/group1/M00/00/0A/Cj2sWVhYtGeAQV15ACz1-KrKcsE448.gif",
-                                      @"http://game2.1332255.com:80/group1/M00/00/0A/Cj2sWVhYtG6AOE4pAFfzq2lUi7E423.gif",
+                                      @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493124763521&di=3b45d25ac37eafb8fa3d46b84e5d16e8&imgtype=0&src=http%3A%2F%2Fn1.itc.cn%2Fimg8%2Fwb%2Fsmccloud%2Ffetch%2F2015%2F07%2F24%2F53798299988865092.GIF",
+                                      @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493124863639&di=919c01df73d30f3d817556962dffb49b&imgtype=0&src=http%3A%2F%2Fwww.sinaimg.cn%2Fdy%2Fslidenews%2F52_img%2F2014_18%2F42283_345383_769322.gif",
+                                      @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493124895276&di=4238543ad86a7e17cb35c83443799e7f&imgtype=0&src=http%3A%2F%2Fpic.meirishentie.com%2Fpicture%2F10042%2F100422009%2Fmedium%2F100422009.gif",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/07/0D/ChMkJlgaksOIEZcSAAYHVJbTdlwAAXcSwNDVmYABgds319.jpg",
                                       @"http://desk.fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/03/ChMkJlbKxtqIF93BABJ066MJkLcAALHrQL_qNkAEnUD253.jpg",
-                                      @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_1.jpg",
-                                      @"http://image101.360doc.com/DownloadImg/2016/11/0404/83709873_8.jpg"]];
+                                      @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493124933405&di=93b31ffb5157376866964e7fa0694d03&imgtype=0&src=http%3A%2F%2Fyun.hainei.org%2Fforum%2F201601%2F16%2F130426n1111b0z8z333b33.gif",
+                                      @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493124971062&di=1d8a65007e2756022a0b2b27183f2e22&imgtype=0&src=http%3A%2F%2Fs1.dwstatic.com%2Fgroup1%2FM00%2F48%2FFA%2F3f842c1ea411dede0212245e71ee3e71.gif"]];
     
     [textArray addObjectsFromArray:@[@"11.webp图片测试1",
                                      @"12.webp图片测试",
@@ -138,6 +138,9 @@
     })
     .longTapIndexChain(^(UIImage *image , NSInteger selectIndex){//长按手势回调
         NSLog(@"%p,%ld",image,selectIndex);
+    })
+    .dissMissChain(^(){
+        NSLog(@"dissMiss");
     })
     .launchDirectionChain(GQLaunchDirectionRight)//设置推出方向
     .showInViewChain(self.navigationController.view,YES);//显示GQImageViewer到指定view上

@@ -19,10 +19,12 @@ typedef enum {
 
 typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片的index的block
 typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
+typedef void (^GQVoidBlock)();
 
 @class GQImageViewer;
 
 //链式调用block
+typedef GQImageViewer * (^GQVoidChain)(GQVoidBlock voidBlock);
 typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
 typedef GQImageViewer * (^GQSubViewChain)(UIView *subView);
 typedef GQImageViewer * (^GQPlaceholderImageChain)(UIImage *placeholderImage);
@@ -108,6 +110,11 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  */
 @property (nonatomic, copy, readonly) GQSubViewChain topViewChain;
 
+/**
+ 视图消失的回调  type  ：GQVoidBlock
+ */
+@property (nonatomic, copy, readonly) GQVoidChain dissMissChain;
+
 #pragma mark -- 普通调用
 
 /**
@@ -185,6 +192,9 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  *  长按手势
  */
 @property (nonatomic, copy) GQLongTapIndexBlock longTapIndex;
+
+/**视图消失的block*/
+@property (nonatomic, copy) GQVoidBlock dissMiss;
 
 /**
  *  选中的图片索引

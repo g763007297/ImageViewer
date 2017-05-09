@@ -8,6 +8,7 @@
 
 #import "GQImageCacheManager.h"
 #import "GQGobalPaths.h"
+#import "NSData+GQImageViewrCategory.h"
 
 @interface GQImageCacheManager()
 {
@@ -174,7 +175,8 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
         return [self getImageFromMemoryCache:key];
     }else{
         NSString *imageFilePath = [self getPathByFileName:key];
-        UIImage* image = [UIImage imageWithContentsOfFile:imageFilePath];
+        NSData *data = [NSData dataWithContentsOfFile:imageFilePath];
+        UIImage* image = [data gqImageWithData];;
         if (image) {
             [self saveToMemory:image forKey:key];
         }
