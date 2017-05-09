@@ -78,6 +78,17 @@ GQ_WEBP=1
 
 ```
 
+## 自定义图片显示页面
+
+自定义显示页面必须继承GQImageView，设置class名称必须在设置DataSource之前，否则都是为默认的GQImageView。
+API：
+使用GQImageViewer的 
+
+```objc
+.imageViewClassNameChain(<#(nonnull NSString Class inherit GQImageView *)#>)
+
+```
+
 ## Basic usage
 
 1.将GQImageViewer文件夹加入到工程中。
@@ -209,7 +220,12 @@ GQ_WEBP=1
 	3.滑动消失手势响应区域修改为图片区域；
 	4.代码优化。
 
-(15) wait a moment
+(15) 1.0.3
+
+	1.增加视图消失回调；
+	2.增加自定义图片显示页面。
+
+(16) wait a moment
 
 ## Support
 

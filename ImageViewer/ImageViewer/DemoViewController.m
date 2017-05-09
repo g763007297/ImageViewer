@@ -142,6 +142,7 @@
     .dissMissChain(^(){
         NSLog(@"dissMiss");
     })
+    .imageViewClassNameChain(@"GQImageView")
     .launchDirectionChain(GQLaunchDirectionRight)//设置推出方向
     .showInViewChain(self.navigationController.view,YES);//显示GQImageViewer到指定view上
 }
