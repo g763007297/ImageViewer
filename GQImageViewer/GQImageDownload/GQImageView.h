@@ -9,14 +9,21 @@
 #import <UIKit/UIKit.h>
 
 typedef void(^GQImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageUrl);
+typedef void(^GQImageProgressBlock) (CGFloat progress);
 
 @interface GQImageView : UIImageView
 
 @property (nonatomic,assign) BOOL showLoadingView;
 @property (nonatomic,strong) NSURL *imageUrl;
 
-- (void)loadImage:(NSURL*)url complete:(GQImageCompletionBlock)complete;
-- (void)loadImage:(NSURL*)url placeHolder:(UIImage *)placeHolderImage complete:(GQImageCompletionBlock)complete;
+/**
+ 配置图片显示界面
+ */
+- (void)configureImageView;
+
+- (void)loadImage:(NSURL*)url progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete;
+- (void)loadImage:(NSURL*)url placeHolder:(UIImage *)placeHolderImage progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete;
+
 - (void)cancelCurrentImageRequest;     //caller must call this method in its dealloc method
 
 @end

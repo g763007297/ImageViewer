@@ -61,7 +61,7 @@ typedef void (^GQSingleTap)();
         };
     }
     photoSV.placeholderImage = _placeholderImage;
-    photoSV.data = _data.imageSource;
+    photoSV.imageModel = _data;
     photoSV.frame = self.bounds;
 }
 

@@ -13,6 +13,11 @@
 //图片信息
 @property (nonatomic, copy) id imageSource;
 
+/**
+ 自定义图片浏览界面class名称 必须继承GQImageView
+ */
+@property (nonatomic, copy) NSString *GQImageViewClassName;
+
 //文字信息
 @property (nonatomic, copy) NSString *textSource;
 

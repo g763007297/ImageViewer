@@ -26,6 +26,7 @@ typedef void (^GQVoidBlock)();
 //链式调用block
 typedef GQImageViewer * (^GQVoidChain)(GQVoidBlock voidBlock);
 typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
+typedef GQImageViewer * (^GQStringClassChain) (NSString *className);
 typedef GQImageViewer * (^GQSubViewChain)(UIView *subView);
 typedef GQImageViewer * (^GQPlaceholderImageChain)(UIImage *placeholderImage);
 typedef GQImageViewer * (^GQDataSouceArrayChain)(NSArray *imageArray ,NSArray *textArray);
@@ -115,6 +116,11 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  */
 @property (nonatomic, copy, readonly) GQVoidChain dissMissChain;
 
+/**
+  自定义图片浏览界面class名称 必须继承GQImageView  需在设置DataSource之前设置 否则没有效果
+ */
+@property (nonatomic, copy, readonly) GQStringClassChain imageViewClassNameChain;
+
 #pragma mark -- 普通调用
 
 /**
@@ -200,6 +206,11 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  *  选中的图片索引
  */
 @property (nonatomic, assign) NSInteger selectIndex;
+
+/**
+ 自定义图片浏览界面class名称 必须继承GQImageView  需在设置DataSource之前设置 否则没有效果
+ */
+@property (nonatomic, strong) NSString *imageViewClassName;
 
 /**
  *  推出方向  默认GQLaunchDirectionBottom

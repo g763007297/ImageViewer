@@ -8,13 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class GQImageView;
+@class GQImageViewerModel;
 
-@interface GQImageScrollView : UIScrollView<UIScrollViewDelegate>{
-    GQImageView *_imageView;
-}
+@interface GQImageScrollView : UIScrollView<UIScrollViewDelegate>
 
-@property (nonatomic, strong) id data;
+@property (nonatomic, strong) GQImageViewerModel *imageModel;
 
 @property (nonatomic, strong) UIImage *placeholderImage;
 

@@ -16,6 +16,8 @@
 
 #import "UIView+GQImageViewrCategory.h"
 
+#import "GQImageView.h"
+
 @interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
@@ -75,6 +77,7 @@ GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
 GQChainObjectDefine(bottomViewChain, BottomView, UIView *, GQSubViewChain);
 GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 GQChainObjectDefine(dissMissChain, DissMiss, GQVoidBlock, GQVoidChain);
+GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQStringClassChain);
 
 @synthesize dataSouceArrayChain =_dataSouceArrayChain;
 @synthesize showInViewChain = _showInViewChain;
@@ -471,6 +474,13 @@ GQChainObjectDefine(dissMissChain, DissMiss, GQVoidBlock, GQVoidChain);
             model.textSource = textArray[i];
         }
         model.imageSource = imageObject;
+        
+        if ([NSClassFromString(_imageViewClassName) isSubclassOfClass:[GQImageView class]]  ) {
+            model.GQImageViewClassName = _imageViewClassName;
+        }else {
+            model.GQImageViewClassName = NSStringFromClass([GQImageView class]);
+        }
+        
         [handleSouces addObject:model];
     }
     

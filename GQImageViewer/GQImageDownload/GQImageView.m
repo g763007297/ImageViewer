@@ -13,6 +13,7 @@
 @interface GQImageView()
 
 @property (nonatomic, copy) GQImageCompletionBlock complete;
+@property (nonatomic, copy) GQImageProgressBlock progress;
 @property (nonatomic, strong) id<GQImageViwerOperationDelegate> downloadOperation;
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicator;
@@ -29,6 +30,7 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    [self configureImageView];
     self.showLoadingView = YES;
 }
 
@@ -36,9 +38,14 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        [self configureImageView];
         self.showLoadingView = YES;
     }
     return self;
+}
+
+- (void)configureImageView {
+    
 }
 
 - (void)cancelCurrentImageRequest
@@ -48,17 +55,18 @@
     [self hideLoading];
 }
 
-- (void)loadImage:(NSURL*)url complete:(GQImageCompletionBlock)complete
+- (void)loadImage:(NSURL*)url progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete
 {
-    [self loadImage:url placeHolder:nil complete:complete];
+    [self loadImage:url placeHolder:nil progress:progress complete:complete];
 }
 
-- (void)loadImage:(NSURL*)url placeHolder:(UIImage *)placeHolderImage complete:(GQImageCompletionBlock)complete
+- (void)loadImage:(NSURL*)url placeHolder:(UIImage *)placeHolderImage progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete
 {
     if(nil == url || [@"" isEqualToString:url.absoluteString] ) {
         return;
     }
     self.complete = [complete copy];
+    self.progress = [progress copy];
     self.imageUrl = url;
     [self cancelCurrentImageRequest];
     
@@ -71,7 +79,10 @@
     _downloadOperation = [[GQImageViewerOperationManager sharedManager]
                  loadWithURL:_imageUrl
                  progress:^(CGFloat progress) {
-                     
+                     GQStrongify(self);
+                     if (self.progress) {
+                         self.progress(progress);
+                     }
                  }complete:^(NSURL *url, UIImage *image, NSError *error) {
                      GQStrongify(self);
                      [self hideLoading];

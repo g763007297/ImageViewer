@@ -9,6 +9,7 @@
 #import "GQImageScrollView.h"
 #import "GQImageViewer.h"
 #import "GQImageView.h"
+#import "GQImageViewerModel.h"
 
 #import "GQImageCacheManager.h"
 
@@ -16,7 +17,11 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
-@interface GQImageScrollView()
+@interface GQImageScrollView(){
+    BOOL            _isAddSubView;
+}
+
+@property (nonatomic, strong) GQImageView *imageView;
 
 @end
 
@@ -76,8 +81,14 @@
     _singleTap = [singleTap copy];
 }
 
-- (void)setData:(id)data
+- (void)setImageModel:(GQImageViewerModel *)imageModel
 {
+    _imageModel = imageModel;
+    if (!_isAddSubView) {
+        [self addSubview:self.imageView];
+        _isAddSubView = YES;
+    }
+    id data = imageModel.imageSource;
     if ([data isKindOfClass:[UIImage class]])
     {
         _imageView.image = data;
@@ -87,9 +98,10 @@
         if ([data isKindOfClass:[NSString class]]) {
             imageUrl = [NSURL URLWithString:data];
         }
-        [_imageView cancelCurrentImageRequest];
         GQWeakify(self);
-        [_imageView loadImage:imageUrl placeHolder:_placeholderImage complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
+        [_imageView loadImage:imageUrl placeHolder:_placeholderImage progress:^(CGFloat progress) {
+            
+        } complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
             GQStrongify(self);
             [self layoutSubviews];
         }];
@@ -155,6 +167,15 @@
     [[GQImageCacheManager sharedManager] clearMemoryCache];
     [_imageView cancelCurrentImageRequest];
     _imageView = nil;
+}
+
+- (GQImageView *)imageView {
+    if (!_imageView) {
+        _imageView = [[NSClassFromString(_imageModel.GQImageViewClassName) alloc] initWithFrame:self.bounds];
+        //让图片等比例适应图片视图的尺寸
+        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+    }
+    return _imageView;
 }
 
 @end
