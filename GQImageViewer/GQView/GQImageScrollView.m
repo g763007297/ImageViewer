@@ -69,10 +69,11 @@
     [super layoutSubviews];
     if (self.zoomScale == 1) {
         if (_imageView.image) {
-            CGRect rect = [_imageView.image gq_imageSizeCompareWithSize:self.bounds.size];
+            CGRect rect = [self imageViewCompareSize];
             _imageView.frame = rect;
+            self.contentSize = rect.size;
         }else
-        _imageView.frame = self.bounds;
+            _imageView.frame = self.bounds;
     }
 }
 
@@ -126,9 +127,9 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view atScale:(CGFloat)scale
 {
     if (scale == 1) {
-        CGRect rect = [_imageView.image gq_imageSizeCompareWithSize:self.bounds.size];
+        
         [UIView animateWithDuration:0.3 animations:^{
-            _imageView.frame = rect;
+            _imageView.frame = [self imageViewCompareSize];
         }];
     }else {
         CGFloat gapHeight = (self.frame.size.height - view.frame.size.height);
@@ -137,6 +138,21 @@
             _imageView.frame = CGRectMake((gapWidth > 0 ? gapWidth : 0) / 2, (gapHeight > 0 ? gapHeight : 0) / 2, view.frame.size.width, view.frame.size.height);
         }];
     }
+}
+
+- (CGRect)imageViewCompareSize {
+    CGRect rect = [_imageView.image gq_imageSizeHeightCompareWithSize:self.bounds.size];
+    
+    switch (_imageModel.scaleType) {
+        case GGImageViewerScaleTypeEqualWidth:
+        {
+            rect = [_imageView.image gq_imageSizeWidthCompareWithSize:self.bounds.size];
+            break;
+        }
+        default:
+            break;
+    }
+    return rect;
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap
