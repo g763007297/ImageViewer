@@ -89,6 +89,9 @@ API：
 
 ```
 
+还可以设置图片的等比例缩放样式：
+
+
 ## Basic usage
 
 1.将GQImageViewer文件夹加入到工程中。
@@ -134,12 +137,17 @@ API：
 
 ```objc
 
-[GQImageViewrConfigure initWithImageViewBgColor:<#(UIColor *)#>
+[GQImageViewrConfigure initWithImageViewBgColor:<#(UIColor *)#>
                                     textViewBgColor:<#(UIColor *)#>
                                           textColor:<#(UIColor *)#>
                                            textFont:<#(UIFont *)#>
                                       maxTextHeight:<#(CGFloat)#>
-                                     textEdgeInsets:<#(UIEdgeInsets)#>];
+                                     textEdgeInsets:<#(UIEdgeInsets)#>
+                                          scaleType:<#(GQImageViewerScaleType)#>];
+
+//如果没有使用到文字显示就使用这个方法初始化                              
+[GQImageViewrConfigure initWithImageViewBgColor:<#(UIColor *)#>
+                                          scaleType:<#(GQImageViewerScaleType)#>];                                  
 
 ```
 

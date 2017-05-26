@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GQImageViewrConfigure.h"
 
 @class GQImageViewerModel;
 
@@ -15,6 +16,8 @@
 @property (nonatomic, strong) GQImageViewerModel *imageModel;
 
 @property (nonatomic, strong) UIImage *placeholderImage;
+
+@property (nonatomic, assign) GQImageViewerScaleType scaleType;
 
 @property (nonatomic, copy) void(^singleTap)();
 

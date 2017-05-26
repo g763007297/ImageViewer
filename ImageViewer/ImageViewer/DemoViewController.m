@@ -121,7 +121,8 @@
                                           textColor:[UIColor whiteColor]
                                            textFont:[UIFont systemFontOfSize:12]
                                       maxTextHeight:100
-                                     textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+                                     textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                          scaleType:GQImageViewerScaleTypeEqualWidth];
     
     //链式调用
     [GQImageViewer sharedInstance]

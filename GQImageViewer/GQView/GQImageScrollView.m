@@ -141,12 +141,17 @@
 }
 
 - (CGRect)imageViewCompareSize {
-    CGRect rect = [_imageView.image gq_imageSizeHeightCompareWithSize:self.bounds.size];
+    CGRect rect = [_imageView.image gq_imageSizeFullyDisplayCompareWithSize:self.bounds.size];
     
-    switch (_imageModel.scaleType) {
-        case GGImageViewerScaleTypeEqualWidth:
+    switch (_scaleType) {
+        case GQImageViewerScaleTypeEqualWidth:
         {
             rect = [_imageView.image gq_imageSizeWidthCompareWithSize:self.bounds.size];
+            break;
+        }
+        case GQImageViewerScaleTypeEqualHeight:
+        {
+            rect = [_imageView.image gq_imageSizeHeightCompareWithSize:self.bounds.size];
             break;
         }
         default:

@@ -60,6 +60,7 @@ typedef void (^GQSingleTap)();
             weak_self.sigleTap();
         };
     }
+    photoSV.scaleType = _configure.scaleType;
     photoSV.placeholderImage = _placeholderImage;
     photoSV.imageModel = _data;
     photoSV.frame = self.bounds;

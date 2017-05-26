@@ -103,7 +103,8 @@ static const CGFloat maxTextHight = 200;
     
     self.backgroundColor = configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
     
-    CGFloat height = [text textSizeWithFont:textFont withcSize:CGSizeMake(width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
+    CGFloat height = [text textSizeWithFont:textFont
+                                  withcSize:CGSizeMake(width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
     CGFloat scolleViewHeight = height + _textEdgeInsets.top + _textEdgeInsets.bottom;
     if (scolleViewHeight >_maxHeight) {
         scolleViewHeight = _maxHeight;

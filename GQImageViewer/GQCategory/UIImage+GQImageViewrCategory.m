@@ -172,7 +172,7 @@ static void FreeImageData(void *info, const void *data, size_t size) {
 
 #endif
 
-- (CGRect)gq_imageSizeHeightCompareWithSize:(CGSize)size {
+- (CGRect)gq_imageSizeWidthCompareWithSize:(CGSize)size {
     CGSize originSize = size;
     CGSize imageSize = self.size;
     
@@ -183,11 +183,32 @@ static void FreeImageData(void *info, const void *data, size_t size) {
     CGFloat height = imageSize.height / scale;
     CGFloat width = imageSize.width / scale;
     
-    CGRect confirmRect = CGRectMake((size.width - width) / 2, (size.height > height)?(size.height - height) / 2:0, width, height);
+    CGRect confirmRect = CGRectMake((size.width - width) / 2,
+                                    (size.height > height)?(size.height - height) / 2:0,
+                                    width,
+                                    height);
     return confirmRect;
 }
 
-- (CGRect)gq_imageSizeWidthCompareWithSize:(CGSize)size {
+- (CGRect)gq_imageSizeHeightCompareWithSize:(CGSize)size {
+    CGSize originSize = size;
+    CGSize imageSize = self.size;
+    
+    CGFloat HScale = imageSize.height / originSize.height;
+    
+    CGFloat scale = HScale;
+    
+    CGFloat height = imageSize.height / scale;
+    CGFloat width = imageSize.width / scale;
+    
+    CGRect confirmRect = CGRectMake( ((size.width > width)?(size.width - width) / 2:0),
+                                    (size.height - height)/2,
+                                    width,
+                                    height);
+    return confirmRect;
+}
+
+- (CGRect)gq_imageSizeFullyDisplayCompareWithSize:(CGSize)size {
     CGSize originSize = size;
     CGSize imageSize = self.size;
     
@@ -199,7 +220,10 @@ static void FreeImageData(void *info, const void *data, size_t size) {
     CGFloat height = imageSize.height / scale;
     CGFloat width = imageSize.width / scale;
     
-    CGRect confirmRect = CGRectMake((size.width - width) / 2, (size.height - height), width, height);
+    CGRect confirmRect = CGRectMake((size.width - width) / 2,
+                                    (size.height - height)/2,
+                                    width,
+                                    height);
     return confirmRect;
 }
 
