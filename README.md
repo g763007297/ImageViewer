@@ -91,6 +91,15 @@ API：
 
 还可以设置图片的等比例缩放样式：
 
+```objc
+typedef enum : NSUInteger {
+    GQImageViewerScaleTypeFullyDisplay,//让图片完全显示 (高度宽度等比例缩放到图片能完全显示)
+    GQImageViewerScaleTypeEqualWidth, //等宽高度自适应（宽度为屏幕宽度  高度自适应）
+    GQImageViewerScaleTypeEqualHeight, //等高宽度自适应（高度为屏幕高度，宽度自适应） //不推荐使用，效果不好
+} GQImageViewerScaleType;
+
+
+```
 
 ## Basic usage
 
@@ -233,7 +242,10 @@ API：
 	1.增加视图消失回调；
 	2.增加自定义图片显示页面。
 
-(16) wait a moment
+(16) 1.0.4
+	1.增加三种图片适配显示样式。
+
+(17) wait a moment
 
 ## Support
 
