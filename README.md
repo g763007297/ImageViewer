@@ -243,6 +243,7 @@ typedef enum : NSUInteger {
 	2.增加自定义图片显示页面。
 
 (16) 1.0.4
+
 	1.增加三种图片适配显示样式。
 
 (17) wait a moment
