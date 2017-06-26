@@ -49,9 +49,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     _memoryCache = nil;
     _memoryCache = [[NSCache alloc] init];
     NSString *path = [self getImageFolder];
-    if (![_fileManager fileExistsAtPath:path]) {
-        [self createDirectorysAtPath:path];
-    }
+    [self createDirectorysAtPath:path];
 }
 
 #pragma mark - private methods
@@ -101,7 +99,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (NSString *)getImageFolder
 {
-    return GQPathForCacheResource(@"images");
+    return GQPathForCacheResource(@"imageViewerCache");
 }
 
 - (NSString *)getPathByFileName:(NSString *)fileName
@@ -152,11 +150,17 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (void)saveImage:(UIImage*)image withKey:(NSString*)key
 {
+    [self createDirectorysAtPath:[self getImageFolder]];
     dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
         @try {
             NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
             NSString *imageFilePath = [self getPathByFileName:key];
-            [imageData writeToFile:imageFilePath atomically:YES];
+            if (![_fileManager fileExistsAtPath:imageFilePath]) {
+                NSURL *fileURL = [NSURL fileURLWithPath:imageFilePath];
+                [_fileManager createFileAtPath:imageFilePath contents:imageData attributes:nil];
+                NSError *error = nil;
+                [fileURL setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:&error];
+            }
         }@catch (NSException *exception) {
             
         }
@@ -244,11 +248,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 {
     dispatch_async(self.ioDispatchQueue, ^{
         [_fileManager removeItemAtPath:[self getImageFolder] error:nil];
-        [_fileManager createDirectoryAtPath:[self getImageFolder]
-                withIntermediateDirectories:YES
-                                 attributes:nil
-                                      error:NULL];
-        
+        [self createDirectorysAtPath:[self getImageFolder]];
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion();
