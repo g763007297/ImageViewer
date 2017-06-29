@@ -15,7 +15,7 @@ typedef enum {
     GQLaunchDirectionTop,       //从上往下推出
     GQLaunchDirectionLeft,      //从左往右推出
     GQLaunchDirectionRight,     //从右往左推出
-    GQLaunchDirectionCenter      //从图片点击位置放大
+//    GQLaunchDirectionCenter      //从图片点击位置放大
 }GQLaunchDirection;
 
 typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片的index的block
