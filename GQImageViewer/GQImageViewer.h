@@ -8,32 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "GQImageViewrConfigure.h"
+#import "UIView+GQImageViewrCategory.h"
 #import "GQImageViewerConst.h"
-
-typedef enum {
-    GQLaunchDirectionBottom = 1,//从下往上推出
-    GQLaunchDirectionTop,       //从上往下推出
-    GQLaunchDirectionLeft,      //从左往右推出
-    GQLaunchDirectionRight,     //从右往左推出
-//    GQLaunchDirectionCenter      //从图片点击位置放大
-}GQLaunchDirection;
 
 typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片的index的block
 typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
+typedef void (^GQSubViewConfigureBlock)(UIView *configureView);
+typedef void (^GQConfigureBlock)(GQImageViewrConfigure *configure);
 typedef void (^GQVoidBlock)();
 
 @class GQImageViewer;
 
 //链式调用block
 typedef GQImageViewer * (^GQVoidChain)(GQVoidBlock voidBlock);
-typedef GQImageViewer * (^GQBOOLChain)(BOOL pageControl);
-typedef GQImageViewer * (^GQStringClassChain) (NSString *className);
-typedef GQImageViewer * (^GQSubViewChain)(UIView *subView);
-typedef GQImageViewer * (^GQPlaceholderImageChain)(UIImage *placeholderImage);
 typedef GQImageViewer * (^GQDataSouceArrayChain)(NSArray *imageArray ,NSArray *textArray);
 typedef GQImageViewer * (^GQSelectIndexChain)(NSInteger selectIndex);
-typedef GQImageViewer * (^GQConfigureChain) (GQImageViewrConfigure *configure);
-typedef GQImageViewer * (^GQLaunchDirectionChain)(GQLaunchDirection launchDirection);
+typedef GQImageViewer * (^GQConfigureChain) (GQConfigureBlock configure);
+typedef GQImageViewer * (^GQSubViewConfigureChain) (GQSubViewConfigureBlock configureBlock);;
 typedef GQImageViewer * (^GQAchieveIndexChain)(GQAchieveIndexBlock achieveIndexBlock);
 typedef GQImageViewer * (^GQLongTapIndexChain)(GQLongTapIndexBlock longTapIndexBlock);
 typedef GQImageViewer * (^GQSingleTapChain)(GQAchieveIndexBlock singleTapBlock);
@@ -42,15 +33,6 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 @interface GQImageViewer : UIView
 
 #pragma mark -- 链式调用
-/**
- *  显示PageControl传yes   type : BOOL
- */
-@property (nonatomic, copy, readonly) GQBOOLChain usePageControlChain;
-
-/**
- 是否需要循环滚动   Type: BOOL
- */
-@property (nonatomic, copy, readonly) GQBOOLChain needLoopScrollChain;
 
 /**
  *  数据源    type : NSArray *
@@ -68,19 +50,9 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 @property (nonatomic, copy, readonly) GQConfigureChain configureChain;
 
 /**
- *  推出方向  type : GQLaunchDirection
- */
-@property (nonatomic, copy, readonly) GQLaunchDirectionChain launchDirectionChain;
-
-/**
  *  显示GQImageViewer到指定view上   type: UIView *
  */
 @property (nonatomic, copy, readonly) GQShowViewChain showInViewChain;
-
-/**
- 缺省图   type : UIImage *
- */
-@property (nonatomic, copy, readonly) GQPlaceholderImageChain placeholderImageChain;
 
 /**
  *  获取当前选中的图片index  type: void (^GQAchieveIndexBlock)(NSInteger selectIndex)
@@ -93,34 +65,24 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 @property (nonatomic, copy, readonly) GQSingleTapChain singleTapChain;
 
 /**
+ 配置头部自定义view type : void (^GQSubViewConfigureBlock)(UIView *configureView)
+ */
+@property (nonatomic, copy, readonly) GQSubViewConfigureChain topViewConfigureChain;
+
+/**
+ 配置底部自定义view type : void (^GQSubViewConfigureBlock)(UIView *configureView)
+ */
+@property (nonatomic, copy, readonly) GQSubViewConfigureChain bottomViewConfigureChain;
+
+/**
  *  长按手势  type : void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
  */
 @property (nonatomic, copy, readonly) GQLongTapIndexChain longTapIndexChain;
 
 /**
- 滑动手势  type : BOOL
- */
-@property (nonatomic, copy, readonly) GQBOOLChain needPanGestureChain;
-
-/**
- 底部自定义View type : UIView
- */
-@property (nonatomic, copy, readonly) GQSubViewChain bottomViewChain;
-
-/**
- 顶部自定义View type : UIView
- */
-@property (nonatomic, copy, readonly) GQSubViewChain topViewChain;
-
-/**
  视图消失的回调  type  ：GQVoidBlock
  */
 @property (nonatomic, copy, readonly) GQVoidChain dissMissChain;
-
-/**
-  自定义图片浏览界面class名称 必须继承GQImageView  需在设置DataSource之前设置 否则没有效果
- */
-@property (nonatomic, copy, readonly) GQStringClassChain imageViewClassNameChain;
 
 #pragma mark -- 普通调用
 
@@ -139,41 +101,10 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  */
 - (void)setImageArray:(NSArray *)imageArray textArray:(NSArray *)textArray;
 
-/*
- *  显示PageControl传yes   默认 : yes
- *  显示label就传no
- */
-@property (nonatomic, assign) BOOL usePageControl;
-
-/**
- 是否需要循环滚动
- */
-@property (nonatomic, assign) BOOL needLoopScroll;
-
-/**
- 是否需要滑动消失手势
- */
-@property (nonatomic, assign) BOOL needPanGesture;
-
 /**
  设置配置
  */
-@property (nonatomic, strong) GQImageViewrConfigure *configure;
-
-/**
- *  如果有网络图片则设置默认图片
- */
-@property (nonatomic, copy) UIImage *placeholderImage;
-
-/**
- 底部UIView   默认为nil
- */
-@property (nonatomic, copy) UIView *bottomView;
-
-/**
- 底部UIView   默认为nil
- */
-@property (nonatomic, copy) UIView *topView;
+@property (nonatomic, copy) GQConfigureBlock configure;
 
 /**
  *  图片数组
@@ -189,6 +120,16 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  *  获取当前选中的图片index
  */
 @property (nonatomic, copy) GQAchieveIndexBlock achieveSelectIndex;
+
+/**
+ * 配置顶部View
+ */
+@property (nonatomic, copy) GQSubViewConfigureBlock topViewConfigure;
+
+/**
+ 配置底部View
+ */
+@property (nonatomic, copy) GQSubViewConfigureBlock bottomViewConfigure;
 
 /**
  单击手势
@@ -207,16 +148,6 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  *  选中的图片索引
  */
 @property (nonatomic, assign) NSInteger selectIndex;
-
-/**
- 自定义图片浏览界面class名称 必须继承GQImageView  需在设置DataSource之前设置 否则没有效果
- */
-@property (nonatomic, strong) NSString *imageViewClassName;
-
-/**
- *  推出方向  默认GQLaunchDirectionBottom
- */
-@property (nonatomic, assign) GQLaunchDirection laucnDirection;
 
 /**
  *  显示GQImageViewer到指定view上

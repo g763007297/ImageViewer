@@ -64,9 +64,9 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
 
 #define dispatch_main_async_safe(block)\
     if ([NSThread isMainThread]) {\
-    block();\
+        block();\
     } else {\
-    dispatch_async(dispatch_get_main_queue(), block);\
+        dispatch_async(dispatch_get_main_queue(), block);\
 }
 
 //强弱引用

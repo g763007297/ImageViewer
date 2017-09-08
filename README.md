@@ -81,13 +81,10 @@ GQ_WEBP=1
 ## 自定义图片显示页面
 
 自定义显示页面必须继承GQImageView，设置class名称必须在设置DataSource之前，否则都是为默认的GQImageView。
+
 API：
-使用GQImageViewer的 
 
-```objc
-.imageViewClassNameChain(<#(nonnull NSString Class inherit GQImageView *)#>)
-
-```
+使用GQImageViewer的GQImageViewrConfigure类配置imageViewClassName。
 
 还可以设置图片的等比例缩放样式：
 
@@ -112,51 +109,93 @@ typedef enum : NSUInteger {
 
 ```objc
 
-    //基本调用
-     [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
-    [GQImageViewer sharedInstance].usePageControl = YES;//设置是否使用pageControl
-    [GQImageViewer sharedInstance].needLoopScroll = NO;//设置是否需要循环滚动
-    [GQImageViewer sharedInstance].needPanGesture = YES;//是否需要滑动消失手势
+        //基本调用
+    [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
     [GQImageViewer sharedInstance].selectIndex = 5;//设置选中的索引
-    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){
+    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){//获取当前选中的图片索引
         NSLog(@"%ld",selectIndex);
-    };//获取当前选中的图片索引
-    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;//设置推出方向
-    [[GQImageViewer sharedInstance] showInView:self.navigationController.view];//显示GQImageViewer到指定view上
+    };
+    [GQImageViewer sharedInstance].configure = ^(GQImageViewrConfigure *configure) {//设置配置信息
+        [configure configureWithImageViewBgColor:[UIColor blackColor]
+                                 textViewBgColor:nil
+                                       textColor:[UIColor whiteColor]
+                                        textFont:[UIFont systemFontOfSize:12]
+                                   maxTextHeight:100
+                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+    };
+    [GQImageViewer sharedInstance].topViewConfigureChain(^(UIView *configureView) {//配置顶部view
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor redColor];
+    });
+    [GQImageViewer sharedInstance].bottomViewConfigureChain(^(UIView *configureView) {//配置底部view
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor yellowColor];
+    });
+    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
 
 	 //链式调用
+    GQImageViewrConfigure *configure =
+    [GQImageViewrConfigure initWithImageViewBgColor:[UIColor blackColor]
+                                    textViewBgColor:nil
+                                          textColor:[UIColor whiteColor]
+                                           textFont:[UIFont systemFontOfSize:12]
+                                      maxTextHeight:100
+                                     textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                          scaleType:GQImageViewerScaleTypeEqualWidth];
+    //链式调用
     [GQImageViewer sharedInstance]
-    .dataSouceArrayChain(imageArray,textArray)
-    .usePageControlChain(YES)
-    .needLoopScrollChain(NO)
-    .needPanGestureChain(YES)
-    .selectIndexChain(5)
-    .achieveSelectIndexChain(^(NSInteger selectIndex){
+    .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
+    .selectIndexChain(5)//设置选中的索引
+	 .configureChain(^(GQImageViewrConfigure *configure) {
+        [configure configureWithImageViewBgColor:[UIColor blackColor]
+                                 textViewBgColor:nil
+                                       textColor:[UIColor whiteColor]
+                                        textFont:[UIFont systemFontOfSize:12]
+                                   maxTextHeight:100
+                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+    })
+    .topViewConfigureChain(^(UIView *configureView) {
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor redColor];
+    })
+    .bottomViewConfigureChain(^(UIView *configureView) {
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor yellowColor];
+    })
+    .achieveSelectIndexChain(^(NSInteger selectIndex){//获取当前选中的图片索引
         NSLog(@"%ld",selectIndex);
     })
-    .longTapIndexChain(^(UIImage *image , NSInteger selectIndex){
+    .longTapIndexChain(^(UIImage *image , NSInteger selectIndex){//长按手势回调
         NSLog(@"%p,%ld",image,selectIndex);
     })
-    .launchDirectionChain(GQLaunchDirectionRight)
-    .showInViewChain(self.navigationController.view,YES);
+    .dissMissChain(^(){
+        NSLog(@"dissMiss");
+    })
+    .showInViewChain(self.view.window,YES);//显示GQImageViewer到指定view上
   
 ```
 
-4.配置信息，通过GQImageViewrConfigure类进行配置，现支持整体背景颜色、文字背景颜色、文字颜色、字体大小、文字最高显示多高、文本相对于父视图的缩进：
+4.配置信息，通过GQImageViewrConfigure类进行配置，现支持整体背景颜色、文字背景颜色、文字颜色、字体大小、文字最高显示多高、文本相对于父视图的缩进、是否需要循环滚动、显示PageControl或label、是否需要滑动消失手势、默认图片、自定义图片浏览界面class名称、推出方向：
 
 ```objc
 
-[GQImageViewrConfigure initWithImageViewBgColor:<#(UIColor *)#>
-                                    textViewBgColor:<#(UIColor *)#>
-                                          textColor:<#(UIColor *)#>
-                                           textFont:<#(UIFont *)#>
-                                      maxTextHeight:<#(CGFloat)#>
-                                     textEdgeInsets:<#(UIEdgeInsets)#>
-                                          scaleType:<#(GQImageViewerScaleType)#>];
+.configureChain(^(GQImageViewrConfigure *configure) {
+        [configure configureWithImageViewBgColor:[UIColor blackColor]
+                                 textViewBgColor:nil
+                                       textColor:[UIColor whiteColor]
+                                        textFont:[UIFont systemFontOfSize:12]
+                                   maxTextHeight:100
+                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+})
 
-//如果没有使用到文字显示就使用这个方法初始化                              
-[GQImageViewrConfigure initWithImageViewBgColor:<#(UIColor *)#>
+//如果没有使用到文字显示就使用这个方法初始化
+.configureChain(^(GQImageViewrConfigure *configure) {                           
+	[configure configureWithImageViewBgColor:<#(UIColor *)#>
                                           scaleType:<#(GQImageViewerScaleType)#>];                                  
+})
 
 ```
 
@@ -180,7 +219,7 @@ typedef enum : NSUInteger {
 	
 (1) 0.0.1
 
-	github添加代码
+	GitHub添加代码
 	
 (2) 0.0.2
 
@@ -200,7 +239,7 @@ typedef enum : NSUInteger {
 
 (6) 0.0.6
 
-    去除依赖库，换成自己的图片下载库，添加长按手势和回调。
+   去除依赖库，换成自己的图片下载库，添加长按手势和回调。
 
 (7) 0.0.7
 
@@ -208,19 +247,19 @@ typedef enum : NSUInteger {
 
 (8) 0.0.8
 
-    修复头文件冲突的bug
+   修复头文件冲突的bug
 
 (9) 0.0.9
 
-	 添加头部和底部自定义View
+	添加头部和底部自定义View
 
 (10) 0.1.0
  
-    添加图片加载LoadingView
+   添加图片加载LoadingView
  
 (11) 0.1.1
 
-	 修复无网络状态下缺省图不显示的bug,topView滑动手势兼容
+	修复无网络状态下缺省图不显示的bug,topView滑动手势兼容
  
 (12) 1.0.0
 
@@ -244,10 +283,18 @@ typedef enum : NSUInteger {
 
 (16) 1.0.4
 
-	1.增加三种图片适配显示样式。
+	增加三种图片适配显示样式。
 
-(17) wait a moment
+(17) 1.0.5
+	
+	1.将GQImageViewer配置全部归入GQImageViewrConfigure类中，避免过多的api调用麻烦。
+	2.增加顶部和底部view的configure方法，使配置方法更加集中。
+	3.配置属性不需要进行初始化了，只需要调用一个方法就可以了。
 
+(18) 1.0.6
+
+	wait a moment
+	
 ## Support
 
 欢迎指出bug或者需要改善的地方，欢迎提出issues，或者联系qq：763007297， 我会及时的做出回应，觉得好用的话不妨给个star吧，你的每个star是我持续维护的强大动力。

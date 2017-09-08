@@ -61,43 +61,52 @@
 }
 
 - (void)showImageViewer:(id)sender{
-    //基本调用
+//    //基本调用
 //    [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
-//    [GQImageViewer sharedInstance].usePageControl = YES;//设置是否使用pageControl
-//    [GQImageViewer sharedInstance].needLoopScroll = NO;//设置是否需要循环滚动
-//    [GQImageViewer sharedInstance].needPanGesture = YES;//是否需要滑动消失手势
 //    [GQImageViewer sharedInstance].selectIndex = 5;//设置选中的索引
 //    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){//获取当前选中的图片索引
 //        NSLog(@"%ld",selectIndex);
 //    };
-//    [GQImageViewer sharedInstance].laucnDirection = GQLaunchDirectionRight;//设置推出方向
+//    [GQImageViewer sharedInstance].configure = ^(GQImageViewrConfigure *configure) {//设置配置信息
+//        [configure configureWithImageViewBgColor:[UIColor blackColor]
+//                                 textViewBgColor:nil
+//                                       textColor:[UIColor whiteColor]
+//                                        textFont:[UIFont systemFontOfSize:12]
+//                                   maxTextHeight:100
+//                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+//                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+//    };
+//    [GQImageViewer sharedInstance].topViewConfigureChain(^(UIView *configureView) {//配置顶部view
+//        configureView.height = 50;
+//        configureView.backgroundColor = [UIColor redColor];
+//    });
+//    [GQImageViewer sharedInstance].bottomViewConfigureChain(^(UIView *configureView) {//配置底部view
+//        configureView.height = 50;
+//        configureView.backgroundColor = [UIColor yellowColor];
+//    });
 //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
-    
-    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    topView.backgroundColor = [UIColor redColor];
-    
-    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
-    bottomView.backgroundColor = [UIColor yellowColor];
-    
-    GQImageViewrConfigure *configure =
-    [GQImageViewrConfigure initWithImageViewBgColor:[UIColor blackColor]
-                                    textViewBgColor:nil
-                                          textColor:[UIColor whiteColor]
-                                           textFont:[UIFont systemFontOfSize:12]
-                                      maxTextHeight:100
-                                     textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
-                                          scaleType:GQImageViewerScaleTypeEqualWidth];
     
     //链式调用
     [GQImageViewer sharedInstance]
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
-    .usePageControlChain(NO)//设置是否使用pageControl
-    .needLoopScrollChain(NO)//设置是否需要循环滚动
-    .needPanGestureChain(YES)//是否需要滑动消失手势
     .selectIndexChain(5)//设置选中的索引
-    .configureChain(configure)
-    .bottomViewChain(bottomView)
-    .topViewChain(topView)
+    .configureChain(^(GQImageViewrConfigure *configure) {
+        [configure configureWithImageViewBgColor:[UIColor blackColor]
+                                 textViewBgColor:nil
+                                       textColor:[UIColor whiteColor]
+                                        textFont:[UIFont systemFontOfSize:12]
+                                   maxTextHeight:100
+                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+    })
+    .topViewConfigureChain(^(UIView *configureView) {
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor redColor];
+    })
+    .bottomViewConfigureChain(^(UIView *configureView) {
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor yellowColor];
+    })
     .achieveSelectIndexChain(^(NSInteger selectIndex){//获取当前选中的图片索引
         NSLog(@"%ld",selectIndex);
     })
@@ -107,9 +116,19 @@
     .dissMissChain(^(){
         NSLog(@"dissMiss");
     })
-    .imageViewClassNameChain(@"GQImageView")
-    .launchDirectionChain(GQLaunchDirectionRight)//设置推出方向
-    .showInViewChain(self.navigationController.view,YES);//显示GQImageViewer到指定view上
+    .showInViewChain(self.view.window,YES);//显示GQImageViewer到指定view上
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self afterAction];
+    });
+}
+
+- (void)afterAction {
+    [GQImageViewer sharedInstance]
+    .topViewConfigureChain(^(UIView *configureView) {
+        [configureView setBackgroundColor:[UIColor whiteColor]];
+        configureView.height = 100;
+    });
 }
 
 #pragma mark -- 添加本地图片

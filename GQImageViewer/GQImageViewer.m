@@ -9,12 +9,9 @@
 #import "GQImageViewer.h"
 #import "GQImageCollectionView.h"
 #import "GQTextScrollView.h"
-#import "GQImageViewerConst.h"
 
 #import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
-
-#import "UIView+GQImageViewrCategory.h"
 
 #import "GQImageView.h"
 
@@ -24,10 +21,45 @@
     CGRect _initialRect;//初始化rect
     CGFloat _bottomBgViewY;
     BOOL interation;
+    
+    @private
+    /*
+     *  显示PageControl传yes   默认 : yes
+     *  显示label就传no
+     */
+    BOOL _usePageControl;
+    
+    /**
+     是否需要循环滚动
+     */
+    BOOL _needLoopScroll;
+    
+    /**
+     是否需要滑动消失手势
+     */
+    BOOL _needPanGesture;
+    
+    /**
+     *  如果有网络图片则设置默认图片
+     */
+    UIImage *_placeholderImage;
+    
+    /**
+     自定义图片浏览界面class名称 必须继承GQImageView  需在设置DataSource之前设置 否则没有效果
+     */
+    NSString *_imageViewClassName;
+    
+    /**
+     *  推出方向  默认GQLaunchDirectionBottom
+     */
+    GQLaunchDirection _laucnDirection;
 }
 
 @property (nonatomic, strong) GQTextScrollView *textScrollView;
-@property (nonatomic, strong) UIView *bottomBgView;
+@property (nonatomic, strong) UIView *bottomBgView;//包含文字部分
+@property (nonatomic, strong) UIView *bottomView;
+@property (nonatomic, strong) UIView *topView;
+@property (nonatomic, strong) GQImageViewrConfigure *imageViewerConfigure;//配置信息
 @property (nonatomic, strong) GQImageCollectionView *collectionView;//collectionView
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 
@@ -51,9 +83,8 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
         [self setClipsToBounds:YES];
-        self.laucnDirection = GQLaunchDirectionBottom;
-        self.usePageControl = YES;
-        self.needLoopScroll = NO;
+        _usePageControl = YES;
+        _needLoopScroll = NO;
     }
     return self;
 }
@@ -64,20 +95,14 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
-GQChainObjectDefine(usePageControlChain, UsePageControl, BOOL, GQBOOLChain);
-GQChainObjectDefine(needLoopScrollChain, NeedLoopScroll, BOOL, GQBOOLChain);
 GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
-GQChainObjectDefine(configureChain, Configure, GQImageViewrConfigure*, GQConfigureChain);
-GQChainObjectDefine(placeholderImageChain, PlaceholderImage, UIImage *, GQPlaceholderImageChain);
-GQChainObjectDefine(launchDirectionChain, LaucnDirection, GQLaunchDirection, GQLaunchDirectionChain);
+GQChainObjectDefine(configureChain, Configure, GQConfigureBlock, GQConfigureChain);
 GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(singleTapChain, SingleTap, GQAchieveIndexBlock, GQAchieveIndexChain);
 GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
-GQChainObjectDefine(needPanGestureChain, NeedPanGesture, BOOL, GQBOOLChain);
-GQChainObjectDefine(bottomViewChain, BottomView, UIView *, GQSubViewChain);
-GQChainObjectDefine(topViewChain, TopView, UIView *, GQSubViewChain);
 GQChainObjectDefine(dissMissChain, DissMiss, GQVoidBlock, GQVoidChain);
-GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQStringClassChain);
+GQChainObjectDefine(topViewConfigureChain, TopViewConfigure, GQSubViewConfigureBlock, GQSubViewConfigureChain);
+GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConfigureBlock, GQSubViewConfigureChain);
 
 @synthesize dataSouceArrayChain =_dataSouceArrayChain;
 @synthesize showInViewChain = _showInViewChain;
@@ -117,59 +142,15 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
     _bottomBgView = nil;
     _bottomView = nil;
     _topView = nil;
+    _bottomViewConfigure = nil;
+    _configure = nil;
+    _imageViewerConfigure = nil;
+    _topViewConfigure = nil;
     _collectionView = nil;
     _textScrollView = nil;
     _collectionView.gqDelegate = nil;
     _collectionView.gqDataSource = nil;
     _isVisible = NO;
-}
-
-- (void)setUsePageControl:(BOOL)usePageControl
-{
-    _usePageControl = usePageControl;
-    [self setupTextScrollView];
-}
-
-- (void)setNeedLoopScroll:(BOOL)needLoopScroll
-{
-    _needLoopScroll = needLoopScroll;
-    if (!_isVisible) {
-        return;
-    }
-    _collectionView.needLoopScroll = _needLoopScroll;
-}
-
-- (void)setNeedPanGesture:(BOOL)needPanGesture {
-    _needPanGesture = needPanGesture;
-    if (_needPanGesture) {
-        [self.panGesture setEnabled:YES];
-    }else {
-        [self.panGesture setEnabled:NO];
-    }
-}
-
-- (void)setPlaceholderImage:(UIImage *)placeholderImage {
-    _placeholderImage = placeholderImage;
-    if (!_isVisible) {
-        return;
-    }
-    _collectionView.placeholderImage = placeholderImage;
-}
-
-- (void)setBottomView:(UIView *)bottomView {
-    _bottomView = bottomView;
-    if (!_isVisible) {
-        return;
-    }
-    [self setupTextScrollView];
-}
-
-- (void)setTopView:(UIView *)topView {
-    _topView = topView;
-    if (!_isVisible) {
-        return;
-    }
-    [self setupTextScrollView];
 }
 
 - (void)setSelectIndex:(NSInteger)selectIndex
@@ -210,10 +191,38 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
     }
 }
 
-- (void)setConfigure:(GQImageViewrConfigure *)configure
+- (void)setBottomViewConfigure:(GQSubViewConfigureBlock)bottomViewConfigure {
+    _bottomViewConfigure = [bottomViewConfigure copy];
+    _bottomViewConfigure(_bottomView);
+    [self setupTextScrollView];
+}
+
+- (void)setTopViewConfigure:(GQSubViewConfigureBlock)topViewConfigure {
+    _topViewConfigure = [topViewConfigure copy];
+    _topViewConfigure(_topView);
+}
+
+- (void)setConfigure:(GQConfigureBlock )configure
 {
     _configure = [configure copy];
-    self.backgroundColor = self.configure.imageViewBgColor?:[UIColor clearColor];
+    _configure(self.imageViewerConfigure);
+    self.backgroundColor = self.imageViewerConfigure.imageViewBgColor?:[UIColor clearColor];
+    
+    _usePageControl = self.imageViewerConfigure.usePageControl;
+    
+    _needLoopScroll = self.imageViewerConfigure.needLoopScroll;
+    _collectionView.needLoopScroll = _needLoopScroll;
+    
+    _needPanGesture = self.imageViewerConfigure.needPanGesture;
+    if (_needPanGesture) {
+        [self.panGesture setEnabled:YES];
+    }else {
+        [self.panGesture setEnabled:NO];
+    }
+    _placeholderImage = self.imageViewerConfigure.placeholderImage;
+    _collectionView.placeholderImage = _placeholderImage;
+    _imageViewClassName = self.imageViewerConfigure.imageViewClassName;
+    _laucnDirection = self.imageViewerConfigure.laucnDirection;
 }
 
 - (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
@@ -237,7 +246,7 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
 }
 
 - (GQImageViewrConfigure *)configureOfGQCollectionView:(GQBaseCollectionView *)collectionView {
-    return _configure;
+    return _imageViewerConfigure;
 }
 
 #pragma mark -- GQCollectionViewDelegate
@@ -254,16 +263,16 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
                     [self -> _topView setHidden:NO];
                     [self -> _topView setAlpha:1];
                 }
-                [self->_bottomBgView setAlpha:1];
-                [self->_bottomBgView setHidden:NO];
+                [self -> _bottomBgView setAlpha:1];
+                [self -> _bottomBgView setHidden:NO];
             }else {
                 [UIView animateWithDuration:0.2 animations:^{
                     if (self -> _topView) {
                         [self -> _topView setAlpha:0];
                     }
-                    [self->_bottomBgView setAlpha:0];
+                    [self -> _bottomBgView setAlpha:0];
                 }completion:^(BOOL finished) {
-                    [self->_bottomBgView setHidden:YES];
+                    [self -> _bottomBgView setHidden:YES];
                     [self -> _topView setHidden:YES];
                 }];
             }
@@ -380,16 +389,15 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
 - (void)setupTextScrollView
 {
     CGFloat height = [_textScrollView configureSource:_dataSources
-                                     withConfigure:_configure
-                                  withCurrentIndex:_selectIndex
+                                        withConfigure:_imageViewerConfigure
+                                     withCurrentIndex:_selectIndex
                                    withUsePageControl:_usePageControl
                                    withSuperViewWidth:_superViewRect.size.width];
     CGFloat bottomViewHeight = 0;
     
-    if (_bottomView) {
+    if (_bottomViewConfigure) {
         bottomViewHeight = _bottomView.height;
         _bottomView.frame = CGRectMake(_bottomView.x, height, _bottomView.width, bottomViewHeight);
-        [_bottomBgView addSubview:_bottomView];
     }
     
     _textScrollView.frame = CGRectMake(0, 0, _superViewRect.size.width, height);
@@ -407,11 +415,16 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
     _collectionView.needLoopScroll = _needLoopScroll;
     _collectionView.placeholderImage = _placeholderImage;
     
-    if (self.topView) {
+    if (self.topViewConfigure) {
         [self addSubview:self.topView];
+        _topViewConfigure(_topView);
     }
-    
+
     [self addSubview:self.bottomBgView];
+    if (self.bottomViewConfigure) {
+        [self.bottomBgView addSubview:self.bottomView];
+        _bottomViewConfigure(_bottomView);
+    }
     
     [_bottomBgView addSubview:self.textScrollView];
     
@@ -602,6 +615,27 @@ GQChainObjectDefine(imageViewClassNameChain, ImageViewClassName, NSString *, GQS
         _bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
     }
     return _bottomBgView;
+}
+
+- (UIView *)bottomView {
+    if (!_bottomView) {
+        _bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+    }
+    return _bottomView;
+}
+
+- (UIView *)topView {
+    if (!_topView) {
+        _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+    }
+    return _topView;
+}
+
+- (GQImageViewrConfigure *)imageViewerConfigure {
+    if (!_imageViewerConfigure) {
+        _imageViewerConfigure = [[GQImageViewrConfigure alloc] init];
+    }
+    return _imageViewerConfigure;
 }
 
 - (GQImageCollectionView *)collectionView {
