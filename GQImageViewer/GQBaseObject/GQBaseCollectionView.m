@@ -28,17 +28,12 @@
 @end
 
 @implementation GQBaseCollectionView
-{
-    GQReuseTabViewFlowLayout *_layouts;
-}
 
 @synthesize selectedInexPath = _selectedInexPath;
 
 - (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout
 {
-    _layouts  = [[GQReuseTabViewFlowLayout alloc] init];
-    
-    self = [super initWithFrame:frame collectionViewLayout:_layouts];
+    self = [super initWithFrame:frame collectionViewLayout:[[GQReuseTabViewFlowLayout alloc] init]];
     if (self) {
         [self _initViews:frame];
     }
@@ -70,7 +65,8 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [_layouts prepareLayout];
+    
+    [self.collectionViewLayout prepareLayout];
 }
 
 #pragma mark -- UICollectionViewDataSource
@@ -87,7 +83,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    return [collectionView dequeueReusableCellWithReuseIdentifier:@"default" forIndexPath:indexPath];
 }
 
 #pragma mark -- GQCollectionViewDataSource Configure
@@ -149,7 +145,7 @@
     NSInteger totalPages = [self numberOfPages];
     
     if (_needLoopScroll) {
-        if (row >= totalPages) {
+        if (row >= totalPages && totalPages != 0) {
             row = row%totalPages;
         }
     }else {
@@ -175,7 +171,8 @@
     int row = y/self.frame.size.width;
     
     NSInteger totalPages = [self numberOfPages];
-    if (_needLoopScroll) {
+    
+    if (_needLoopScroll && totalPages != 0) {
         //如果超过边界则返回中间位置
         if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
             row = (int)(_needLoopScroll?totalPages*maxSectionNum/2:0);
