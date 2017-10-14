@@ -100,12 +100,16 @@
             imageUrl = [NSURL URLWithString:data];
         }
         GQWeakify(self);
-        [_imageView loadImage:imageUrl placeHolder:_placeholderImage progress:^(CGFloat progress) {
-            
-        } complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
-            GQStrongify(self);
-            [self layoutSubviews];
-        }];
+        [_imageView loadImage:imageUrl
+             requestClassName:imageModel.GQImageViewURLRequestClassName
+                  placeHolder:_placeholderImage
+                     progress:^(CGFloat progress) {
+                         
+                     }
+                     complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
+                        GQStrongify(self);
+                        [self layoutSubviews];
+                    }];
     }else if ([data isKindOfClass:[UIImageView class]])
     {
         UIImageView *imageView = (UIImageView *)data;

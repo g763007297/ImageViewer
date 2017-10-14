@@ -62,6 +62,10 @@
 
 - (void)loadImage:(NSURL*)url placeHolder:(UIImage *)placeHolderImage progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete
 {
+    [self loadImage:url requestClassName:nil placeHolder:placeHolderImage progress:progress complete:complete];
+}
+
+- (void)loadImage:(NSURL*)url requestClassName:(NSString *)className placeHolder:(UIImage *)placeHolderImage progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete {
     if(nil == url || [@"" isEqualToString:url.absoluteString] ) {
         return;
     }
@@ -77,22 +81,23 @@
     self.image = placeHolderImage;
     GQWeakify(self);
     _downloadOperation = [[GQImageViewerOperationManager sharedManager]
-                 loadWithURL:_imageUrl
-                 progress:^(CGFloat progress) {
-                     GQStrongify(self);
-                     if (self.progress) {
-                         self.progress(progress);
-                     }
-                 }complete:^(NSURL *url, UIImage *image, NSError *error) {
-                     GQStrongify(self);
-                     [self hideLoading];
-                     if (image) {
-                         self.image = image;
-                     }
-                     if (self.complete) {
-                         self.complete(image,error,url);
-                     }
-                 }];
+                          loadWithURL:_imageUrl
+                          withURLRequestClassName:className
+                          progress:^(CGFloat progress) {
+                              GQStrongify(self);
+                              if (self.progress) {
+                                  self.progress(progress);
+                              }
+                          }complete:^(NSURL *url, UIImage *image, NSError *error) {
+                              GQStrongify(self);
+                              [self hideLoading];
+                              if (image) {
+                                  self.image = image;
+                              }
+                              if (self.complete) {
+                                  self.complete(image,error,url);
+                              }
+                          }];
 }
 
 -(void)showLoading

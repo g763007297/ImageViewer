@@ -9,6 +9,7 @@
 #import "DemoViewController.h"
 #import "GQImageViewer.h"
 #import "UIImage+GQImageViewrCategory.h"
+#import "GQImageDataDownload.h"
 
 @interface DemoViewController (){
     UIView *demoView;
@@ -86,10 +87,10 @@
 //    });
 //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
     
+    [[GQImageDataDownload sharedDownloadManager] setURLRequestClass:NSClassFromString(@"DemoURLRequest")];
+    
     //链式调用
     [GQImageViewer sharedInstance]
-    .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
-    .selectIndexChain(5)//设置选中的索引
     .configureChain(^(GQImageViewrConfigure *configure) {
         [configure configureWithImageViewBgColor:[UIColor blackColor]
                                  textViewBgColor:nil
@@ -98,7 +99,10 @@
                                    maxTextHeight:100
                                   textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
                                        scaleType:GQImageViewerScaleTypeEqualWidth];
+        [configure setRequestClassName:@"DemoURLRequest"];
     })
+    .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
+    .selectIndexChain(5)//设置选中的索引
     .topViewConfigureChain(^(UIView *configureView) {
         configureView.height = 50;
         configureView.backgroundColor = [UIColor redColor];

@@ -159,7 +159,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
 }
 
 - (void)setURLRequestClass:(Class)requestClass {
-    _requstClass = requestClass ?: [GQImageViewrBaseURLRequest class];
+    _requstClass = (requestClass && [requestClass isSubclassOfClass:[GQImageViewrBaseURLRequest class]]) ? requestClass: [GQImageViewrBaseURLRequest class];
 }
 
 #pragma mark -- lazy load

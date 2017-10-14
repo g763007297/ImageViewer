@@ -37,6 +37,7 @@
 		B65C1FFE1D816CF600F1711B /* GQImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF71D816CF600F1711B /* GQImageView.m */; };
 		B65C1FFF1D816CF600F1711B /* GQImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B65C1FF91D816CF600F1711B /* GQImageRequestOperation.m */; };
 		B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = B69521721CE2C82F00F288AF /* GQImageViewer.m */; };
+		B6CEC0181F919B260052D571 /* DemoURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6CEC0171F919B260052D571 /* DemoURLRequest.m */; };
 		B6FB8CB31DF01F4E009C4494 /* UIView+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */; };
 		B6FF15E71E10CFE100225785 /* GQImageViewrBaseURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6FF15E61E10CFE100225785 /* GQImageViewrBaseURLRequest.m */; };
 		DF0255BA1C34BCCD001E65C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255B91C34BCCD001E65C2 /* main.m */; };
@@ -106,6 +107,8 @@
 		B65C1FF91D816CF600F1711B /* GQImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageRequestOperation.m; sourceTree = "<group>"; };
 		B69521711CE2C82F00F288AF /* GQImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViewer.h; sourceTree = "<group>"; };
 		B69521721CE2C82F00F288AF /* GQImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageViewer.m; sourceTree = "<group>"; };
+		B6CEC0161F919B260052D571 /* DemoURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoURLRequest.h; sourceTree = "<group>"; };
+		B6CEC0171F919B260052D571 /* DemoURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoURLRequest.m; sourceTree = "<group>"; };
 		B6FB8CB11DF01F4E009C4494 /* UIView+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GQImageViewrCategory.h"; sourceTree = "<group>"; };
 		B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GQImageViewrCategory.m"; sourceTree = "<group>"; };
 		B6FF15E51E10CFE100225785 /* GQImageViewrBaseURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViewrBaseURLRequest.h; sourceTree = "<group>"; };
@@ -292,6 +295,8 @@
 				DF0255BC1C34BCCD001E65C2 /* AppDelegate.m */,
 				DF0255E01C34BD89001E65C2 /* DemoViewController.h */,
 				DF0255E11C34BD89001E65C2 /* DemoViewController.m */,
+				B6CEC0161F919B260052D571 /* DemoURLRequest.h */,
+				B6CEC0171F919B260052D571 /* DemoURLRequest.m */,
 				DF0255C71C34BCCD001E65C2 /* Assets.xcassets */,
 				DF0255CC1C34BCCD001E65C2 /* Info.plist */,
 				DF0255B81C34BCCD001E65C2 /* Supporting Files */,
@@ -429,6 +434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6CEC0181F919B260052D571 /* DemoURLRequest.m in Sources */,
 				B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */,
 				B61787D31E63B5920042DF60 /* GQImageViewerOperationManager.m in Sources */,
 				B6032E361DEE67290060FB0E /* GQTextScrollView.m in Sources */,

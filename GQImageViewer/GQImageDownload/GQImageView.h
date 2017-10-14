@@ -21,8 +21,20 @@ typedef void(^GQImageProgressBlock) (CGFloat progress);
  */
 - (void)configureImageView;
 
-- (void)loadImage:(NSURL*)url progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete;
-- (void)loadImage:(NSURL*)url placeHolder:(UIImage *)placeHolderImage progress:(GQImageProgressBlock)progress complete:(GQImageCompletionBlock)complete;
+- (void)loadImage:(NSURL*)url
+         progress:(GQImageProgressBlock)progress
+         complete:(GQImageCompletionBlock)complete;
+
+- (void)loadImage:(NSURL*)url
+      placeHolder:(UIImage *)placeHolderImage
+         progress:(GQImageProgressBlock)progress
+         complete:(GQImageCompletionBlock)complete;
+
+- (void)loadImage:(NSURL*)url
+ requestClassName:(NSString *)className
+      placeHolder:(UIImage *)placeHolderImage
+         progress:(GQImageProgressBlock)progress
+         complete:(GQImageCompletionBlock)complete;
 
 - (void)cancelCurrentImageRequest;     //caller must call this method in its dealloc method
 

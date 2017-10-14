@@ -26,7 +26,11 @@
 
 GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewerOperationManager, sharedManager)
 
-- (id<GQImageViwerOperationDelegate>)loadWithURL:(NSURL *)url progress:(GQImageViwerProgressBlock)progressBlock complete:(GQImageViwerCompleteBlock)completeBlock {
+- (id<GQImageViwerOperationDelegate>)loadWithURL:(NSURL *)url
+                         withURLRequestClassName:(NSString *)className
+                                        progress:(GQImageViwerProgressBlock)progressBlock
+                                        complete:(GQImageViwerCompleteBlock)completeBlock {
+    [[GQImageDataDownload sharedDownloadManager] setURLRequestClass:NSClassFromString(className)];
     __block UIImage *image = nil;
     if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString]){
         id<GQImageViwerOperationDelegate> operation = [[GQImageDataDownload sharedDownloadManager]

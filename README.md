@@ -20,7 +20,7 @@
 2.执行 pod install 或 pod update。
 3.导入 GQImageViewer.h。
 
-## WebP图片支持
+## 1.0 WebP图片支持
  
 使用: pod 'GQImageViewer/WebP'
 
@@ -41,7 +41,7 @@ GQ_WEBP=1
 
 ```
 
-## 缓存数据
+## 1.1 缓存数据
 
 详情见:GQImageCacheManager头文件
 
@@ -78,7 +78,7 @@ GQ_WEBP=1
 
 ```
 
-## 自定义图片显示页面
+## 1.2 自定义图片显示页面
 
 自定义显示页面必须继承GQImageView，设置class名称必须在设置DataSource之前，否则都是为默认的GQImageView。
 
@@ -95,6 +95,33 @@ typedef enum : NSUInteger {
     GQImageViewerScaleTypeEqualHeight, //等高宽度自适应（高度为屏幕高度，宽度自适应） //不推荐使用，效果不好
 } GQImageViewerScaleType;
 
+
+```
+
+## 1.3 自定义图片请求类NSMutableURLRequest
+
+自定义图片请求class名称,必须继承GQImageViewrBaseURLRequest,需在设置DataSource之前设置,否则没有效果，否则都是为默认的GQImageViewrBaseURLRequest。
+
+默认的GQImageViewrBaseURLRequest内有设置acceptType，userAgent，Cookie。
+其他请求参数可覆盖方法configureRequestData进行设置
+
+API:
+
+直接通过引用头文件设置：
+
+```objc
+#import "GQImageDataDownload.h"
+
+[[GQImageDataDownload sharedDownloadManager] setURLRequestClass:<#(__unsafe_unretained Class)#>]
+
+```
+
+也可以通过configure进行设置：
+
+```objc
+.configureChain(^(GQImageViewrConfigure *configure) {
+        [configure setRequestClassName:<#(NSString *)#>]
+    })
 
 ```
 
@@ -219,55 +246,61 @@ typedef enum : NSUInteger {
 	
 (1) 0.0.1
 
-	GitHub添加代码
+	GitHub添加代码。
 	
 (2) 0.0.2
 
-	支持链式调用,支持显示在指定UIView上，无需指定UIViewController,支持设置推出方向
+	1.支持链式调用；
+	2.支持显示在指定UIView上，无需指定UIViewController；
+	3.支持设置推出方向。
 
 (3) 0.0.3
 
-	新增获取当前选中的图片索引
+	新增获取当前选中的图片索引。
 
 (4) 0.0.4
 
-	修复卡顿现象，更加精确快速获取当前图片的索引
+	修复卡顿现象，更加精确快速获取当前图片的索引。
 
 (5) 0.0.5
 
-	修复屏幕旋转时frame布局不准的bug
+	修复屏幕旋转时frame布局不准的bug。
 
 (6) 0.0.6
-
-   去除依赖库，换成自己的图片下载库，添加长按手势和回调。
+	
+	1.去除依赖库，换成自己的图片下载库；
+	2.添加长按手势和回调。
 
 (7) 0.0.7
 
-	增加底部文字，仿今日头条效果，支持上下滑动移除控件，增加控件属性配置。
+	1.增加底部文字，仿今日头条效果；
+	2.支持上下滑动移除控件；
+	3.增加控件属性配置。
 
 (8) 0.0.8
 
-   修复头文件冲突的bug
+	修复头文件冲突的bug。
 
 (9) 0.0.9
 
-	添加头部和底部自定义View
+	添加头部和底部自定义View。
 
 (10) 0.1.0
  
-   添加图片加载LoadingView
+	添加图片加载LoadingView。
  
 (11) 0.1.1
 
-	修复无网络状态下缺省图不显示的bug,topView滑动手势兼容
+	1.修复无网络状态下缺省图不显示的bug；
+	2.topView滑动手势兼容。
  
 (12) 1.0.0
 
-	添加WebP支持
+	添加WebP支持。
 
 (13) 1.0.1
 
-	修复放大留白问题，修复新版本单例下载时复用问题
+	修复放大留白问题，修复新版本单例下载时复用问题。
  
 (14) 1.0.2
 
@@ -287,12 +320,16 @@ typedef enum : NSUInteger {
 
 (17) 1.0.5
 	
-	1.将GQImageViewer配置全部归入GQImageViewrConfigure类中，避免过多的api调用麻烦。
-	2.增加顶部和底部view的configure方法，使配置方法更加集中。
+	1.将GQImageViewer配置全部归入GQImageViewrConfigure类中，避免过多的api调用麻烦；
+	2.增加顶部和底部view的configure方法，使配置方法更加集中；
 	3.配置属性不需要进行初始化了，只需要调用一个方法就可以了。
 
 (18) 1.0.6
-
+	
+	1.完善自定义图片请求类。
+	
+(19) 1.0.7
+	
 	wait a moment
 	
 ## Support

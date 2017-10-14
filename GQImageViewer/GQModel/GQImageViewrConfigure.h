@@ -46,9 +46,14 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) UIImage *placeholderImage;
 
 /**
- 自定义图片浏览界面class名称 必须继承GQImageView  需在设置DataSource之前设置 否则没有效果
+ 自定义图片浏览界面class名称 必须继承GQImageView 需在设置DataSource之前设置 否则没有效果
  */
 @property (nonatomic, strong) NSString *imageViewClassName;
+
+/**
+ 自定义图片请求class名称 必须继承GQImageViewrBaseURLRequest 需在设置DataSource之前设置 否则没有效果
+ */
+@property (nonatomic, strong) NSString *requestClassName;
 
 /**
  *  推出方向  默认 : GQLaunchDirectionBottom

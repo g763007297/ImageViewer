@@ -13,8 +13,6 @@
 #import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
 
-#import "GQImageView.h"
-
 @interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
@@ -219,6 +217,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     }else {
         [self.panGesture setEnabled:NO];
     }
+    
     _placeholderImage = self.imageViewerConfigure.placeholderImage;
     _collectionView.placeholderImage = _placeholderImage;
     _imageViewClassName = self.imageViewerConfigure.imageViewClassName;
@@ -488,10 +487,24 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
         }
         model.imageSource = imageObject;
         
-        if ([NSClassFromString(_imageViewClassName) isSubclassOfClass:[GQImageView class]]  ) {
+        if (!NSClassFromString(@"GQImageViewrBaseURLRequest")) {
+            NSAssert(0, @"GQImageViewrBaseURLRequest class is miss, please check!");
+        }
+        
+        if (!NSClassFromString(@"GQImageView")) {
+            NSAssert(0, @"GQImageView class is miss, please check!");
+        }
+        
+        if ([NSClassFromString(_imageViewerConfigure.requestClassName) isSubclassOfClass:NSClassFromString(@"GQImageViewrBaseURLRequest")]) {
+            model.GQImageViewURLRequestClassName = _imageViewerConfigure.requestClassName;
+        }else {
+            model.GQImageViewURLRequestClassName = @"GQImageViewrBaseURLRequest";
+        }
+        
+        if ([NSClassFromString(_imageViewClassName) isSubclassOfClass:NSClassFromString(@"GQImageView")]  ) {
             model.GQImageViewClassName = _imageViewClassName;
         }else {
-            model.GQImageViewClassName = NSStringFromClass([GQImageView class]);
+            model.GQImageViewClassName = @"GQImageView";
         }
         
         [handleSouces addObject:model];

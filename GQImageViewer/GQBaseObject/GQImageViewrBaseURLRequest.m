@@ -16,7 +16,7 @@ static NSString *defaultUserAgent = nil;
 - (instancetype)initWithURL:(NSURL *)URL {
     self = [super initWithURL:URL];
     if (self) {
-        [self configureRequestData];
+        [self defaultConfigure];
     }
     return self;
 }

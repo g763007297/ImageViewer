@@ -13,6 +13,9 @@
 
 + (instancetype)sharedManager;
 
-- (id<GQImageViwerOperationDelegate>)loadWithURL:(NSURL *)url progress:(GQImageViwerProgressBlock)progress complete:(GQImageViwerCompleteBlock)complete;
+- (id<GQImageViwerOperationDelegate>)loadWithURL:(NSURL *)url
+                         withURLRequestClassName:(NSString *)className
+                                        progress:(GQImageViwerProgressBlock)progress
+                                        complete:(GQImageViwerCompleteBlock)complete;
 
 @end
