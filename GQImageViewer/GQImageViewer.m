@@ -252,29 +252,27 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 
 - (void)GQCollectionViewDidSigleTap:(GQBaseCollectionView *)collectionView withCurrentSelectIndex:(NSInteger)index
 {
-    if (_singleTap||[_textArray count] > 0) {
-        if (self.singleTap) {
-            self.singleTap(self.selectIndex);
-        }
-        if ([_textArray count] > 0) {
-            if (self->_bottomBgView.hidden) {
-                if (self -> _topView) {
-                    [self -> _topView setHidden:NO];
-                    [self -> _topView setAlpha:1];
-                }
-                [self -> _bottomBgView setAlpha:1];
-                [self -> _bottomBgView setHidden:NO];
-            }else {
-                [UIView animateWithDuration:0.2 animations:^{
-                    if (self -> _topView) {
-                        [self -> _topView setAlpha:0];
-                    }
-                    [self -> _bottomBgView setAlpha:0];
-                }completion:^(BOOL finished) {
-                    [self -> _bottomBgView setHidden:YES];
-                    [self -> _topView setHidden:YES];
-                }];
+    if (_singleTap) {
+        self.singleTap(self.selectIndex);
+    }
+    if (self.imageViewerConfigure.needTapAutoHiddenTopBottomView) {
+        if (self->_bottomBgView.hidden) {
+            if (self -> _topView) {
+                [self -> _topView setHidden:NO];
+                [self -> _topView setAlpha:1];
             }
+            [self -> _bottomBgView setAlpha:1];
+            [self -> _bottomBgView setHidden:NO];
+        }else {
+            [UIView animateWithDuration:0.2 animations:^{
+                if (self -> _topView) {
+                    [self -> _topView setAlpha:0];
+                }
+                [self -> _bottomBgView setAlpha:0];
+            }completion:^(BOOL finished) {
+                [self -> _bottomBgView setHidden:YES];
+                [self -> _topView setHidden:YES];
+            }];
         }
         return;
     }

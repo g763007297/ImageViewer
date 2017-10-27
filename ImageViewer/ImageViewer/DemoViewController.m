@@ -42,26 +42,69 @@
     [super viewWillAppear:animated];
     self.navigationController.visibleViewController.title = @"GQImageViewer";
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, CGRectGetMaxY(self.view.frame)/2+140, 200, 40)];
-    [button setTitle:@"点击此处查看图片" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    UIButton *autoManagerbutton = [self creatButtonWithTitle:@"点击此处查看图片(自动管理生命周期)" withSEL:@selector(showAutoManagerImageViewer:)];
+    [autoManagerbutton setFrame:CGRectMake(5, CGRectGetMaxY(self.view.frame)/2+80, CGRectGetWidth(self.view.frame)-10, 40)];
+
+    [self.view addSubview:autoManagerbutton];
     
-    button.layer.borderColor = [UIColor orangeColor].CGColor;
-    button.layer.borderWidth = 1;
+    UIButton *manualManagerbutton = [self creatButtonWithTitle:@"点击此处查看图片(手动管理生命周期)" withSEL:@selector(showManualManagerImageViewer:)];
+    [manualManagerbutton setFrame:CGRectMake(5, CGRectGetMaxY(self.view.frame)/2+140, CGRectGetWidth(self.view.frame)-10, 40)];
     
-    button.layer.cornerRadius = 5;
-    [button setClipsToBounds:YES];
-    
-    [button addTarget:self action:@selector(showImageViewer:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
+    [self.view addSubview:manualManagerbutton];
     
     demoView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, 64, 200, 300)];
     demoView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:demoView];
 }
 
-- (void)showImageViewer:(id)sender{
+//手动管理生命周期
+- (void)showManualManagerImageViewer:(id)sender {
+    [[GQImageDataDownload sharedDownloadManager] setURLRequestClass:NSClassFromString(@"DemoURLRequest")];
+    GQWeakify(self);
+    //链式调用
+    [GQImageViewer sharedInstance]
+    .configureChain(^(GQImageViewrConfigure *configure) {
+        [configure configureWithImageViewBgColor:[UIColor blackColor]
+                                 textViewBgColor:nil
+                                       textColor:[UIColor whiteColor]
+                                        textFont:[UIFont systemFontOfSize:12]
+                                   maxTextHeight:100
+                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+        [configure setRequestClassName:@"DemoURLRequest"];
+        [configure setNeedPanGesture:NO];//设置是否需要滑动消失手势
+        [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
+    })
+    .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
+    .selectIndexChain(5)//设置选中的索引
+    .topViewConfigureChain(^(UIView *configureView) {
+        configureView.height = 80;
+        configureView.backgroundColor = [UIColor cyanColor];
+        
+        [weak_self topViewAddLabelText:@"手动管理生命周期" withTopView:configureView];
+        
+        UIButton *button = [weak_self creatButtonWithTitle:@"点击消失" withSEL:@selector(dissMissImageViewer:)];
+        button.frame = CGRectMake(10, (configureView.height - 30) / 2, 100, 30);
+        [configureView addSubview:button];
+    })
+    .bottomViewConfigureChain(^(UIView *configureView) {
+        configureView.height = 50;
+        configureView.backgroundColor = [UIColor yellowColor];
+    })
+    .achieveSelectIndexChain(^(NSInteger selectIndex){//获取当前选中的图片索引
+        NSLog(@"%ld",selectIndex);
+    })
+    .longTapIndexChain(^(UIImage *image , NSInteger selectIndex){//长按手势回调
+        NSLog(@"%p,%ld",image,selectIndex);
+    })
+    .dissMissChain(^(){
+        NSLog(@"dissMiss");
+    })
+    .showInViewChain(self.view.window,YES);//显示GQImageViewer到指定view上
+}
+
+//自动管理生命周期
+- (void)showAutoManagerImageViewer:(id)sender{
 //    //基本调用
 //    [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
 //    [GQImageViewer sharedInstance].selectIndex = 5;//设置选中的索引
@@ -88,7 +131,7 @@
 //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
     
     [[GQImageDataDownload sharedDownloadManager] setURLRequestClass:NSClassFromString(@"DemoURLRequest")];
-    
+    GQWeakify(self);
     //链式调用
     [GQImageViewer sharedInstance]
     .configureChain(^(GQImageViewrConfigure *configure) {
@@ -100,12 +143,14 @@
                                   textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
                                        scaleType:GQImageViewerScaleTypeEqualWidth];
         [configure setRequestClassName:@"DemoURLRequest"];
+        [configure setNeedTapAutoHiddenTopBottomView:NO];//设置是否需要自动隐藏顶部和底部视图
     })
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
     .selectIndexChain(5)//设置选中的索引
     .topViewConfigureChain(^(UIView *configureView) {
-        configureView.height = 50;
+        configureView.height = 80;
         configureView.backgroundColor = [UIColor redColor];
+        [weak_self topViewAddLabelText:@"自动管理生命周期" withTopView:configureView];
     })
     .bottomViewConfigureChain(^(UIView *configureView) {
         configureView.height = 50;
@@ -130,9 +175,13 @@
 - (void)afterAction {
     [GQImageViewer sharedInstance]
     .topViewConfigureChain(^(UIView *configureView) {
-        [configureView setBackgroundColor:[UIColor whiteColor]];
+        [configureView setBackgroundColor:[UIColor blueColor]];
         configureView.height = 100;
     });
+}
+
+- (void)dissMissImageViewer:(id)sender {
+    [[GQImageViewer sharedInstance] dissMissWithAnimation:YES];
 }
 
 #pragma mark -- 添加本地图片
@@ -194,6 +243,31 @@
                                      @"20.百度百科作为知识平台，节省了人们记忆大量内容的成本，可以做到随用随取且及时准确，不会给大脑造成负担，且不会受记忆偏差的影响。在人类从认知黑箱走向科学文明的过程中，掌握更多学科知识的人，点亮了这个世界；百度百科的存在，以互联网工具让每个人都成为有望推动文明进化节点到来的那个人。\n百度百科成功做到了传播广度与深度的结合，让“词媒体”与“权威知识平台”形成完美统一。",
                                      @"21.百度百科，以人人可编辑的模式，将碎片化的知识重新组合起来，在不增加人脑负担的同时，建立起人们与各学科之间互通的触点，从而以更简单的方式创造跨界的可能性。\n人人可编辑，意味着人人都在贡献自己的知识，同时也意味着人人都能够轻松从中获取所需。在“百科全书式”人物基本已不可能再出现的情况下，百度百科人人可编辑带来了另一种推动文明发展的方式。",
                                      @"22.百度百科"]];
+}
+
+- (void)topViewAddLabelText:(NSString *)textString withTopView:(UIView *)topView {
+    UILabel *textLabel = [[UILabel alloc] init];
+    textLabel.frame = CGRectMake(CGRectGetWidth(topView.frame)/2 - 75, CGRectGetHeight(topView.frame)/2 - 10, 150, 20);
+    textLabel.textColor = [UIColor whiteColor];
+    textLabel.text = textString;
+    [textLabel setAdjustsFontSizeToFitWidth:YES];
+    [topView addSubview:textLabel];
+}
+
+- (UIButton *)creatButtonWithTitle:(NSString *)title withSEL:(SEL)selector{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    
+    button.layer.borderColor = [UIColor orangeColor].CGColor;
+    button.layer.borderWidth = 1;
+    
+    button.layer.cornerRadius = 5;
+    [button setClipsToBounds:YES];
+    
+    [button addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+    
+    return button;
 }
 
 - (void)didReceiveMemoryWarning {

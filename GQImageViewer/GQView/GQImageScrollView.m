@@ -7,7 +7,6 @@
 //
 
 #import "GQImageScrollView.h"
-#import "GQImageViewer.h"
 #import "GQImageView.h"
 #import "GQImageViewerModel.h"
 
@@ -170,9 +169,6 @@
     {
         if (self.singleTap) {
             self.singleTap();
-        }else {
-            [_imageView cancelCurrentImageRequest];
-            [[GQImageViewer sharedInstance] dissMissWithAnimation:YES];
         }
     }
     else if(tap.numberOfTapsRequired == 2)

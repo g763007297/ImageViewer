@@ -41,6 +41,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL needPanGesture;
 
 /**
+ 是否需要点击手势自动隐藏头部和底部视图 （该方法如果设置为yes则单机手势dissmiss会失效） 默认 ： NO
+ */
+@property (nonatomic, assign) BOOL needTapAutoHiddenTopBottomView;
+
+/**
  *  如果有网络图片则设置默认图片   默认 :  nil
  */
 @property (nonatomic, copy) UIImage *placeholderImage;

@@ -16,6 +16,7 @@
         _usePageControl = YES;
         _needLoopScroll = NO;
         _needPanGesture = YES;
+        _needTapAutoHiddenTopBottomView = NO;
         _laucnDirection = GQLaunchDirectionBottom;
     }
     return self;

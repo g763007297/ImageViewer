@@ -330,6 +330,11 @@ API:
 	
 (19) 1.0.7
 	
+	1.完善单机手势逻辑，增加配置属性needTapAutoHiddenTopBottomView配置是否需要自动隐藏顶部和底部视图。
+	2.完善demo，增加自动与手动管理生命周期的🌰
+	
+(20) 1.0.8
+
 	wait a moment
 	
 ## Support
