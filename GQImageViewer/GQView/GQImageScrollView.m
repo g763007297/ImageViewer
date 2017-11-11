@@ -76,7 +76,7 @@
     }
 }
 
-- (void)setSingleTap:(void (^)())singleTap
+- (void)setSingleTap:(void (^)(void))singleTap
 {
     _singleTap = [singleTap copy];
 }

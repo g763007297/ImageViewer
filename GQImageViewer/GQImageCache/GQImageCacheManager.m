@@ -244,7 +244,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     [self clearDiskOnCompletion:nil];
 }
 
-- (void)clearDiskOnCompletion:(GGWebImageNoParamsBlock)completion
+- (void)clearDiskOnCompletion:(GQWebImageNoParamsBlock)completion
 {
     dispatch_async(self.ioDispatchQueue, ^{
         [_fileManager removeItemAtPath:[self getImageFolder] error:nil];

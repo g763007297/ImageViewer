@@ -12,7 +12,7 @@
 
 typedef void(^GQImageViwerCompleteBlock)(NSURL *url, UIImage* image, NSError *error);
 typedef void(^GQImageViwerProgressBlock)(CGFloat progress);
-typedef void(^GQImageViwerNoParamsBlock)();
+typedef void(^GQImageViwerNoParamsBlock)(void);
 
 @interface GQImageDataDownload : NSObject
 

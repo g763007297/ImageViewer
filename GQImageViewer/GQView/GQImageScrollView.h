@@ -19,6 +19,6 @@
 
 @property (nonatomic, assign) GQImageViewerScaleType scaleType;
 
-@property (nonatomic, copy) void(^singleTap)();
+@property (nonatomic, copy) void(^singleTap)(void);
 
 @end

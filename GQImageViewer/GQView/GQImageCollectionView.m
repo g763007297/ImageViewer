@@ -13,7 +13,7 @@
 #import "GQImageViewerConst.h"
 #import "GQImageViewrConfigure.h"
 
-typedef void (^GQSingleTap)();
+typedef void (^GQSingleTap)(void);
 
 @interface GQImageVideoCollectionViewCell : UICollectionViewCell
 

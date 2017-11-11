@@ -16,7 +16,7 @@ void GQSetDefaultBundle(NSBundle* bundle);
 /**
  * 返回全局默认bundle
  */
-NSBundle *GQGetDefaultBundle();
+NSBundle *GQGetDefaultBundle(void);
 
 /**
  * 返回bundle资源路径

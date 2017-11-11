@@ -84,6 +84,6 @@
  删除disk缓存
  */
 - (void)clearDisk;
-- (void)clearDiskOnCompletion:(GGWebImageNoParamsBlock)completion;
+- (void)clearDiskOnCompletion:(GQWebImageNoParamsBlock)completion;
 
 @end

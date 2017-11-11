@@ -15,7 +15,7 @@ typedef void (^GQAchieveIndexBlock)(NSInteger selectIndex);//获取当前图片�
 typedef void (^GQLongTapIndexBlock)(UIImage *image ,NSInteger selectIndex);
 typedef void (^GQSubViewConfigureBlock)(UIView *configureView);
 typedef void (^GQConfigureBlock)(GQImageViewrConfigure *configure);
-typedef void (^GQVoidBlock)();
+typedef void (^GQVoidBlock)(void);
 
 @class GQImageViewer;
 

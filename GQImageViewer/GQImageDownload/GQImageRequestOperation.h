@@ -19,7 +19,7 @@ enum {
 typedef NSUInteger GQImageRequestState;
 
 typedef void (^GQImageRequestChangeHandler) (float progress);
-typedef void (^GQImageRequestCancelHandler) ();
+typedef void (^GQImageRequestCancelHandler) (void);
 typedef void (^GQImageRequestCompletionHandler)(GQImageRequestOperation *urlOperation,BOOL requestSuccess, NSError *error);
 
 @interface GQImageRequestOperation : NSOperation <GQImageViwerOperationDelegate>
