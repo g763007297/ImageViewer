@@ -21,7 +21,7 @@ typedef void(^GQImageViwerNoParamsBlock)(void);
 /**
  设置图片处理请求class
 
- @param requestClass
+ param requestClass
  */
 - (void)setURLRequestClass:(Class)requestClass;
 

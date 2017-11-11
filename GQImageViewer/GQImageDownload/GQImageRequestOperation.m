@@ -163,7 +163,7 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     NSOperationQueue *currentQueue = [NSOperationQueue currentQueue];
     BOOL inBackgroundAndInOperationQueue = (currentQueue != nil && currentQueue != [NSOperationQueue mainQueue]);
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] > 8.0) {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] > 7.0) {
         self.operationSession =[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
         self.operationSessionTask = [_operationSession dataTaskWithRequest:_operationRequest];
         [self.operationSessionTask resume];

@@ -17,7 +17,7 @@
 /**
  *  获取指定key的图片文件位置
  *
- *  @param url 请求的url或key
+ *  param url 请求的url或key
  *
  *  @return 文件位置
  */
@@ -26,8 +26,8 @@
 /**
  *  图片保存
  *
- *  @param image 图片
- *  @param url   请求的url或key
+ *  param image 图片
+ *  param url   请求的url或key
  */
 - (void)saveImage:(UIImage*)image withUrl:(NSString*)url;
 - (void)saveImage:(UIImage*)image withKey:(NSString*)key;
@@ -35,7 +35,7 @@
 /**
  *  获取指定图片
  *
- *  @param url 请求的url或key
+ *  param url 请求的url或key
  *
  *  @return image
  */
@@ -45,7 +45,7 @@
 /**
  *  图片是否缓存在内存里
  *
- *  @param url 请求的url或key
+ *  param url 请求的url或key
  *
  *  @return YES or NO
  */
@@ -60,7 +60,7 @@
 /**
  *  删除指定的image缓存
  *
- *  @param url 请求的url或key
+ *  param url 请求的url或key
  */
 - (void)removeImageFromCacheWithUrl:(NSString *)url;
 - (void)removeImageFromCacheWithKey:(NSString *)key;

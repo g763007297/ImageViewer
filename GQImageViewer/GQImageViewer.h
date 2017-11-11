@@ -96,8 +96,8 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 /**
  设置数据源
 
- @param imageArray 图片数组
- @param textArray 文字数组
+ param imageArray 图片数组
+ param textArray 文字数组
  */
 - (void)setImageArray:(NSArray *)imageArray textArray:(NSArray *)textArray;
 
@@ -152,7 +152,7 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 /**
  *  显示GQImageViewer到指定view上
  *
- *  @param showView view
+ *  param showView view
  */
 - (void)showInView:(UIView *)showView animation:(BOOL)animation;
 
