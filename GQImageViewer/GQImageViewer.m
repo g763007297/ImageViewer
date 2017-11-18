@@ -224,6 +224,10 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     _collectionView.placeholderImage = _placeholderImage;
     _imageViewClassName = self.imageViewerConfigure.imageViewClassName;
     _laucnDirection = self.imageViewerConfigure.laucnDirection;
+    if (_laucnDirection == GQLaunchDirectionFromRect) {
+        NSAssert([self.imageViewerConfigure.launchFromView isKindOfClass:[UIView class]], @"launchFromView must be subClass of UIView");
+        NSAssert(self.imageViewerConfigure.launchFromView.superview, @"launchFromView must be have superview");
+    }
 }
 
 - (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
@@ -411,6 +415,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     [self scrollToSettingIndex];
 }
 
+//配置头部与底部视图
 - (void)configureTopAndBottomView {
     if (self.topViewConfigure) [self addSubview:self.topView];
     
@@ -432,6 +437,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
                         } completion:nil];
 }
 
+//配置头部与底部视图的隐藏
 - (void)configureTopAndBottomViewHidden:(BOOL)hidden {
     if (!hidden) {
         if (self -> _topView) {
@@ -473,7 +479,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
             _initialRect = CGRectMake(CGRectGetWidth(_superViewRect), 0, 0, CGRectGetHeight(_superViewRect));
             break;
         }
-        case GQLaunchDirectionRect: {
+        case GQLaunchDirectionFromRect: {
             _initialRect = [_imageViewerConfigure.launchFromView.superview convertRect:_imageViewerConfigure.launchFromView.frame toView:self.superview];
             break;
         }

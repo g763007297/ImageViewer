@@ -32,6 +32,8 @@ static const CGFloat maxTextHight = 200;
 
 @implementation GQTextScrollView
 
+#pragma mark -- life cycle
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -59,6 +61,14 @@ static const CGFloat maxTextHight = 200;
     _textLabel.frame = CGRectMake(_textEdgeInsets.left, _textEdgeInsets.top, self.bounds.size.width - _textEdgeInsets.left - _textEdgeInsets.right, _textHeight);
     _pageLabel.frame = CGRectMake(0, 0, self.bounds.size.width, 20);
 }
+
+- (void)dealloc {
+    _pageControl = nil;
+    _textLabel = nil;
+    _pageLabel = nil;
+}
+
+#pragma mark -- public method
 
 - (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
              withConfigure:(GQImageViewrConfigure *)configure
@@ -166,12 +176,6 @@ static const CGFloat maxTextHight = 200;
         _textLabel.numberOfLines = 0;
     }
     return _textLabel;
-}
-
-- (void)dealloc {
-    _pageControl = nil;
-    _textLabel = nil;
-    _pageLabel = nil;
 }
 
 @end

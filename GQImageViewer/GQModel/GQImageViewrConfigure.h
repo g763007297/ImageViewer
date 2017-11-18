@@ -13,7 +13,7 @@ typedef enum {
     GQLaunchDirectionTop,       //从上往下推出
     GQLaunchDirectionLeft,      //从左往右推出
     GQLaunchDirectionRight,     //从右往左推出
-    GQLaunchDirectionRect       //从视图位置放大
+    GQLaunchDirectionFromRect   //从视图位置放大
 }GQLaunchDirection;
 
 typedef enum : NSUInteger {
@@ -61,12 +61,12 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSString *requestClassName;
 
 /**
- *  推出方向  默认 : GQLaunchDirectionBottom
+ *  推出方向  默认 : GQLaunchDirectionBottom 如果设置为GQLaunchDirectionFromRect 必须设置launchFromView才有效果
  */
 @property (nonatomic, assign) GQLaunchDirection laucnDirection;
 
 /**
- 推出视图
+ 推出视图  当设置为GQLaunchDirectionFromRect才有用 默认为nil
  */
 @property (nonatomic, weak) UIView  *launchFromView;
 

@@ -28,6 +28,8 @@
 
 @implementation GQImageScrollView
 
+#pragma mark -- life cycle
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -79,6 +81,15 @@
             _imageView.frame = self.bounds;
     }
 }
+
+- (void)dealloc
+{
+    [[GQImageCacheManager sharedManager] clearMemoryCache];
+    [_imageView cancelCurrentImageRequest];
+    _imageView = nil;
+}
+
+#pragma mark -- set method
 
 - (void)setSingleTap:(void (^)(void))singleTap
 {
@@ -187,13 +198,6 @@
             [self setZoomScale:3 animated:YES];
         }
     }
-}
-
-- (void)dealloc
-{
-    [[GQImageCacheManager sharedManager] clearMemoryCache];
-    [_imageView cancelCurrentImageRequest];
-    _imageView = nil;
 }
 
 - (GQImageView *)imageView {

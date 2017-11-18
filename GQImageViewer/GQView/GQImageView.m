@@ -17,6 +17,8 @@
 
 @implementation GQImageView
 
+#pragma mark -- life cycle
+
 - (void)awakeFromNib
 {
     [super awakeFromNib];
@@ -37,6 +39,8 @@
     self.showLoadingView = YES;
     self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 }
+
+#pragma mark -- public method
 
 - (void)configureImageView {
     
