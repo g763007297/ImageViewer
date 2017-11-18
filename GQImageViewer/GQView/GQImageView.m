@@ -20,18 +20,22 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    [self configureImageView];
-    self.showLoadingView = YES;
+    [self setupInit];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self configureImageView];
-        self.showLoadingView = YES;
+        [self setupInit];
     }
     return self;
+}
+
+- (void)setupInit {
+    [self configureImageView];
+    self.showLoadingView = YES;
+    self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 }
 
 - (void)configureImageView {
@@ -69,3 +73,4 @@
 }
 
 @end
+

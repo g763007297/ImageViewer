@@ -44,7 +44,7 @@
     
     UIButton *autoManagerbutton = [self creatButtonWithTitle:@"点击此处查看图片(自动管理生命周期)" withSEL:@selector(showAutoManagerImageViewer:)];
     [autoManagerbutton setFrame:CGRectMake(5, CGRectGetMaxY(self.view.frame)/2+80, CGRectGetWidth(self.view.frame)-10, 40)];
-
+    
     [self.view addSubview:autoManagerbutton];
     
     UIButton *manualManagerbutton = [self creatButtonWithTitle:@"点击此处查看图片(手动管理生命周期)" withSEL:@selector(showManualManagerImageViewer:)];
@@ -73,6 +73,8 @@
                                        scaleType:GQImageViewerScaleTypeEqualWidth];
         [configure setRequestClassName:@"DemoURLRequest"];
         [configure setNeedPanGesture:NO];//设置是否需要滑动消失手势
+        configure.launchFromView = demoView;
+        configure.laucnDirection = GQLaunchDirectionRect;
         [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
     })
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
@@ -105,30 +107,30 @@
 
 //自动管理生命周期
 - (void)showAutoManagerImageViewer:(id)sender{
-//    //基本调用
-//    [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
-//    [GQImageViewer sharedInstance].selectIndex = 5;//设置选中的索引
-//    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){//获取当前选中的图片索引
-//        NSLog(@"%ld",selectIndex);
-//    };
-//    [GQImageViewer sharedInstance].configure = ^(GQImageViewrConfigure *configure) {//设置配置信息
-//        [configure configureWithImageViewBgColor:[UIColor blackColor]
-//                                 textViewBgColor:nil
-//                                       textColor:[UIColor whiteColor]
-//                                        textFont:[UIFont systemFontOfSize:12]
-//                                   maxTextHeight:100
-//                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
-//                                       scaleType:GQImageViewerScaleTypeEqualWidth];
-//    };
-//    [GQImageViewer sharedInstance].topViewConfigureChain(^(UIView *configureView) {//配置顶部view
-//        configureView.height = 50;
-//        configureView.backgroundColor = [UIColor redColor];
-//    });
-//    [GQImageViewer sharedInstance].bottomViewConfigureChain(^(UIView *configureView) {//配置底部view
-//        configureView.height = 50;
-//        configureView.backgroundColor = [UIColor yellowColor];
-//    });
-//    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
+    //    //基本调用
+    //    [[GQImageViewer sharedInstance] setImageArray:imageArray textArray:nil];//这是数据源
+    //    [GQImageViewer sharedInstance].selectIndex = 5;//设置选中的索引
+    //    [GQImageViewer sharedInstance].achieveSelectIndex = ^(NSInteger selectIndex){//获取当前选中的图片索引
+    //        NSLog(@"%ld",selectIndex);
+    //    };
+    //    [GQImageViewer sharedInstance].configure = ^(GQImageViewrConfigure *configure) {//设置配置信息
+    //        [configure configureWithImageViewBgColor:[UIColor blackColor]
+    //                                 textViewBgColor:nil
+    //                                       textColor:[UIColor whiteColor]
+    //                                        textFont:[UIFont systemFontOfSize:12]
+    //                                   maxTextHeight:100
+    //                                  textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+    //                                       scaleType:GQImageViewerScaleTypeEqualWidth];
+    //    };
+    //    [GQImageViewer sharedInstance].topViewConfigureChain(^(UIView *configureView) {//配置顶部view
+    //        configureView.height = 50;
+    //        configureView.backgroundColor = [UIColor redColor];
+    //    });
+    //    [GQImageViewer sharedInstance].bottomViewConfigureChain(^(UIView *configureView) {//配置底部view
+    //        configureView.height = 50;
+    //        configureView.backgroundColor = [UIColor yellowColor];
+    //    });
+    //    [[GQImageViewer sharedInstance] showInView:self.navigationController.view animation:YES];//显示GQImageViewer到指定view上
     
     [[GQImageDataDownload sharedDownloadManager] setURLRequestClass:NSClassFromString(@"DemoURLRequest")];
     GQWeakify(self);
@@ -143,7 +145,9 @@
                                   textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
                                        scaleType:GQImageViewerScaleTypeEqualWidth];
         [configure setRequestClassName:@"DemoURLRequest"];
-        [configure setNeedTapAutoHiddenTopBottomView:NO];//设置是否需要自动隐藏顶部和底部视图
+        configure.launchFromView = demoView;
+        configure.laucnDirection = GQLaunchDirectionRect;
+        [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
     })
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
     .selectIndexChain(5)//设置选中的索引
@@ -201,7 +205,7 @@
                                      @"6.百度百科开启权威编辑项目，与各行业垂直领域权威机构合作，这一系列的举措进一步提高词条的专业质量，实现从UGC（用户生产内容）到PGC（专家生产内容）的转变。而且2014年以来，突破了传统的百科功能，百度百科不仅集聚了逻辑严谨、内容丰富的文字内容，对于图片的表现形式也颇为多样化。同时，百度百科还可作为多种网络平台的“中心点”，并有望串联起包括社交网站、视频网站、新闻资讯、相关产品等网络信息，实现信息最大价值化 。\n在互联网时代，百度百科可以满足大部分网民迅速获取知识的需求，而且向所有人开放了一个免费获取知识的途径，实现了互联网时代的“开启民智”。百度百科是一本网络百科全书，互联网百科类产品从技术角度并无门槛，而其强大的内容生产能力、可以为用户提供权威、可信的知识是百度百科的核心竞争力。（赛迪网）",
                                      @"7.百度百科利用“词媒体”方式呈现新闻，一个重点新闻事件出现之后，用户会淹没在各种新闻列表中，而百度百科尝试用“词媒体”的方式来整理清楚来龙去脉，这属于百度百科的一个创新，可以让更多的网民可以更快，更精准的获取信息知识。\n百度百科已经在尝试探索品牌数字博物馆、城市百科等合作项目，通过各种技术手段，把各类机构的内容借助百科的平台传递给更多的用户，一方面可以对合作机构品牌影响力的提升，同时也给用户提供给更多有价值的信息。这类应用不仅可以用在展馆，还可以用在植物园、动物园等多种场景，这样的合作同样可以用在多种商业场景，新技术展示、新产品发布、新概念传播等，通过这些技术和创新技术，不仅仅让百度百科成为一本人人可以获得知识的中文百科全书，更重要的是它可以让更多的信息以更加生动的形式呈现在互联网网民的面前。",
                                      @"8.百度百科作为知识平台，节省了人们记忆大量内容的成本，可以做到随用随取且及时准确，不会给大脑造成负担，且不会受记忆偏差的影响。在人类从认知黑箱走向科学文明的过程中，掌握更多学科知识的人，点亮了这个世界；百度百科的存在，以互联网工具让每个人都成为有望推动文明进化节点到来的那个人。\n百度百科成功做到了传播广度与深度的结合，让“词媒体”与“权威知识平台”形成完美统一。",
-                                      @"9.百度百科，以人人可编辑的模式，将碎片化的知识重新组合起来，在不增加人脑负担的同时，建立起人们与各学科之间互通的触点，从而以更简单的方式创造跨界的可能性。\n人人可编辑，意味着人人都在贡献自己的知识，同时也意味着人人都能够轻松从中获取所需。在“百科全书式”人物基本已不可能再出现的情况下，百度百科人人可编辑带来了另一种推动文明发展的方式。",]];
+                                     @"9.百度百科，以人人可编辑的模式，将碎片化的知识重新组合起来，在不增加人脑负担的同时，建立起人们与各学科之间互通的触点，从而以更简单的方式创造跨界的可能性。\n人人可编辑，意味着人人都在贡献自己的知识，同时也意味着人人都能够轻松从中获取所需。在“百科全书式”人物基本已不可能再出现的情况下，百度百科人人可编辑带来了另一种推动文明发展的方式。",]];
 }
 
 #pragma mark -- 添加webp图片
@@ -212,8 +216,8 @@
     [textArray addObject:@"10.本地webp文件测试"];
     
     [imageArray addObjectsFromArray:@[
-    @"https://isparta.github.io/compare-webp/image/gif_webp/webp/1.webp",
-    @"https://isparta.github.io/compare-webp/image/gif_webp/webp/2.webp"]];
+                                      @"https://isparta.github.io/compare-webp/image/gif_webp/webp/1.webp",
+                                      @"https://isparta.github.io/compare-webp/image/gif_webp/webp/2.webp"]];
     [textArray addObjectsFromArray:@[@"11.webp图片测试1",
                                      @"12.webp图片测试"]];
 }
@@ -275,3 +279,4 @@
 }
 
 @end
+

@@ -13,6 +13,8 @@
 #import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
 
+#define GQImageViewerAnimationTimeInterval 0.3
+
 @interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
@@ -20,7 +22,7 @@
     CGFloat _bottomBgViewY;
     BOOL interation;
     
-    @private
+@private
     /*
      *  显示PageControl传yes   默认 : yes
      *  显示label就传no
@@ -256,24 +258,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
         self.singleTap(self.selectIndex);
     }
     if (self.imageViewerConfigure.needTapAutoHiddenTopBottomView) {
-        if (self->_bottomBgView.hidden) {
-            if (self -> _topView) {
-                [self -> _topView setHidden:NO];
-                [self -> _topView setAlpha:1];
-            }
-            [self -> _bottomBgView setAlpha:1];
-            [self -> _bottomBgView setHidden:NO];
-        }else {
-            [UIView animateWithDuration:0.2 animations:^{
-                if (self -> _topView) {
-                    [self -> _topView setAlpha:0];
-                }
-                [self -> _bottomBgView setAlpha:0];
-            }completion:^(BOOL finished) {
-                [self -> _bottomBgView setHidden:YES];
-                [self -> _topView setHidden:YES];
-            }];
-        }
+        [self configureTopAndBottomViewHidden:!_bottomBgView.hidden];
         return;
     }
     [self dissMissWithAnimation:YES];
@@ -313,20 +298,25 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     //初始化子view
     [self initSubViews];
     
+    self.alpha = 0;
+    
+    [showView addSubview:self];
+    
     //更新初始化rect
     [self updateInitialRect];
     
+    self.frame = _initialRect;
+    
     if (animation) {
         //设置初始值
-        self.alpha = 0;
-        self.frame = _initialRect;
-        
-        [showView addSubview:self];
-        
-        [UIView animateWithDuration:0.3
+        [UIView animateWithDuration:GQImageViewerAnimationTimeInterval
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.alpha = 1;
                              self.frame = _superViewRect;
+                         }completion:^(BOOL finished) {
+                             [self configureTopAndBottomView];
                          }];
     }else {
         self.alpha = 1;
@@ -344,15 +334,21 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
         if (self.dissMiss) {
             self.dissMiss();
         }
+        self.userInteractionEnabled = YES;
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [self removeFromSuperview];
         [self resetConfigure];
     };
     
+    [self configureTopAndBottomViewHidden:YES];
+    self.userInteractionEnabled = NO;
+    
     if (animation) {
-        [UIView animateWithDuration:0.3
+        [UIView animateWithDuration:GQImageViewerAnimationTimeInterval
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             self.alpha = 0;
+                             self.alpha = 0.5;
                              self.frame = _initialRect;
                          } completion:^(BOOL finished) {
                              dispatch_async(dispatch_get_main_queue(), completionBlock);
@@ -412,11 +408,12 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     _collectionView.needLoopScroll = _needLoopScroll;
     _collectionView.placeholderImage = _placeholderImage;
     
-    if (self.topViewConfigure) {
-        [self addSubview:self.topView];
-        _topViewConfigure(_topView);
-    }
+    [self scrollToSettingIndex];
+}
 
+- (void)configureTopAndBottomView {
+    if (self.topViewConfigure) [self addSubview:self.topView];
+    
     [self addSubview:self.bottomBgView];
     if (self.bottomViewConfigure) {
         [self.bottomBgView addSubview:self.bottomView];
@@ -425,9 +422,35 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     
     [_bottomBgView addSubview:self.textScrollView];
     
-    [self setupTextScrollView];
-    
-    [self scrollToSettingIndex];
+    [UIView animateWithDuration:GQImageViewerAnimationTimeInterval
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                            if (self.topViewConfigure) _topViewConfigure(_topView);
+                            _topView.alpha = 1;
+                            _bottomBgView.alpha = 1;
+                            [self setupTextScrollView];
+                        } completion:nil];
+}
+
+- (void)configureTopAndBottomViewHidden:(BOOL)hidden {
+    if (!hidden) {
+        if (self -> _topView) {
+            [self -> _topView setHidden:NO];
+            [self -> _topView setAlpha:1];
+        }
+        [self -> _bottomBgView setAlpha:1];
+        [self -> _bottomBgView setHidden:NO];
+    }else {
+        [UIView animateWithDuration:0.2 animations:^{
+            if (self -> _topView) {
+                [self -> _topView setAlpha:0];
+            }
+            [self -> _bottomBgView setAlpha:0];
+        }completion:^(BOOL finished) {
+            [self -> _bottomBgView setHidden:YES];
+            [self -> _topView setHidden:YES];
+        }];
+    }
 }
 
 //更新初始化rect
@@ -448,6 +471,10 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
         }
         case GQLaunchDirectionRight:{
             _initialRect = CGRectMake(CGRectGetWidth(_superViewRect), 0, 0, CGRectGetHeight(_superViewRect));
+            break;
+        }
+        case GQLaunchDirectionRect: {
+            _initialRect = [_imageViewerConfigure.launchFromView.superview convertRect:_imageViewerConfigure.launchFromView.frame toView:self.superview];
             break;
         }
         default:
@@ -578,7 +605,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
             interation = NO;
             //手势完成后结束标记并且判断移动距离
             if (fabsf(transitionY) > _superViewRect.size.height/4) {
-                [self dissMissWithAnimation:NO];
+                [self dissMissWithAnimation:YES];
             }else{
                 [self updateInteractiveTransition:0];
                 [self setupTextScrollView];
@@ -601,7 +628,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
             _topView.y = -transition;
         }
     }else {
-        [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:GQImageViewerAnimationTimeInterval animations:^{
             if (_topView) {
                 _topView.y = transition;
             }
@@ -623,7 +650,8 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 
 - (UIView *)bottomBgView {
     if (!_bottomBgView) {
-        _bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+        _bottomBgView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_superViewRect), CGRectGetWidth(_superViewRect), 0)];
+        [_bottomBgView setAlpha:0];
     }
     return _bottomBgView;
 }
@@ -638,6 +666,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 - (UIView *)topView {
     if (!_topView) {
         _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_superViewRect), 0)];
+        [_topView setAlpha:0];
     }
     return _topView;
 }
@@ -675,3 +704,4 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 }
 
 @end
+

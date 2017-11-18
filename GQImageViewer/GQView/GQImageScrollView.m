@@ -37,6 +37,8 @@
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_imageView];
         
+        self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth ;
+        
         //设置最大放大倍数
         self.maximumZoomScale = 3.0;
         self.minimumZoomScale = 1.0;
@@ -50,7 +52,7 @@
         //单击手势
         UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
         [self addGestureRecognizer:tap1];
-
+        
         //双击放大缩小手势
         UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
         //双击
@@ -58,7 +60,7 @@
         //手指的数量
         tap2.numberOfTouchesRequired = 1;
         [self addGestureRecognizer:tap2];
-
+        
         //tap1、tap2两个手势同时响应时，则取消tap1手势
         [tap1 requireGestureRecognizerToFail:tap2];
     }
@@ -109,10 +111,10 @@
                          
                      }
                      complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
-                        GQStrongify(self);
+                         GQStrongify(self);
                          [self.imageView hideLoading];
-                        [self layoutSubviews];
-                    }];
+                         [self layoutSubviews];
+                     }];
     }else if ([data isKindOfClass:[UIImageView class]])
     {
         UIImageView *imageView = (UIImageView *)data;

@@ -19,8 +19,8 @@
     [super prepareLayout];
     self.minimumInteritemSpacing = 0;
     self.minimumLineSpacing = 0;
-    if (self.collectionView.bounds.size.height) {
-        self.itemSize = self.collectionView.bounds.size;
+    if (self.collectionView.frame.size.height) {
+        self.itemSize = CGSizeMake(self.collectionView.frame.size.width, self.collectionView.frame.size.height);
     }
     self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 }
@@ -50,6 +50,8 @@
 {
     self.backgroundColor = [UIColor clearColor];
     
+    self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+    
     //去掉垂直方向的滚动条
     self.showsHorizontalScrollIndicator = NO;
     
@@ -78,7 +80,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-   return [self numberOfPages]*(_needLoopScroll?maxSectionNum:1);
+    return [self numberOfPages]*(_needLoopScroll?maxSectionNum:1);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -201,3 +203,4 @@
 }
 
 @end
+

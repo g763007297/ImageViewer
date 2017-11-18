@@ -18,6 +18,7 @@
         _needPanGesture = YES;
         _needTapAutoHiddenTopBottomView = NO;
         _laucnDirection = GQLaunchDirectionBottom;
+        _launchFromView = nil;
     }
     return self;
 }

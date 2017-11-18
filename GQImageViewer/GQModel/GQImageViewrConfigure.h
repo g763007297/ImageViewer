@@ -13,7 +13,7 @@ typedef enum {
     GQLaunchDirectionTop,       //从上往下推出
     GQLaunchDirectionLeft,      //从左往右推出
     GQLaunchDirectionRight,     //从右往左推出
-//    GQLaunchDirectionRect  //从图片点击位置放大
+    GQLaunchDirectionRect       //从视图位置放大
 }GQLaunchDirection;
 
 typedef enum : NSUInteger {
@@ -64,6 +64,11 @@ typedef enum : NSUInteger {
  *  推出方向  默认 : GQLaunchDirectionBottom
  */
 @property (nonatomic, assign) GQLaunchDirection laucnDirection;
+
+/**
+ 推出视图
+ */
+@property (nonatomic, weak) UIView  *launchFromView;
 
 /**
  整体背景颜色
@@ -120,3 +125,4 @@ typedef enum : NSUInteger {
                                     scaleType:(GQImageViewerScaleType)scaleType;
 
 @end
+
