@@ -9,18 +9,18 @@
 #import "GQImageViewrBaseObject.h"
 
 typedef enum {
-    GQLaunchDirectionBottom = 1,//从下往上推出
-    GQLaunchDirectionTop,       //从上往下推出
-    GQLaunchDirectionLeft,      //从左往右推出
-    GQLaunchDirectionRight,     //从右往左推出
-    GQLaunchDirectionFromRect   //从视图位置放大
+    GQLaunchDirectionBottom = 1,//从下往上推入
+    GQLaunchDirectionTop,       //从上往下推入
+    GQLaunchDirectionLeft,      //从左往右推入
+    GQLaunchDirectionRight,     //从右往左推入
+    GQLaunchDirectionFromRect   //从视图位置放大或缩小
 }GQLaunchDirection;
 
 typedef enum : NSUInteger {
     GQImageViewerScaleTypeFullyDisplay,//让图片完全显示 (高度宽度等比例缩放到图片能完全显示)
-    GQImageViewerScaleTypeEqualWidth, //等宽高度自适应（宽度为屏幕宽度  高度自适应）
-    GQImageViewerScaleTypeEqualHeight, //等高宽度自适应（高度为屏幕高度，宽度自适应） //不推荐使用，效果不好
-} GQImageViewerScaleType;
+    GQImageViewerScaleTypeEqualWidth, //等宽高度自适应（宽度为屏幕宽度  高度自适应） 如果超过屏幕高度的长图会影响滑动消失手势，
+    GQImageViewerScaleTypeEqualHeight, //等高宽度自适应（高度为屏幕高度，宽度自适应  超过屏幕高度的长图设置为这个模式不会影响滑动消失手势
+} GQImageViewerScaleType;//图片伸缩模式
 
 @interface GQImageViewrConfigure : GQImageViewrBaseObject
 
