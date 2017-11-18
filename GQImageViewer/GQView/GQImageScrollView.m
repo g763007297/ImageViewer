@@ -16,6 +16,8 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
+#import "UIImageView+GQImageViewerCategory.h"
+
 @interface GQImageScrollView(){
     BOOL            _isAddSubView;
 }
@@ -98,6 +100,7 @@
         if ([data isKindOfClass:[NSString class]]) {
             imageUrl = [NSURL URLWithString:data];
         }
+        [_imageView showLoading];
         GQWeakify(self);
         [_imageView loadImage:imageUrl
              requestClassName:imageModel.GQImageViewURLRequestClassName
@@ -107,6 +110,7 @@
                      }
                      complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
                         GQStrongify(self);
+                         [self.imageView hideLoading];
                         [self layoutSubviews];
                     }];
     }else if ([data isKindOfClass:[UIImageView class]])

@@ -78,6 +78,29 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
 #define GQStrongify(object) __typeof__(object) object = weak##_##object
 #endif
 
+#pragma mark - 动态添加属性
+//动态添加属性
+#define GQ_DYNAMIC_PROPERTY_OBJECT(_getter_, _setter_, _association_, _type_) \
+- (void)_setter_ : (_type_)object { \
+    [self willChangeValueForKey:@#_getter_]; \
+    objc_setAssociatedObject(self, _cmd, object, _association_); \
+    [self didChangeValueForKey:@#_getter_]; \
+} \
+- (_type_)_getter_ { \
+    return objc_getAssociatedObject(self, @selector(_setter_:)); \
+}
+
+//动态添加BOOL属性
+#define GQ_DYNAMIC_PROPERTY_BOOL(_getter_, _setter_)\
+- (void)_setter_:(BOOL)object {\
+    [self willChangeValueForKey:@#_getter_]; \
+    objc_setAssociatedObject(self, _cmd, @(object), OBJC_ASSOCIATION_ASSIGN); \
+    [self didChangeValueForKey:@#_getter_]; \
+}\
+- (BOOL)_getter_ {\
+    return [objc_getAssociatedObject(self, @selector(_setter_:)) boolValue];\
+}\
+
 typedef void(^GQWebImageNoParamsBlock)(void);
 
 #endif /* GQImageViewerConst_h */

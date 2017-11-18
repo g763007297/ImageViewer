@@ -1,25 +1,16 @@
 //
-//  GQImageView.h
-//  GQImageVideoViewer
+//  UIImageView+GQImageViewerCategory.h
+//  ImageViewer
 //
-//  Created by 高旗 on 16/9/8.
-//  Copyright © 2016年 gaoqi. All rights reserved.
+//  Created by 高旗 on 2017/11/18.
+//  Copyright © 2017年 tusm. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-
 typedef void(^GQImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageUrl);
 typedef void(^GQImageProgressBlock) (CGFloat progress);
 
-@interface GQImageView : UIImageView
-
-@property (nonatomic,assign) BOOL showLoadingView;
-@property (nonatomic,strong) NSURL *imageUrl;
-
-/**
- 配置图片显示界面
- */
-- (void)configureImageView;
+@interface UIImageView (GQImageViewerCategory)
 
 - (void)loadImage:(NSURL*)url
          progress:(GQImageProgressBlock)progress
