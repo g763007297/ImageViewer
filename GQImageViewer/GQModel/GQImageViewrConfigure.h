@@ -14,7 +14,7 @@ typedef enum {
     GQLaunchDirectionLeft,      //从左往右推入
     GQLaunchDirectionRight,     //从右往左推入
     GQLaunchDirectionFromRect   //从视图位置放大或缩小
-}GQLaunchDirection;
+} GQLaunchDirection;//推入推出方向
 
 typedef enum : NSUInteger {
     GQImageViewerScaleTypeFullyDisplay,//让图片完全显示 (高度宽度等比例缩放到图片能完全显示)
@@ -110,6 +110,10 @@ typedef enum : NSUInteger {
                                     scaleType:(GQImageViewerScaleType)scaleType;
 
 - (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
+                                    scaleType:(GQImageViewerScaleType)scaleType
+                                    launchDirection:(GQLaunchDirection)launchDirection;
+
+- (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
                               textViewBgColor:(UIColor *)textViewBgColor
                                     textColor:(UIColor *)textColor
                                      textFont:(UIFont *)textFont
@@ -123,6 +127,15 @@ typedef enum : NSUInteger {
                                 maxTextHeight:(CGFloat)maxTextHeight
                                textEdgeInsets:(UIEdgeInsets)textEdgeInsets
                                     scaleType:(GQImageViewerScaleType)scaleType;
+
+- (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
+                              textViewBgColor:(UIColor *)textViewBgColor
+                                    textColor:(UIColor *)textColor
+                                     textFont:(UIFont *)textFont
+                                maxTextHeight:(CGFloat)maxTextHeight
+                               textEdgeInsets:(UIEdgeInsets)textEdgeInsets
+                                    scaleType:(GQImageViewerScaleType)scaleType
+                              launchDirection:(GQLaunchDirection)launchDirection;
 
 @end
 

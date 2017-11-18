@@ -35,6 +35,19 @@
 }
 
 - (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
+                                    scaleType:(GQImageViewerScaleType)scaleType
+                              launchDirection:(GQLaunchDirection)launchDirection {
+    return [self configureWithImageViewBgColor:imageViewBgColor
+                               textViewBgColor:[[UIColor blackColor] colorWithAlphaComponent:0.3]
+                                     textColor:[UIColor whiteColor]
+                                      textFont:[UIFont systemFontOfSize:15]
+                                 maxTextHeight:200
+                                textEdgeInsets:UIEdgeInsetsZero
+                                     scaleType:scaleType
+                               launchDirection:launchDirection];
+}
+
+- (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
                               textViewBgColor:(UIColor *)textViewBgColor
                                     textColor:(UIColor *)textColor
                                      textFont:(UIFont *)textFont
@@ -56,6 +69,24 @@
                                 maxTextHeight:(CGFloat)maxTextHeight
                                textEdgeInsets:(UIEdgeInsets)textEdgeInsets
                                     scaleType:(GQImageViewerScaleType)scaleType {
+    return [self configureWithImageViewBgColor:imageViewBgColor
+                        textViewBgColor:textViewBgColor
+                              textColor:textColor
+                               textFont:textFont
+                          maxTextHeight:maxTextHeight
+                         textEdgeInsets:textEdgeInsets
+                              scaleType:scaleType
+                        launchDirection:GQLaunchDirectionBottom];
+}
+
+- (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
+                              textViewBgColor:(UIColor *)textViewBgColor
+                                    textColor:(UIColor *)textColor
+                                     textFont:(UIFont *)textFont
+                                maxTextHeight:(CGFloat)maxTextHeight
+                               textEdgeInsets:(UIEdgeInsets)textEdgeInsets
+                                    scaleType:(GQImageViewerScaleType)scaleType
+                              launchDirection:(GQLaunchDirection)launchDirection {
     self.imageViewBgColor = imageViewBgColor;
     self.textViewBgColor = textViewBgColor;
     self.textColor = textColor;
@@ -63,6 +94,7 @@
     self.maxTextHeight = maxTextHeight;
     self.textEdgeInsets = textEdgeInsets;
     self.scaleType = scaleType;
+    self.laucnDirection = launchDirection;
     return self;
 }
 
