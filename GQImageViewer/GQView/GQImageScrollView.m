@@ -118,9 +118,7 @@
         [_imageView loadImage:imageUrl
              requestClassName:imageModel.GQImageViewURLRequestClassName
                   placeHolder:_placeholderImage
-                     progress:^(CGFloat progress) {
-                         
-                     }
+                     progress:nil
                      complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
                          GQStrongify(self);
                          [self.imageView hideLoading];
