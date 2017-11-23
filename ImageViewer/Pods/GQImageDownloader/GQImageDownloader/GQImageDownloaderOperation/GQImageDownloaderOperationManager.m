@@ -1,17 +1,16 @@
 //
-//  GQImageViewerOperationManager.m
-//  ImageViewer
+//  GQImageDownloaderOperationManager.m
+//  GQImageDownload
 //
-//  Created by 高旗 on 17/2/27.
-//  Copyright © 2017年 tusm. All rights reserved.
+//  Created by 高旗 on 2017/11/23.
+//  Copyright © 2017年 gaoqi. All rights reserved.
 //
 
-#import "GQImageViewerOperationManager.h"
-#import "GQImageViewerConst.h"
+#import "GQImageDownloaderOperationManager.h"
+#import "GQImageDownloaderConst.h"
 #import "GQImageCacheManager.h"
-#import "GQImageDataDownload.h"
 
-@interface GQImageViewerOperationManager()
+@interface GQImageDownloaderOperationManager()
 #if !OS_OBJECT_USE_OBJC
 @property (nonatomic, assign) dispatch_queue_t saveDataDispatchQueue;
 @property (nonatomic, assign) dispatch_group_t saveDataDispatchGroup;
@@ -22,18 +21,18 @@
 
 @end
 
-@implementation GQImageViewerOperationManager
+@implementation GQImageDownloaderOperationManager
 
-GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewerOperationManager, sharedManager)
+GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
 
-- (id<GQImageViwerOperationDelegate>)loadWithURL:(NSURL *)url
+- (id<GQImageDownloaderOperationDelegate>)loadWithURL:(NSURL *)url
                          withURLRequestClassName:(NSString *)className
-                                        progress:(GQImageViwerProgressBlock)progressBlock
-                                        complete:(GQImageViwerCompleteBlock)completeBlock {
-    [[GQImageDataDownload sharedDownloadManager] setURLRequestClass:NSClassFromString(className)];
+                                        progress:(GQImageDownloaderProgressBlock)progressBlock
+                                        complete:(GQImageDownloaderCompleteBlock)completeBlock {
+    [[GQImageDataDownloader sharedDownloadManager] setURLRequestClass:NSClassFromString(className)];
     __block UIImage *image = nil;
     if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString]){
-        id<GQImageViwerOperationDelegate> operation = [[GQImageDataDownload sharedDownloadManager]
+        id<GQImageDownloaderOperationDelegate> operation = [[GQImageDataDownloader sharedDownloadManager]
                                                        downloadWithURL:url
                                                        progress:^(CGFloat progress) {
                                                            dispatch_main_async_safe(^{
@@ -41,11 +40,11 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewerOperationManager, sharedManager)
                                                                    progressBlock(progress);
                                                                }
                                                            });
-                                                       } complete:^(NSURL *url, UIImage *image, NSError *error) {
+                                                       } complete:^(UIImage *image, NSURL *url, NSError *error) {
                                                            [[GQImageCacheManager sharedManager] saveImage:image withUrl:url.absoluteString];
                                                            dispatch_main_async_safe(^{
                                                                if (completeBlock) {
-                                                                   completeBlock(url,image,error);
+                                                                   completeBlock(image, url ,error);
                                                                }
                                                            });
                                                        }];
@@ -54,7 +53,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewerOperationManager, sharedManager)
         dispatch_group_async(dispatch_group_create(), dispatch_queue_create("com.ISS.GQImageCacheManager", DISPATCH_QUEUE_SERIAL), ^{
             image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:url.absoluteString];
             dispatch_main_async_safe(^{
-                completeBlock(url,image,nil);
+                completeBlock(image,url,nil);
             });
         });
         return nil;

@@ -7,36 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImage+GQImageDownloader.h"
 
 @interface UIImage (GQImageViewrCategory)
-
-#ifdef GQ_WEBP
-
-/**
- data转换成UIImage
- 
- param imgData
- @return
- */
-+ (UIImage *)gq_imageWithWebPData:(NSData *)imgData;
-
-/**
- WebP文件转换成UIImage
- 
- param filePath
- @return
- */
-+ (UIImage *)gq_imageWithWebPFile:(NSString*)filePath;
-
-/**
- WebP图片转换成UIImage
-
- param imageName
- @return
- */
-+ (UIImage *)gq_imageWithWebPImageName:(NSString *)imageName;
-
-#endif
 
 /**
  等比例自适应imageView大小  (等高  宽度自适应)

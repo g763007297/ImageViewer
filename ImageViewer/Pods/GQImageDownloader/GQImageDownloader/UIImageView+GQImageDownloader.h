@@ -1,16 +1,17 @@
 //
-//  UIImageView+GQImageViewerCategory.h
-//  ImageViewer
+//  UIImageView+GQImageDownloader.h
+//  GQImageDownload
 //
-//  Created by 高旗 on 2017/11/18.
-//  Copyright © 2017年 tusm. All rights reserved.
+//  Created by 高旗 on 2017/11/23.
+//  Copyright © 2017年 gaoqi. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+
 typedef void(^GQImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageUrl);
 typedef void(^GQImageProgressBlock) (CGFloat progress);
 
-@interface UIImageView (GQImageViewerCategory)
+@interface UIImageView (GQImageDownloader)
 
 - (void)loadImage:(NSURL*)url
          progress:(GQImageProgressBlock)progress

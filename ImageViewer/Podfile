@@ -1,0 +1,21 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+pod 'GQImageDownloader/WebP'
+
+# pod 的所有工程的bitcode设置为NO
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+            if target.name == 'SDWebImage'
+                #config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = ['$(inherited)', 'SD_WEBP=1']
+            end
+        end
+    end
+end
+
+#继承公共默认pod
+target :ImageViewer do
+end

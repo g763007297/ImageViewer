@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "GQImageViewerConst.h"
+#import "GQImageDownloaderConst.h"
 
 @interface GQImageCacheManager : NSObject
 
@@ -84,6 +84,6 @@
  删除disk缓存
  */
 - (void)clearDisk;
-- (void)clearDiskOnCompletion:(GQWebImageNoParamsBlock)completion;
+- (void)clearDiskOnCompletion:(GQImageDownloaderNoParamsBlock)completion;
 
 @end

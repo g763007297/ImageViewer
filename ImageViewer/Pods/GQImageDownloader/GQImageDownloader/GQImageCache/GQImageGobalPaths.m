@@ -6,7 +6,7 @@
 //  Copyright © 2016年 gaoqi. All rights reserved.
 //
 
-#import "GQGobalPaths.h"
+#import "GQImageGobalPaths.h"
 
 static NSBundle* globalBundle = nil;
 
@@ -47,7 +47,6 @@ NSString *GQPathForDocumentsResource(NSString* relativePath)
     }
     return [documentsPath stringByAppendingPathComponent:relativePath];
 }
-
 
 /**
  * 返回Cache资源路径

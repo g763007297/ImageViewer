@@ -13,7 +13,10 @@
 - (CGSize)textSizeWithFont:(UIFont *)font withcSize:(CGSize)size{
     CGSize actualTitleSize;
     if ([[UIDevice currentDevice].systemVersion doubleValue] >= 7.0) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
         actualTitleSize = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName, nil] context:nil].size;
+#pragma clang diagnostic pop
     }else{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"

@@ -1,13 +1,15 @@
 //
-//  GQImageViewerConst.h
-//  ImageViewer
+//  GQImageDownloaderConst.h
+//  GQImageDownload
 //
-//  Created by 高旗 on 16/6/23.
-//  Copyright © 2016年 tusm. All rights reserved.
+//  Created by 高旗 on 2017/11/23.
+//  Copyright © 2017年 gaoqi. All rights reserved.
 //
 
-#ifndef GQImageViewerConst_h
-#define GQImageViewerConst_h                                         
+#ifndef GQImageDownloaderConst_h
+#define GQImageDownloaderConst_h
+
+#import <UIKit/UIKit.h>
 
 #define GQOBJECT_SINGLETON_BOILERPLATE(_object_name_, _shared_obj_name_)    \
 static _object_name_ *z##_shared_obj_name_ = nil;                           \
@@ -35,21 +37,6 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     return z##_shared_obj_name_;                                            \
 }
 
-#define GQChainObjectDefine(_key_name_,_Chain_, _type_ , _block_type_)  \
-@synthesize _key_name_ = _##_key_name_;                                 \
-- (_block_type_)_key_name_                                              \
-{                                                                       \
-    __weak typeof(self) weakSelf = self;                                \
-    if (!_##_key_name_) {                                               \
-        _##_key_name_ = ^(_type_ value){                                \
-            __strong typeof(weakSelf) strongSelf = weakSelf;            \
-            [strongSelf set##_Chain_:value];                            \
-            return strongSelf;                                          \
-        };                                                              \
-    }                                                                   \
-    return _##_key_name_;                                               \
-}
-
 #if OS_OBJECT_USE_OBJC
     #undef GQDispatchQueueRelease
     #undef GQDispatchQueueSetterSementics
@@ -62,13 +49,20 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     #define GQDispatchQueueSetterSementics assign
 #endif
 
+#define dispatch_main_async_safe(block)\
+if ([NSThread isMainThread]) {\
+    block();\
+} else {\
+    dispatch_async(dispatch_get_main_queue(), block);\
+}
+
 //强弱引用
 #ifndef GQWeakify
-#define GQWeakify(object) __weak __typeof__(object) weak##_##object = object
+    #define GQWeakify(object) __weak __typeof__(object) weak##_##object = object
 #endif
 
 #ifndef GQStrongify
-#define GQStrongify(object) __typeof__(object) object = weak##_##object
+    #define GQStrongify(object) __typeof__(object) object = weak##_##object
 #endif
 
 #pragma mark - 动态添加属性
@@ -94,6 +88,6 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
     return [objc_getAssociatedObject(self, @selector(_setter_:)) boolValue];\
 }\
 
-typedef void(^GQWebImageNoParamsBlock)(void);
+typedef void(^GQImageDownloaderNoParamsBlock)(void);
 
-#endif /* GQImageViewerConst_h */
+#endif /* GQImageDownloaderConst_h */

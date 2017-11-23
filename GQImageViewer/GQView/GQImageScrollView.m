@@ -16,7 +16,7 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
-#import "UIImageView+GQImageViewerCategory.h"
+#import "UIImageView+GQImageDownloader.h"
 
 @interface GQImageScrollView(){
     BOOL            _isAddSubView;

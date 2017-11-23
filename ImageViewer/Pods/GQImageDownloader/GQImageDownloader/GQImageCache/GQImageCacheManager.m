@@ -7,8 +7,8 @@
 //
 
 #import "GQImageCacheManager.h"
-#import "GQGobalPaths.h"
-#import "NSData+GQImageViewrCategory.h"
+#import "GQImageGobalPaths.h"
+#import "NSData+GQImageDownloader.h"
 
 @interface GQImageCacheManager()
 {
@@ -77,7 +77,10 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (NSString*)encodeURL:(NSString *)string
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"    
     NSString *newString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)string, NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)));
+#pragma clang diagnostic pop
     if (newString) {
         return newString;
     }
@@ -244,7 +247,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     [self clearDiskOnCompletion:nil];
 }
 
-- (void)clearDiskOnCompletion:(GQWebImageNoParamsBlock)completion
+- (void)clearDiskOnCompletion:(GQImageDownloaderNoParamsBlock)completion
 {
     dispatch_async(self.ioDispatchQueue, ^{
         [_fileManager removeItemAtPath:[self getImageFolder] error:nil];
