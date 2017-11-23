@@ -186,7 +186,7 @@ API:
 
 ## 1.3 Basic usage
 
-1.将GQImageViewer文件夹加入到工程中。
+1.将GQImageViewer和GQImageDownloader文件夹加入到工程中。
 
 2.在需要使用的图片查看器的控制器中#import "GQImageViewer.h"。
 

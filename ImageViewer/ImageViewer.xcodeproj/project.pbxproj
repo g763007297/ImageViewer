@@ -30,12 +30,22 @@
 		B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B646A70D1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m */; };
 		B655AEE01FC6BD1A007D44E4 /* GQImageViewrBaseURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEDF1FC6BD1A007D44E4 /* GQImageViewrBaseURLRequest.m */; };
 		B655AEE31FC6C0B3007D44E4 /* GQImageDataDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEE21FC6C0B3007D44E4 /* GQImageDataDownload.m */; };
-		B655AEE41FC6C3A3007D44E4 /* GQImageDownloader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B655AEE51FC6C3A3007D44E4 /* GQImageDownloader.framework */; };
+		B655AF051FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEE71FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m */; };
+		B655AF061FC6CB17007D44E4 /* GQImageDataDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEEA1FC6CB17007D44E4 /* GQImageDataDownloader.m */; };
+		B655AF071FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEEC1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m */; };
+		B655AF081FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF21FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m */; };
+		B655AF091FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF31FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m */; };
+		B655AF0A1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF41FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m */; };
+		B655AF0B1FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF51FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m */; };
+		B655AF0C1FC6CB17007D44E4 /* GQImageGobalPaths.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF91FC6CB17007D44E4 /* GQImageGobalPaths.m */; };
+		B655AF0D1FC6CB17007D44E4 /* GQImageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEFB1FC6CB17007D44E4 /* GQImageCacheManager.m */; };
+		B655AF0E1FC6CB17007D44E4 /* UIImage+GQImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEFF1FC6CB17007D44E4 /* UIImage+GQImageDownloader.m */; };
+		B655AF0F1FC6CB17007D44E4 /* NSData+GQImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AF001FC6CB17007D44E4 /* NSData+GQImageDownloader.m */; };
+		B655AF101FC6CB17007D44E4 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B655AF041FC6CB17007D44E4 /* WebP.framework */; };
 		B68C6A1A1FBFC3C90014E78C /* GQImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B68C6A181FBFC3C90014E78C /* GQImageView.m */; };
 		B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = B69521721CE2C82F00F288AF /* GQImageViewer.m */; };
 		B6CEC0181F919B260052D571 /* DemoURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6CEC0171F919B260052D571 /* DemoURLRequest.m */; };
 		B6FB8CB31DF01F4E009C4494 /* UIView+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */; };
-		BF9D77DB129D62CA28315F60 /* Pods_ImageViewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCC81A314B704353AD977AFE /* Pods_ImageViewer.framework */; };
 		DF0255BA1C34BCCD001E65C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255B91C34BCCD001E65C2 /* main.m */; };
 		DF0255BD1C34BCCD001E65C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255BC1C34BCCD001E65C2 /* AppDelegate.m */; };
 		DF0255C81C34BCCD001E65C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF0255C71C34BCCD001E65C2 /* Assets.xcassets */; };
@@ -54,8 +64,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		11C0507C2532E40C1CE275FD /* Pods-ImageViewer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageViewer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageViewer/Pods-ImageViewer.debug.xcconfig"; sourceTree = "<group>"; };
-		6867956B939F584B3762123B /* Pods-ImageViewer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageViewer.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageViewer/Pods-ImageViewer.release.xcconfig"; sourceTree = "<group>"; };
 		B6032E1E1DEE64EA0060FB0E /* NSString+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GQImageViewrCategory.h"; sourceTree = "<group>"; };
 		B6032E1F1DEE64EA0060FB0E /* NSString+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GQImageViewrCategory.m"; sourceTree = "<group>"; };
 		B6032E221DEE65B00060FB0E /* GQBaseCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQBaseCollectionView.h; sourceTree = "<group>"; };
@@ -91,7 +99,31 @@
 		B655AEDF1FC6BD1A007D44E4 /* GQImageViewrBaseURLRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GQImageViewrBaseURLRequest.m; sourceTree = "<group>"; };
 		B655AEE11FC6C0B3007D44E4 /* GQImageDataDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GQImageDataDownload.h; sourceTree = "<group>"; };
 		B655AEE21FC6C0B3007D44E4 /* GQImageDataDownload.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GQImageDataDownload.m; sourceTree = "<group>"; };
-		B655AEE51FC6C3A3007D44E4 /* GQImageDownloader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GQImageDownloader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B655AEE71FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+GQImageDownloader.m"; sourceTree = "<group>"; };
+		B655AEE91FC6CB17007D44E4 /* GQImageDownloaderConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderConst.h; sourceTree = "<group>"; };
+		B655AEEA1FC6CB17007D44E4 /* GQImageDataDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDataDownloader.m; sourceTree = "<group>"; };
+		B655AEEB1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderBaseURLRequest.h; sourceTree = "<group>"; };
+		B655AEEC1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderBaseURLRequest.m; sourceTree = "<group>"; };
+		B655AEED1FC6CB17007D44E4 /* GQImageDataDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDataDownloader.h; sourceTree = "<group>"; };
+		B655AEEF1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderOperationManager.h; sourceTree = "<group>"; };
+		B655AEF01FC6CB17007D44E4 /* GQImageDownloaderOperationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderOperationDelegate.h; sourceTree = "<group>"; };
+		B655AEF11FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderSessionOperation.h; sourceTree = "<group>"; };
+		B655AEF21FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderBaseOperation.m; sourceTree = "<group>"; };
+		B655AEF31FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderURLConnectionOperation.m; sourceTree = "<group>"; };
+		B655AEF41FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderOperationManager.m; sourceTree = "<group>"; };
+		B655AEF51FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderSessionOperation.m; sourceTree = "<group>"; };
+		B655AEF61FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderURLConnectionOperation.h; sourceTree = "<group>"; };
+		B655AEF71FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderBaseOperation.h; sourceTree = "<group>"; };
+		B655AEF91FC6CB17007D44E4 /* GQImageGobalPaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageGobalPaths.m; sourceTree = "<group>"; };
+		B655AEFA1FC6CB17007D44E4 /* GQImageCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageCacheManager.h; sourceTree = "<group>"; };
+		B655AEFB1FC6CB17007D44E4 /* GQImageCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageCacheManager.m; sourceTree = "<group>"; };
+		B655AEFC1FC6CB17007D44E4 /* GQImageGobalPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageGobalPaths.h; sourceTree = "<group>"; };
+		B655AEFD1FC6CB17007D44E4 /* UIImageView+GQImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+GQImageDownloader.h"; sourceTree = "<group>"; };
+		B655AEFF1FC6CB17007D44E4 /* UIImage+GQImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GQImageDownloader.m"; sourceTree = "<group>"; };
+		B655AF001FC6CB17007D44E4 /* NSData+GQImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GQImageDownloader.m"; sourceTree = "<group>"; };
+		B655AF011FC6CB17007D44E4 /* NSData+GQImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GQImageDownloader.h"; sourceTree = "<group>"; };
+		B655AF021FC6CB17007D44E4 /* UIImage+GQImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GQImageDownloader.h"; sourceTree = "<group>"; };
+		B655AF041FC6CB17007D44E4 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		B68C6A181FBFC3C90014E78C /* GQImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageView.m; sourceTree = "<group>"; };
 		B68C6A191FBFC3C90014E78C /* GQImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageView.h; sourceTree = "<group>"; };
 		B69521711CE2C82F00F288AF /* GQImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageViewer.h; sourceTree = "<group>"; };
@@ -100,7 +132,6 @@
 		B6CEC0171F919B260052D571 /* DemoURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoURLRequest.m; sourceTree = "<group>"; };
 		B6FB8CB11DF01F4E009C4494 /* UIView+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GQImageViewrCategory.h"; sourceTree = "<group>"; };
 		B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GQImageViewrCategory.m"; sourceTree = "<group>"; };
-		CCC81A314B704353AD977AFE /* Pods_ImageViewer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageViewer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF0255B51C34BCCD001E65C2 /* ImageViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF0255B91C34BCCD001E65C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DF0255BB1C34BCCD001E65C2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -119,8 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B655AEE41FC6C3A3007D44E4 /* GQImageDownloader.framework in Frameworks */,
-				BF9D77DB129D62CA28315F60 /* Pods_ImageViewer.framework in Frameworks */,
+				B655AF101FC6CB17007D44E4 /* WebP.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,24 +164,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3234306B7897642E3F7EB7C9 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B655AEE51FC6C3A3007D44E4 /* GQImageDownloader.framework */,
-				CCC81A314B704353AD977AFE /* Pods_ImageViewer.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		55DCB8EAE7370FDB3CDD7C41 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				11C0507C2532E40C1CE275FD /* Pods-ImageViewer.debug.xcconfig */,
-				6867956B939F584B3762123B /* Pods-ImageViewer.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		B6032E1A1DEE64D50060FB0E /* GQCategory */ = {
 			isa = PBXGroup;
 			children = (
@@ -225,6 +237,79 @@
 			path = image;
 			sourceTree = "<group>";
 		};
+		B655AEE61FC6CB17007D44E4 /* GQImageDownloader */ = {
+			isa = PBXGroup;
+			children = (
+				B655AEFD1FC6CB17007D44E4 /* UIImageView+GQImageDownloader.h */,
+				B655AEE71FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m */,
+				B655AEE81FC6CB17007D44E4 /* GQImageRequestConfigure */,
+				B655AEEE1FC6CB17007D44E4 /* GQImageDownloaderOperation */,
+				B655AEF81FC6CB17007D44E4 /* GQImageCache */,
+				B655AEFE1FC6CB17007D44E4 /* GQCategory */,
+				B655AF031FC6CB17007D44E4 /* GQThirdPart */,
+			);
+			name = GQImageDownloader;
+			path = ../../GQImageDownloader;
+			sourceTree = "<group>";
+		};
+		B655AEE81FC6CB17007D44E4 /* GQImageRequestConfigure */ = {
+			isa = PBXGroup;
+			children = (
+				B655AEE91FC6CB17007D44E4 /* GQImageDownloaderConst.h */,
+				B655AEEA1FC6CB17007D44E4 /* GQImageDataDownloader.m */,
+				B655AEEB1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.h */,
+				B655AEEC1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m */,
+				B655AEED1FC6CB17007D44E4 /* GQImageDataDownloader.h */,
+			);
+			path = GQImageRequestConfigure;
+			sourceTree = "<group>";
+		};
+		B655AEEE1FC6CB17007D44E4 /* GQImageDownloaderOperation */ = {
+			isa = PBXGroup;
+			children = (
+				B655AEEF1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.h */,
+				B655AEF01FC6CB17007D44E4 /* GQImageDownloaderOperationDelegate.h */,
+				B655AEF11FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.h */,
+				B655AEF21FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m */,
+				B655AEF31FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m */,
+				B655AEF41FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m */,
+				B655AEF51FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m */,
+				B655AEF61FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.h */,
+				B655AEF71FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.h */,
+			);
+			path = GQImageDownloaderOperation;
+			sourceTree = "<group>";
+		};
+		B655AEF81FC6CB17007D44E4 /* GQImageCache */ = {
+			isa = PBXGroup;
+			children = (
+				B655AEF91FC6CB17007D44E4 /* GQImageGobalPaths.m */,
+				B655AEFA1FC6CB17007D44E4 /* GQImageCacheManager.h */,
+				B655AEFB1FC6CB17007D44E4 /* GQImageCacheManager.m */,
+				B655AEFC1FC6CB17007D44E4 /* GQImageGobalPaths.h */,
+			);
+			path = GQImageCache;
+			sourceTree = "<group>";
+		};
+		B655AEFE1FC6CB17007D44E4 /* GQCategory */ = {
+			isa = PBXGroup;
+			children = (
+				B655AEFF1FC6CB17007D44E4 /* UIImage+GQImageDownloader.m */,
+				B655AF001FC6CB17007D44E4 /* NSData+GQImageDownloader.m */,
+				B655AF011FC6CB17007D44E4 /* NSData+GQImageDownloader.h */,
+				B655AF021FC6CB17007D44E4 /* UIImage+GQImageDownloader.h */,
+			);
+			path = GQCategory;
+			sourceTree = "<group>";
+		};
+		B655AF031FC6CB17007D44E4 /* GQThirdPart */ = {
+			isa = PBXGroup;
+			children = (
+				B655AF041FC6CB17007D44E4 /* WebP.framework */,
+			);
+			path = GQThirdPart;
+			sourceTree = "<group>";
+		};
 		B695216E1CE2C82F00F288AF /* GQImageViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,8 +331,6 @@
 				DF0255B71C34BCCD001E65C2 /* ImageViewer */,
 				DF0255D41C34BCCD001E65C2 /* ImageViewerTests */,
 				DF0255B61C34BCCD001E65C2 /* Products */,
-				55DCB8EAE7370FDB3CDD7C41 /* Pods */,
-				3234306B7897642E3F7EB7C9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -263,6 +346,7 @@
 		DF0255B71C34BCCD001E65C2 /* ImageViewer */ = {
 			isa = PBXGroup;
 			children = (
+				B655AEE61FC6CB17007D44E4 /* GQImageDownloader */,
 				B695216E1CE2C82F00F288AF /* GQImageViewer */,
 				DF0255BB1C34BCCD001E65C2 /* AppDelegate.h */,
 				DF0255BC1C34BCCD001E65C2 /* AppDelegate.m */,
@@ -302,12 +386,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DF0255DA1C34BCCD001E65C2 /* Build configuration list for PBXNativeTarget "ImageViewer" */;
 			buildPhases = (
-				175FF38A1809F624776F6A03 /* [CP] Check Pods Manifest.lock */,
 				DF0255B11C34BCCD001E65C2 /* Sources */,
 				DF0255B21C34BCCD001E65C2 /* Frameworks */,
 				DF0255B31C34BCCD001E65C2 /* Resources */,
-				D296412FC73304B026AEBF3A /* [CP] Embed Pods Frameworks */,
-				E79B3EEFE89F644B67E39476 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -405,77 +486,34 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		175FF38A1809F624776F6A03 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ImageViewer-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D296412FC73304B026AEBF3A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ImageViewer/Pods-ImageViewer-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GQImageDownloader/GQImageDownloader.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GQImageDownloader.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageViewer/Pods-ImageViewer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E79B3EEFE89F644B67E39476 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageViewer/Pods-ImageViewer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		DF0255B11C34BCCD001E65C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				B6CEC0181F919B260052D571 /* DemoURLRequest.m in Sources */,
+				B655AF071FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m in Sources */,
+				B655AF0C1FC6CB17007D44E4 /* GQImageGobalPaths.m in Sources */,
 				B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */,
 				B6032E361DEE67290060FB0E /* GQTextScrollView.m in Sources */,
+				B655AF0A1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m in Sources */,
+				B655AF091FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m in Sources */,
+				B655AF0B1FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m in Sources */,
+				B655AF051FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m in Sources */,
 				B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */,
 				B655AEE01FC6BD1A007D44E4 /* GQImageViewrBaseURLRequest.m in Sources */,
+				B655AF061FC6CB17007D44E4 /* GQImageDataDownloader.m in Sources */,
+				B655AF0E1FC6CB17007D44E4 /* UIImage+GQImageDownloader.m in Sources */,
 				B6032E391DEE67DA0060FB0E /* GQImageViewrConfigure.m in Sources */,
 				B6032E341DEE67290060FB0E /* GQImageCollectionView.m in Sources */,
 				DF0255E21C34BD89001E65C2 /* DemoViewController.m in Sources */,
 				B6032E271DEE65C10060FB0E /* GQImageViewrBaseObject.m in Sources */,
+				B655AF0F1FC6CB17007D44E4 /* NSData+GQImageDownloader.m in Sources */,
 				B6FB8CB31DF01F4E009C4494 /* UIView+GQImageViewrCategory.m in Sources */,
 				B6032E201DEE64EA0060FB0E /* NSString+GQImageViewrCategory.m in Sources */,
+				B655AF081FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m in Sources */,
 				B6032E241DEE65B00060FB0E /* GQBaseCollectionView.m in Sources */,
+				B655AF0D1FC6CB17007D44E4 /* GQImageCacheManager.m in Sources */,
 				DF0255BD1C34BCCD001E65C2 /* AppDelegate.m in Sources */,
 				DF0255BA1C34BCCD001E65C2 /* main.m in Sources */,
 				B6032E331DEE67290060FB0E /* GQImageViewerModel.m in Sources */,
@@ -604,7 +642,6 @@
 		};
 		DF0255DB1C34BCCD001E65C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 11C0507C2532E40C1CE275FD /* Pods-ImageViewer.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -612,6 +649,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = KT3C6DHFPC;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../GQImageDownloader/GQThirdPart\"";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -628,7 +666,6 @@
 		};
 		DF0255DC1C34BCCD001E65C2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6867956B939F584B3762123B /* Pods-ImageViewer.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -636,6 +673,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = KT3C6DHFPC;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../GQImageDownloader/GQThirdPart\"";
 				INFOPLIST_FILE = ImageViewer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
