@@ -26,13 +26,13 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
 
 - (id<GQImageDownloaderOperationDelegate>)loadWithURL:(NSURL *)url
                               withURLRequestClassName:(NSString *)className
-                                            cacheType:(GQImageDownloaderCacheType)type
+                                            cacheType:(GQImageDownloaderCacheType)cacheType
                                              progress:(GQImageDownloaderProgressBlock)progressBlock
                                              complete:(GQImageDownloaderCompleteBlock)completeBlock {
     [[GQImageDataDownloader sharedDownloadManager] setURLRequestClass:NSClassFromString(className)];
     __block UIImage *image = nil;
     
-    BOOL isCacheToDisk = ( type == GQImageDownloaderCacheTypeDisk );
+    BOOL isCacheToDisk = ( cacheType == GQImageDownloaderCacheTypeDisk );
     
     BOOL isExistDisk = [[GQImageCacheManager sharedManager] isImageExistDiskWithUrl:url.absoluteString];
     
@@ -48,7 +48,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
                                                                     }
                                                                 });
                                                             } complete:^(UIImage *image, NSURL *url, NSError *error) {
-                                                                [[GQImageCacheManager sharedManager] saveImage:image withUrl:url.absoluteString];
+                                                                
+                                                                [[GQImageCacheManager sharedManager] saveImage:image withUrl:url.absoluteString withCacheType:cacheType];
+                                                                
                                                                 dispatch_main_async_safe(^{
                                                                     if (completeBlock) {
                                                                         completeBlock(image, url ,error);

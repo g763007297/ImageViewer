@@ -63,6 +63,7 @@ typedef void (^GQSingleTap)(void);
     photoSV.scaleType = _configure.scaleType;
     photoSV.placeholderImage = _placeholderImage;
     photoSV.imageModel = _data;
+    photoSV.cacheType = _configure.cacheType;
     photoSV.frame = self.bounds;
 }
 

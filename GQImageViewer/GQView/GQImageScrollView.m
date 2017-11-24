@@ -34,6 +34,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
         _imageView = [[GQImageView alloc] initWithFrame:self.bounds];
         //让图片等比例适应图片视图的尺寸
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -117,6 +118,7 @@
         GQWeakify(self);
         [_imageView loadImage:imageUrl
              requestClassName:imageModel.GQImageViewURLRequestClassName
+                    cacheType:(GQImageDownloaderCacheType)_cacheType
                   placeHolder:_placeholderImage
                      progress:nil
                      complete:^(UIImage *image, NSURL *imageUrl,NSError *error) {

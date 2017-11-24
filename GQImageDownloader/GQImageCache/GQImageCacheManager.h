@@ -34,9 +34,10 @@ typedef enum : NSUInteger {
  *
  *  param image 图片
  *  param url   请求的url或key
+ *  param cacheType   缓存类型
  */
-- (void)saveImage:(UIImage*)image withUrl:(NSString*)url;
-- (void)saveImage:(UIImage*)image withKey:(NSString*)key;
+- (void)saveImage:(UIImage*)image withUrl:(NSString*)url withCacheType:(GQImageDownloaderCacheType)cacheType;
+- (void)saveImage:(UIImage*)image withKey:(NSString*)key withCacheType:(GQImageDownloaderCacheType)cacheType;
 
 /**
  *  获取指定图片

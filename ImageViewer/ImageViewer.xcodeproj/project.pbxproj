@@ -36,7 +36,6 @@
 		B655AF071FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEEC1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m */; };
 		B655AF081FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF21FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m */; };
 		B655AF091FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF31FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m */; };
-		B655AF0A1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF41FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m */; };
 		B655AF0B1FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF51FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m */; };
 		B655AF0C1FC6CB17007D44E4 /* GQImageGobalPaths.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEF91FC6CB17007D44E4 /* GQImageGobalPaths.m */; };
 		B655AF0D1FC6CB17007D44E4 /* GQImageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B655AEFB1FC6CB17007D44E4 /* GQImageCacheManager.m */; };
@@ -46,6 +45,7 @@
 		B68C6A1A1FBFC3C90014E78C /* GQImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B68C6A181FBFC3C90014E78C /* GQImageView.m */; };
 		B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = B69521721CE2C82F00F288AF /* GQImageViewer.m */; };
 		B6CEC0181F919B260052D571 /* DemoURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6CEC0171F919B260052D571 /* DemoURLRequest.m */; };
+		B6EA52D81FC822090023F619 /* GQImageDownloaderOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EA52D61FC822090023F619 /* GQImageDownloaderOperationManager.m */; };
 		B6FB8CB31DF01F4E009C4494 /* UIView+GQImageViewrCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */; };
 		DF0255BA1C34BCCD001E65C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255B91C34BCCD001E65C2 /* main.m */; };
 		DF0255BD1C34BCCD001E65C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255BC1C34BCCD001E65C2 /* AppDelegate.m */; };
@@ -108,12 +108,10 @@
 		B655AEEB1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderBaseURLRequest.h; sourceTree = "<group>"; };
 		B655AEEC1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderBaseURLRequest.m; sourceTree = "<group>"; };
 		B655AEED1FC6CB17007D44E4 /* GQImageDataDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDataDownloader.h; sourceTree = "<group>"; };
-		B655AEEF1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderOperationManager.h; sourceTree = "<group>"; };
 		B655AEF01FC6CB17007D44E4 /* GQImageDownloaderOperationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderOperationDelegate.h; sourceTree = "<group>"; };
 		B655AEF11FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderSessionOperation.h; sourceTree = "<group>"; };
 		B655AEF21FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderBaseOperation.m; sourceTree = "<group>"; };
 		B655AEF31FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderURLConnectionOperation.m; sourceTree = "<group>"; };
-		B655AEF41FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderOperationManager.m; sourceTree = "<group>"; };
 		B655AEF51FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderSessionOperation.m; sourceTree = "<group>"; };
 		B655AEF61FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderURLConnectionOperation.h; sourceTree = "<group>"; };
 		B655AEF71FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderBaseOperation.h; sourceTree = "<group>"; };
@@ -134,6 +132,8 @@
 		B6CEC0161F919B260052D571 /* DemoURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoURLRequest.h; sourceTree = "<group>"; };
 		B6CEC0171F919B260052D571 /* DemoURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoURLRequest.m; sourceTree = "<group>"; };
 		B6EA52D21FC81E740023F619 /* GQImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloader.h; sourceTree = "<group>"; };
+		B6EA52D61FC822090023F619 /* GQImageDownloaderOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageDownloaderOperationManager.m; sourceTree = "<group>"; };
+		B6EA52D71FC822090023F619 /* GQImageDownloaderOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloaderOperationManager.h; sourceTree = "<group>"; };
 		B6FB8CB11DF01F4E009C4494 /* UIView+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GQImageViewrCategory.h"; sourceTree = "<group>"; };
 		B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GQImageViewrCategory.m"; sourceTree = "<group>"; };
 		DF0255B51C34BCCD001E65C2 /* ImageViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -261,10 +261,12 @@
 			isa = PBXGroup;
 			children = (
 				B655AEE91FC6CB17007D44E4 /* GQImageDownloaderConst.h */,
+				B6EA52D71FC822090023F619 /* GQImageDownloaderOperationManager.h */,
+				B6EA52D61FC822090023F619 /* GQImageDownloaderOperationManager.m */,
+				B655AEED1FC6CB17007D44E4 /* GQImageDataDownloader.h */,
 				B655AEEA1FC6CB17007D44E4 /* GQImageDataDownloader.m */,
 				B655AEEB1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.h */,
 				B655AEEC1FC6CB17007D44E4 /* GQImageDownloaderBaseURLRequest.m */,
-				B655AEED1FC6CB17007D44E4 /* GQImageDataDownloader.h */,
 			);
 			path = GQImageRequestConfigure;
 			sourceTree = "<group>";
@@ -275,8 +277,6 @@
 				B655AEF01FC6CB17007D44E4 /* GQImageDownloaderOperationDelegate.h */,
 				B65479491FC80AEE00156512 /* GQImageDownloaderSessionManager.h */,
 				B654794A1FC80AEF00156512 /* GQImageDownloaderSessionManager.m */,
-				B655AEEF1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.h */,
-				B655AEF41FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m */,
 				B655AEF71FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.h */,
 				B655AEF21FC6CB17007D44E4 /* GQImageDownloaderBaseOperation.m */,
 				B655AEF11FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.h */,
@@ -504,11 +504,11 @@
 				B655AF0C1FC6CB17007D44E4 /* GQImageGobalPaths.m in Sources */,
 				B69521781CE2C82F00F288AF /* GQImageViewer.m in Sources */,
 				B6032E361DEE67290060FB0E /* GQTextScrollView.m in Sources */,
-				B655AF0A1FC6CB17007D44E4 /* GQImageDownloaderOperationManager.m in Sources */,
 				B655AF091FC6CB17007D44E4 /* GQImageDownloaderURLConnectionOperation.m in Sources */,
 				B655AF0B1FC6CB17007D44E4 /* GQImageDownloaderSessionOperation.m in Sources */,
 				B655AF051FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m in Sources */,
 				B646A70E1E306A9300C90BAC /* UIImage+GQImageViewrCategory.m in Sources */,
+				B6EA52D81FC822090023F619 /* GQImageDownloaderOperationManager.m in Sources */,
 				B655AEE01FC6BD1A007D44E4 /* GQImageViewrBaseURLRequest.m in Sources */,
 				B655AF061FC6CB17007D44E4 /* GQImageDataDownloader.m in Sources */,
 				B655AF0E1FC6CB17007D44E4 /* UIImage+GQImageDownloader.m in Sources */,

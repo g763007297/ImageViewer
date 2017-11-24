@@ -19,6 +19,7 @@
         _needTapAutoHiddenTopBottomView = NO;
         _laucnDirection = GQLaunchDirectionBottom;
         _launchFromView = nil;
+        _cacheType = GQImageViewerCacheTypeDisk;
     }
     return self;
 }

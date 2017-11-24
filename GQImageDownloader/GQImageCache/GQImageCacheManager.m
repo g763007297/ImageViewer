@@ -153,28 +153,34 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 }
 
 #pragma mark - public methods
-- (void)saveImage:(UIImage*)image withUrl:(NSString*)url
+- (void)saveImage:(UIImage*)image withUrl:(NSString*)url withCacheType:(GQImageDownloaderCacheType)cacheType
 {
-    [self saveImage:image withKey:[self getKeyFromUrl:url]];
+    [self saveImage:image withKey:[self getKeyFromUrl:url] withCacheType:cacheType];
 }
 
-- (void)saveImage:(UIImage*)image withKey:(NSString*)key
+- (void)saveImage:(UIImage*)image withKey:(NSString*)key withCacheType:(GQImageDownloaderCacheType)cacheType
 {
-    [self createDirectorysAtPath:[self getImageFolder]];
-    dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
-        @try {
-            NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
-            NSString *imageFilePath = [self getPathByFileName:key];
-            if (![_fileManager fileExistsAtPath:imageFilePath]) {
-                NSURL *fileURL = [NSURL fileURLWithPath:imageFilePath];
-                [_fileManager createFileAtPath:imageFilePath contents:imageData attributes:nil];
-                NSError *error = nil;
-                [fileURL setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:&error];
+    if (cacheType == GQImageDownloaderCacheTypeNone) {
+        return;
+    }
+    
+    if (cacheType == GQImageDownloaderCacheTypeDisk) {
+        [self createDirectorysAtPath:[self getImageFolder]];
+        dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
+            @try {
+                NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
+                NSString *imageFilePath = [self getPathByFileName:key];
+                if (![_fileManager fileExistsAtPath:imageFilePath]) {
+                    NSURL *fileURL = [NSURL fileURLWithPath:imageFilePath];
+                    [_fileManager createFileAtPath:imageFilePath contents:imageData attributes:nil];
+                    NSError *error = nil;
+                    [fileURL setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:&error];
+                }
+            }@catch (NSException *exception) {
+                
             }
-        }@catch (NSException *exception) {
-            
-        }
-    });
+        });
+    }
     [self saveToMemory:image forKey:key];
 }
 

@@ -17,6 +17,8 @@
 
 @property (nonatomic, strong) UIImage *placeholderImage;
 
+@property (nonatomic, assign) GQImageViewerCacheType cacheType;
+
 @property (nonatomic, assign) GQImageViewerScaleType scaleType;
 
 @property (nonatomic, copy) void(^singleTap)(void);

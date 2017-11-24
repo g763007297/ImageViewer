@@ -8,19 +8,25 @@
 
 #import "GQImageViewrBaseObject.h"
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, GQLaunchDirection) {
     GQLaunchDirectionBottom = 1,//从下往上推入
     GQLaunchDirectionTop,       //从上往下推入
     GQLaunchDirectionLeft,      //从左往右推入
     GQLaunchDirectionRight,     //从右往左推入
     GQLaunchDirectionFromRect   //从视图位置放大或缩小
-} GQLaunchDirection;//推入推出方向
+};
 
-typedef enum : NSUInteger {
-    GQImageViewerScaleTypeFullyDisplay,//让图片完全显示 (高度宽度等比例缩放到图片能完全显示)
-    GQImageViewerScaleTypeEqualWidth, //等宽高度自适应（宽度为屏幕宽度  高度自适应） 如果超过屏幕高度的长图会影响滑动消失手势，
-    GQImageViewerScaleTypeEqualHeight, //等高宽度自适应（高度为屏幕高度，宽度自适应  超过屏幕高度的长图设置为这个模式不会影响滑动消失手势
-} GQImageViewerScaleType;//图片伸缩模式
+typedef NS_ENUM(NSUInteger, GQImageViewerScaleType) {
+    GQImageViewerScaleTypeFullyDisplay,     //让图片完全显示 (高度宽度等比例缩放到图片能完全显示)
+    GQImageViewerScaleTypeEqualWidth,       //等宽高度自适应（宽度为屏幕宽度  高度自适应） 如果超过屏幕高度的长图会影响滑动消失手势，
+    GQImageViewerScaleTypeEqualHeight,      //等高宽度自适应（高度为屏幕高度，宽度自适应  超过屏幕高度的长图设置为这个模式不会影响滑动消失手势
+};
+
+typedef NS_ENUM(NSUInteger, GQImageViewerCacheType) {
+    GQImageViewerCacheTypeNone,         //无缓存，每次都是去请求
+    GQImageViewerCacheTypeOnlyMemory,   //缓存在内存
+    GQImageViewerCacheTypeDisk,         //保存至硬盘
+};
 
 @interface GQImageViewrConfigure : GQImageViewrBaseObject
 
@@ -79,6 +85,11 @@ typedef enum : NSUInteger {
  设置图片的等比例缩放  默认为等高宽度自适应
  */
 @property (nonatomic, assign) GQImageViewerScaleType scaleType;
+
+/**
+ 缓存类型  默认：GQImageViewerCacheTypeDisk
+ */
+@property (nonatomic, assign) GQImageViewerCacheType cacheType;
 
 /**
  文字背景颜色
