@@ -7,27 +7,32 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef void(^GQImageCompletionBlock)(UIImage *image, NSError *error, NSURL *imageUrl);
-typedef void(^GQImageProgressBlock) (CGFloat progress);
+#import "GQImageDownloaderOperationManager.h"
 
 @interface UIImageView (GQImageDownloader)
 
 - (void)loadImage:(NSURL*)url
-         progress:(GQImageProgressBlock)progress
-         complete:(GQImageCompletionBlock)complete;
+         progress:(GQImageDownloaderProgressBlock)progress
+         complete:(GQImageDownloaderCompleteBlock)complete;
 
 - (void)loadImage:(NSURL*)url
       placeHolder:(UIImage *)placeHolderImage
-         progress:(GQImageProgressBlock)progress
-         complete:(GQImageCompletionBlock)complete;
+         progress:(GQImageDownloaderProgressBlock)progress
+         complete:(GQImageDownloaderCompleteBlock)complete;
 
 - (void)loadImage:(NSURL*)url
  requestClassName:(NSString *)className
       placeHolder:(UIImage *)placeHolderImage
-         progress:(GQImageProgressBlock)progress
-         complete:(GQImageCompletionBlock)complete;
+         progress:(GQImageDownloaderProgressBlock)progress
+         complete:(GQImageDownloaderCompleteBlock)complete;
 
-- (void)cancelCurrentImageRequest;     //caller must call this method in its dealloc method
+- (void)loadImage:(NSURL*)url
+ requestClassName:(NSString *)className
+        cacheType:(GQImageDownloaderCacheType)cacheType
+      placeHolder:(UIImage *)placeHolderImage
+         progress:(GQImageDownloaderProgressBlock)progress
+         complete:(GQImageDownloaderCompleteBlock)complete;
+
+- (void)cancelCurrentImageRequest;
 
 @end

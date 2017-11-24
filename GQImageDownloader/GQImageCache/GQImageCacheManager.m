@@ -123,8 +123,8 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (void)saveToMemory:(UIImage*)image forKey:(NSString*)key
 {
-    @synchronized (_memoryCache) {
-        if (image) {
+    if (image) {
+        @synchronized (_memoryCache) {
             [_memoryCache setObject:image forKey:key];
         }
     }
@@ -138,6 +138,13 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 - (BOOL)isImageInMemoryCacheWithUrl:(NSString*)url
 {
     return [self isImageInMemoryCache:[self getKeyFromUrl:url]];
+}
+
+- (BOOL)isImageExistDiskWithUrl:(NSString *)url
+{
+    BOOL exists = NO;
+    exists = [_fileManager fileExistsAtPath:[self getKeyFromUrl:url]];
+    return exists;
 }
 
 - (BOOL)isImageInMemoryCache:(NSString*)key
@@ -182,27 +189,26 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
         return [self getImageFromMemoryCache:key];
     }else{
         NSString *imageFilePath = [self getPathByFileName:key];
-        NSData *data = [NSData dataWithContentsOfFile:imageFilePath];
-        UIImage* image = [data gqImageWithData];;
-        if (image) {
-            [self saveToMemory:image forKey:key];
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfFile:imageFilePath options:NSDataReadingUncached error:&error];
+        UIImage* image = nil;
+        if (data) {
+            image = [data gqImageWithData];
+            if (image) {
+                [self saveToMemory:image forKey:key];
+            }
         }
         return image;
     }
 }
 
-- (void)clearDiskCache
-{
-    NSString *imageFolderPath = [self getImageFolder];
-    [_fileManager removeItemAtPath:imageFolderPath error:nil];
-    [self createDirectorysAtPath:imageFolderPath];
-}
-
 - (void)clearMemoryCache
 {
-    [_memoryCache removeAllObjects];
-    _memoryCache = nil;
-    _memoryCache = [[NSCache alloc] init];
+    @synchronized (self) {
+        [_memoryCache removeAllObjects];
+        _memoryCache = nil;
+        _memoryCache = [[NSCache alloc] init];
+    }
 }
 
 - (void)removeImageFromCacheWithUrl:(NSString *)url

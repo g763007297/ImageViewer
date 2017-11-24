@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GQImageCacheManager.h"
 #import "GQImageDataDownloader.h"
 
 @interface GQImageDownloaderOperationManager : NSObject
@@ -14,8 +15,14 @@
 + (instancetype)sharedManager;
 
 - (id<GQImageDownloaderOperationDelegate>)loadWithURL:(NSURL *)url
-                         withURLRequestClassName:(NSString *)className
-                                        progress:(GQImageDownloaderProgressBlock)progress
-                                        complete:(GQImageDownloaderCompleteBlock)complete;
+                              withURLRequestClassName:(NSString *)className
+                                             progress:(GQImageDownloaderProgressBlock)progressBlock
+                                             complete:(GQImageDownloaderCompleteBlock)completeBlock;
+
+- (id<GQImageDownloaderOperationDelegate>)loadWithURL:(NSURL *)url
+                              withURLRequestClassName:(NSString *)className
+                                            cacheType:(GQImageDownloaderCacheType)type
+                                             progress:(GQImageDownloaderProgressBlock)progressBlock
+                                             complete:(GQImageDownloaderCompleteBlock)completeBlock;
 
 @end

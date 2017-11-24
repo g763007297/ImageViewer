@@ -16,7 +16,7 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
-#import "UIImageView+GQImageDownloader.h"
+#import "GQImageDownloader.h"
 
 @interface GQImageScrollView(){
     BOOL            _isAddSubView;
@@ -119,7 +119,7 @@
              requestClassName:imageModel.GQImageViewURLRequestClassName
                   placeHolder:_placeholderImage
                      progress:nil
-                     complete:^(UIImage *image, NSError *error, NSURL *imageUrl) {
+                     complete:^(UIImage *image, NSURL *imageUrl,NSError *error) {
                          GQStrongify(self);
                          [self.imageView hideLoading];
                          [self layoutSubviews];

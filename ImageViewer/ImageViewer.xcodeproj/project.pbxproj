@@ -133,6 +133,7 @@
 		B69521721CE2C82F00F288AF /* GQImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GQImageViewer.m; sourceTree = "<group>"; };
 		B6CEC0161F919B260052D571 /* DemoURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoURLRequest.h; sourceTree = "<group>"; };
 		B6CEC0171F919B260052D571 /* DemoURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoURLRequest.m; sourceTree = "<group>"; };
+		B6EA52D21FC81E740023F619 /* GQImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GQImageDownloader.h; sourceTree = "<group>"; };
 		B6FB8CB11DF01F4E009C4494 /* UIView+GQImageViewrCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GQImageViewrCategory.h"; sourceTree = "<group>"; };
 		B6FB8CB21DF01F4E009C4494 /* UIView+GQImageViewrCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GQImageViewrCategory.m"; sourceTree = "<group>"; };
 		DF0255B51C34BCCD001E65C2 /* ImageViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -243,6 +244,7 @@
 		B655AEE61FC6CB17007D44E4 /* GQImageDownloader */ = {
 			isa = PBXGroup;
 			children = (
+				B6EA52D21FC81E740023F619 /* GQImageDownloader.h */,
 				B655AEFD1FC6CB17007D44E4 /* UIImageView+GQImageDownloader.h */,
 				B655AEE71FC6CB17007D44E4 /* UIImageView+GQImageDownloader.m */,
 				B655AEE81FC6CB17007D44E4 /* GQImageRequestConfigure */,

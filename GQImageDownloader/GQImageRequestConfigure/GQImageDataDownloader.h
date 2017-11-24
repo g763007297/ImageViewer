@@ -25,8 +25,8 @@ typedef void(^GQImageDownloaderProgressBlock)(CGFloat progress);
 - (void)setURLRequestClass:(Class)requestClass;
 
 - (id<GQImageDownloaderOperationDelegate>)downloadWithURL:(NSURL *)url
-                                                 progress:(GQImageDownloaderProgressBlock)progress
-                                                 complete:(GQImageDownloaderCompleteBlock)complete;
+                                                 progress:(GQImageDownloaderProgressBlock)progressBlock
+                                                 complete:(GQImageDownloaderCompleteBlock)completeBlock;
 
 - (void)suspendLoading;
 

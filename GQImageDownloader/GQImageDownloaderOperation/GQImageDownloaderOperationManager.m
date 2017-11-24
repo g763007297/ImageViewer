@@ -8,30 +8,37 @@
 
 #import "GQImageDownloaderOperationManager.h"
 #import "GQImageDownloaderConst.h"
-#import "GQImageCacheManager.h"
-
-@interface GQImageDownloaderOperationManager()
-#if !OS_OBJECT_USE_OBJC
-@property (nonatomic, assign) dispatch_queue_t saveDataDispatchQueue;
-@property (nonatomic, assign) dispatch_group_t saveDataDispatchGroup;
-#else
-@property (nonatomic, strong) dispatch_queue_t saveDataDispatchQueue;
-@property (nonatomic, strong) dispatch_group_t saveDataDispatchGroup;
-#endif
-
-@end
 
 @implementation GQImageDownloaderOperationManager
 
 GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
 
 - (id<GQImageDownloaderOperationDelegate>)loadWithURL:(NSURL *)url
-                         withURLRequestClassName:(NSString *)className
-                                        progress:(GQImageDownloaderProgressBlock)progressBlock
-                                        complete:(GQImageDownloaderCompleteBlock)completeBlock {
+                              withURLRequestClassName:(NSString *)className
+                                             progress:(GQImageDownloaderProgressBlock)progressBlock
+                                             complete:(GQImageDownloaderCompleteBlock)completeBlock {
+    return [self loadWithURL:url
+     withURLRequestClassName:className
+                   cacheType:GQImageDownloaderCacheTypeDisk
+                    progress:progressBlock
+                    complete:completeBlock];
+}
+
+- (id<GQImageDownloaderOperationDelegate>)loadWithURL:(NSURL *)url
+                              withURLRequestClassName:(NSString *)className
+                                            cacheType:(GQImageDownloaderCacheType)type
+                                             progress:(GQImageDownloaderProgressBlock)progressBlock
+                                             complete:(GQImageDownloaderCompleteBlock)completeBlock {
     [[GQImageDataDownloader sharedDownloadManager] setURLRequestClass:NSClassFromString(className)];
     __block UIImage *image = nil;
-    if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString]){
+    
+    BOOL isCacheToDisk = ( type == GQImageDownloaderCacheTypeDisk );
+    
+    BOOL isExistDisk = [[GQImageCacheManager sharedManager] isImageExistDiskWithUrl:url.absoluteString];
+    
+    BOOL isExistMemory = [[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString];
+    
+    if(!isExistMemory || (isCacheToDisk && !isExistDisk)) {
         id<GQImageDownloaderOperationDelegate> operation = [[GQImageDataDownloader sharedDownloadManager]
                                                             downloadWithURL:url
                                                             progress:^(CGFloat progress) {
@@ -49,7 +56,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
                                                                 });
                                                             }];
         return operation;
-    }else{
+    } else {
         dispatch_group_async(dispatch_group_create(), dispatch_queue_create("com.ISS.GQImageCacheManager", DISPATCH_QUEUE_SERIAL), ^{
             image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:url.absoluteString];
             dispatch_main_async_safe(^{

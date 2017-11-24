@@ -88,7 +88,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
         operation = [[GQImageDownloaderSessionOperation alloc]
                      initWithURLRequest:request
                      operationSession:self.sessionManager.session
-                     progress:^(float progress) {
+                     progress:^(CGFloat progress) {
                          __block NSArray *callbacksForURL;
                          dispatch_barrier_sync(weak_self.barrierQueue, ^{
                              callbacksForURL = weak_self.callBackDic[url];
@@ -118,7 +118,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
     }else {
         operation = [[GQImageDownloaderURLConnectionOperation alloc]
                      initWithURLRequest:request
-                     progress:^(float progress) {
+                     progress:^(CGFloat progress) {
                          __block NSArray *callbacksForURL;
                          dispatch_barrier_sync(weak_self.barrierQueue, ^{
                              callbacksForURL = weak_self.callBackDic[url];
@@ -183,12 +183,12 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
 #pragma mark -- publicMethod
 
 - (id<GQImageDownloaderOperationDelegate>)downloadWithURL:(NSURL *)url
-                                                 progress:(GQImageDownloaderProgressBlock)progress
-                                                 complete:(GQImageDownloaderCompleteBlock)complete
+                                                 progress:(GQImageDownloaderProgressBlock)progressBlock
+                                                 complete:(GQImageDownloaderCompleteBlock)completeBlock
 {
     GQWeakify(self);
     __block GQImageDownloaderBaseOperation *operation;
-    [self addBlockToCallBackDicUrl:(NSURL *)url progress:progress complete:complete finishAdd:^{
+    [self addBlockToCallBackDicUrl:(NSURL *)url progress:progressBlock complete:completeBlock finishAdd:^{
         operation = [weak_self startRequestWithUrl:url];
     }];
     return operation;

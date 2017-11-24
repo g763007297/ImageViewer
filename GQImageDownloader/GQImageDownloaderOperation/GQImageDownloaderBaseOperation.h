@@ -12,7 +12,7 @@
 
 @class GQImageDownloaderBaseOperation;
 
-typedef void (^GQImageDownloaderChangeHandler) (float progress);
+typedef void (^GQImageDownloaderChangeHandler) (CGFloat progress);
 typedef void (^GQImageDownloaderCancelHandler) (void);
 typedef void (^GQImageDownloaderCompletionHandler)(GQImageDownloaderBaseOperation *urlOperation,BOOL requestSuccess, NSError *error);
 
