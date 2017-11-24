@@ -33,21 +33,21 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
     __block UIImage *image = nil;
     if(![[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString]){
         id<GQImageDownloaderOperationDelegate> operation = [[GQImageDataDownloader sharedDownloadManager]
-                                                       downloadWithURL:url
-                                                       progress:^(CGFloat progress) {
-                                                           dispatch_main_async_safe(^{
-                                                               if (progress) {
-                                                                   progressBlock(progress);
-                                                               }
-                                                           });
-                                                       } complete:^(UIImage *image, NSURL *url, NSError *error) {
-                                                           [[GQImageCacheManager sharedManager] saveImage:image withUrl:url.absoluteString];
-                                                           dispatch_main_async_safe(^{
-                                                               if (completeBlock) {
-                                                                   completeBlock(image, url ,error);
-                                                               }
-                                                           });
-                                                       }];
+                                                            downloadWithURL:url
+                                                            progress:^(CGFloat progress) {
+                                                                dispatch_main_async_safe(^{
+                                                                    if (progress) {
+                                                                        progressBlock(progress);
+                                                                    }
+                                                                });
+                                                            } complete:^(UIImage *image, NSURL *url, NSError *error) {
+                                                                [[GQImageCacheManager sharedManager] saveImage:image withUrl:url.absoluteString];
+                                                                dispatch_main_async_safe(^{
+                                                                    if (completeBlock) {
+                                                                        completeBlock(image, url ,error);
+                                                                    }
+                                                                });
+                                                            }];
         return operation;
     }else{
         dispatch_group_async(dispatch_group_create(), dispatch_queue_create("com.ISS.GQImageCacheManager", DISPATCH_QUEUE_SERIAL), ^{

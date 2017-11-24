@@ -53,6 +53,12 @@ typedef NSUInteger GQImageDownloaderState;
                                                 cancel:(GQImageDownloaderCancelHandler)onCancelBlock
                                             completion:(GQImageDownloaderCompletionHandler)onCompletionBlock;
 
+- (GQImageDownloaderBaseOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
+                                      operationSession:(NSURLSession *)operationSession
+                                              progress:(GQImageDownloaderChangeHandler)onProgressBlock
+                                                cancel:(GQImageDownloaderCancelHandler)onCancelBlock
+                                            completion:(GQImageDownloaderCompletionHandler)onCompletionBlock NS_AVAILABLE_IOS(8_0);
+
 - (void)finish;
 - (void)handleResponseData:(NSData *)data;
 - (void)callCompletionBlockWithResponse:(NSData *)response

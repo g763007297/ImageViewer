@@ -14,6 +14,10 @@
 
 #import "NSData+GQImageDownloader.h"
 
+#import "GQImageDownloaderSessionOperation.h"
+
+#import "GQImageDownloaderSessionManager.h"
+
 static NSString *const kProgressCallbackKey = @"progress";
 static NSString *const kCompletedCallbackKey = @"completed";
 
@@ -22,6 +26,8 @@ static NSString *const kCompletedCallbackKey = @"completed";
 }
 
 @property (nonatomic,strong) NSOperationQueue *connectionQueue;
+
+@property (nonatomic, strong) GQImageDownloaderSessionManager *sessionManager NS_AVAILABLE_IOS(8.0);
 
 @property (nonatomic, strong) NSMutableDictionary *callBackDic;
 @property (GQDispatchQueueSetterSementics, nonatomic) dispatch_queue_t barrierQueue;
@@ -40,6 +46,14 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
         [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(checkRequestQueueStatus) userInfo:nil repeats:YES];
         _barrierQueue = dispatch_queue_create("com.hackemist.GQWebImageDownloaderBarrierQueue", DISPATCH_QUEUE_CONCURRENT);
         _requstClass = [GQImageDownloaderBaseURLRequest class];
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+            _sessionManager = [[GQImageDownloaderSessionManager alloc] initWithOperationQueue:_connectionQueue];
+#pragma clang diagnostic pop
+        }
+        
     }
     return self;
 }
@@ -47,6 +61,7 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
 - (void)dealloc {
     [_connectionQueue cancelAllOperations];
     _connectionQueue = nil;
+    _sessionManager = nil;
     _callBackDic = nil;
 }
 
@@ -65,45 +80,72 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
 {
     __block UIImage *image = nil;
     GQWeakify(self);
-    Class operationClass;
+    id<GQImageDownloaderOperationDelegate> operation;
+    GQImageDownloaderBaseURLRequest *request = [[_requstClass alloc] initWithURL:url];
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
-        operationClass = [GQImageDownloaderSessionOperation class];
+        operation = [[GQImageDownloaderSessionOperation alloc]
+                     initWithURLRequest:request
+                     operationSession:self.sessionManager.session
+                     progress:^(float progress) {
+                         __block NSArray *callbacksForURL;
+                         dispatch_barrier_sync(weak_self.barrierQueue, ^{
+                             callbacksForURL = weak_self.callBackDic[url];
+                         });
+                         for (NSDictionary *callbacks in callbacksForURL) {
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 GQImageDownloaderProgressBlock callback = callbacks[kProgressCallbackKey];
+                                 if (callback) callback(progress);
+                             });
+                         }
+                     }cancel:^{
+                         [weak_self.callBackDic removeObjectForKey:url];
+                     }completion:^(GQImageDownloaderBaseOperation *urlOperation, BOOL requestSuccess, NSError *error) {
+                         NSData *data = urlOperation.operationData;
+                         image = [data gqImageWithData];
+                         __block NSArray *callbacksForURL;
+                         dispatch_barrier_sync(weak_self.barrierQueue, ^{
+                             callbacksForURL = weak_self.callBackDic[url];
+                         });
+                         for (NSDictionary *callbacks in callbacksForURL) {
+                             GQImageDownloaderCompleteBlock callback = callbacks[kCompletedCallbackKey];
+                             if (callback) callback(image,url,error);
+                         }
+                         [weak_self.callBackDic removeObjectForKey:url];
+                     }];
 #pragma clang diagnostic pop
     }else {
-        operationClass = [GQImageDownloaderURLConnectionOperation class];
+        operation = [[GQImageDownloaderURLConnectionOperation alloc]
+                     initWithURLRequest:request
+                     progress:^(float progress) {
+                         __block NSArray *callbacksForURL;
+                         dispatch_barrier_sync(weak_self.barrierQueue, ^{
+                             callbacksForURL = weak_self.callBackDic[url];
+                         });
+                         for (NSDictionary *callbacks in callbacksForURL) {
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 GQImageDownloaderProgressBlock callback = callbacks[kProgressCallbackKey];
+                                 if (callback) callback(progress);
+                             });
+                         }
+                     }cancel:^{
+                         [weak_self.callBackDic removeObjectForKey:url];
+                     }completion:^(GQImageDownloaderBaseOperation *urlOperation, BOOL requestSuccess, NSError *error) {
+                         NSData *data = urlOperation.operationData;
+                         image = [data gqImageWithData];
+                         __block NSArray *callbacksForURL;
+                         dispatch_barrier_sync(weak_self.barrierQueue, ^{
+                             callbacksForURL = weak_self.callBackDic[url];
+                         });
+                         for (NSDictionary *callbacks in callbacksForURL) {
+                             GQImageDownloaderCompleteBlock callback = callbacks[kCompletedCallbackKey];
+                             if (callback) callback(image,url,error);
+                         }
+                         [weak_self.callBackDic removeObjectForKey:url];
+                     }];
     }
     
-    GQImageDownloaderBaseURLRequest *request = [[_requstClass alloc] initWithURL:url];
-    id<GQImageDownloaderOperationDelegate> operation = [[operationClass alloc]
-                                                   initWithURLRequest:request
-                                                   progress:^(float progress) {
-                                                       __block NSArray *callbacksForURL;
-                                                       dispatch_barrier_sync(weak_self.barrierQueue, ^{
-                                                           callbacksForURL = weak_self.callBackDic[url];
-                                                       });
-                                                       for (NSDictionary *callbacks in callbacksForURL) {
-                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                               GQImageDownloaderProgressBlock callback = callbacks[kProgressCallbackKey];
-                                                               if (callback) callback(progress);
-                                                           });
-                                                       }
-                                                   }cancel:^{
-                                                       [weak_self.callBackDic removeObjectForKey:url];
-                                                   }completion:^(GQImageDownloaderBaseOperation *urlOperation, BOOL requestSuccess, NSError *error) {
-                                                       NSData *data = urlOperation.operationData;
-                                                       image = [data gqImageWithData];
-                                                       __block NSArray *callbacksForURL;
-                                                       dispatch_barrier_sync(weak_self.barrierQueue, ^{
-                                                           callbacksForURL = weak_self.callBackDic[url];
-                                                       });
-                                                       for (NSDictionary *callbacks in callbacksForURL) {
-                                                           GQImageDownloaderCompleteBlock callback = callbacks[kCompletedCallbackKey];
-                                                           if (callback) callback(image,url,error);
-                                                       }
-                                                       [weak_self.callBackDic removeObjectForKey:url];
-                                                   }];
     [self.connectionQueue addOperation:operation];
     return operation;
 }
@@ -186,6 +228,5 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownloader, sharedDownloadManager)
     }
     return _callBackDic;
 }
-
 
 @end

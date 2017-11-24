@@ -48,6 +48,28 @@ static NSInteger GQHTTPRequestTaskCount = 0;
     return self;
 }
 
+- (GQImageDownloaderBaseOperation *)initWithURLRequest:(NSURLRequest *)urlRequest
+                                      operationSession:(NSURLSession *)operationSession
+                                              progress:(GQImageDownloaderChangeHandler)onProgressBlock
+                                                cancel:(GQImageDownloaderCancelHandler)onCancelBlock
+                                            completion:(GQImageDownloaderCompletionHandler)onCompletionBlock {
+    self = [super init];
+    self.operationData = [[NSMutableData alloc] init];
+    self.operationRequest = urlRequest;
+    self.operationSession = operationSession;
+    
+    if (onProgressBlock) {
+        _operationProgressBlock = [onProgressBlock copy];
+    }
+    if (onCancelBlock) {
+        _operationCancelBlock = [onCancelBlock copy];
+    }
+    if (onCompletionBlock) {
+        _operationCompletionBlock = [onCompletionBlock copy];
+    }
+    return self;
+}
+
 - (void)cancel
 {
     if(![self isFinished]){
