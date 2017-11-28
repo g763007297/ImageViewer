@@ -42,6 +42,12 @@
 
 #pragma mark -- public method
 
+- (void)setProgress:(CGFloat)progress {
+    [self willChangeValueForKey:@"progress"];
+    _progress = progress;
+    [self didChangeValueForKey:@"progress"];
+}
+
 - (void)configureImageView {
     
 }

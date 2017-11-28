@@ -13,6 +13,11 @@
 @property (nonatomic,assign) BOOL showLoadingView;
 
 /**
+ 网络图片下载进度， 可以使用kvo进行监听
+ */
+@property (nonatomic, assign) CGFloat progress;
+
+/**
  配置图片显示界面
  */
 - (void)configureImageView;

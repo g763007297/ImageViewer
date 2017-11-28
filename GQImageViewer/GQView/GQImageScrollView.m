@@ -118,7 +118,7 @@
         GQWeakify(self);
         [_imageView loadImage:imageUrl
              requestClassName:imageModel.GQImageViewURLRequestClassName
-                    cacheType:(GQImageDownloaderCacheType)_cacheType
+                    cacheType:(NSInteger)_cacheType
                   placeHolder:_placeholderImage
                      progress:nil
                      complete:^(UIImage *image, NSURL *imageUrl,NSError *error) {
