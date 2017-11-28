@@ -105,11 +105,9 @@
         _isAddSubView = YES;
     }
     id data = imageModel.imageSource;
-    if ([data isKindOfClass:[UIImage class]])
-    {
+    if ([data isKindOfClass:[UIImage class]]) {
         _imageView.image = data;
-    }else if ([data isKindOfClass:[NSString class]]||[data isKindOfClass:[NSURL class]])
-    {
+    } else if ([data isKindOfClass:[NSString class]]||[data isKindOfClass:[NSURL class]]) {
         NSURL *imageUrl = data;
         if ([data isKindOfClass:[NSString class]]) {
             imageUrl = [NSURL URLWithString:data];
@@ -120,18 +118,19 @@
              requestClassName:imageModel.GQImageViewURLRequestClassName
                     cacheType:(NSInteger)_cacheType
                   placeHolder:_placeholderImage
-                     progress:nil
+                     progress:^(CGFloat progress) {
+                         GQStrongify(self);
+                         self.imageView.progress = progress;
+                     }
                      complete:^(UIImage *image, NSURL *imageUrl,NSError *error) {
                          GQStrongify(self);
                          [self.imageView hideLoading];
                          [self layoutSubviews];
                      }];
-    }else if ([data isKindOfClass:[UIImageView class]])
-    {
+    } else if ([data isKindOfClass:[UIImageView class]]) {
         UIImageView *imageView = (UIImageView *)data;
         _imageView.image = imageView.image;
-    }else
-    {
+    } else {
         _imageView.image = nil;
     }
     [self layoutSubviews];

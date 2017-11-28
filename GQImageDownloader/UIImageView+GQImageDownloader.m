@@ -13,8 +13,8 @@
 @implementation UIImageView (GQImageDownloader)
 
 GQ_DYNAMIC_PROPERTY_OBJECT(imageUrl, setImageUrl, OBJC_ASSOCIATION_RETAIN_NONATOMIC, NSURL*);
-GQ_DYNAMIC_PROPERTY_OBJECT(progress, setProgress, OBJC_ASSOCIATION_COPY_NONATOMIC, GQImageDownloaderProgressBlock);
-GQ_DYNAMIC_PROPERTY_OBJECT(complete, setComplete, OBJC_ASSOCIATION_COPY_NONATOMIC, GQImageDownloaderCompleteBlock);
+GQ_DYNAMIC_PROPERTY_OBJECT(progressBlock, setProgressBlock, OBJC_ASSOCIATION_COPY_NONATOMIC, GQImageDownloaderProgressBlock);
+GQ_DYNAMIC_PROPERTY_OBJECT(completeBlock, setCompleteBlock, OBJC_ASSOCIATION_COPY_NONATOMIC, GQImageDownloaderCompleteBlock);
 GQ_DYNAMIC_PROPERTY_OBJECT(downloadOperation, setDownloadOperation, OBJC_ASSOCIATION_RETAIN_NONATOMIC, id<GQImageDownloaderOperationDelegate>);
 
 - (void)dealloc
@@ -72,8 +72,8 @@ GQ_DYNAMIC_PROPERTY_OBJECT(downloadOperation, setDownloadOperation, OBJC_ASSOCIA
     if(nil == url || [@"" isEqualToString:url.absoluteString] ) {
         return;
     }
-    self.complete = [complete copy];
-    self.progress = [progress copy];
+    self.completeBlock = [complete copy];
+    self.progressBlock = [progress copy];
     self.imageUrl = url;
     [self cancelCurrentImageRequest];
     
@@ -84,16 +84,16 @@ GQ_DYNAMIC_PROPERTY_OBJECT(downloadOperation, setDownloadOperation, OBJC_ASSOCIA
                                                                           withURLRequestClassName:className
                                                                           progress:^(CGFloat progress) {
                                                                               GQStrongify(self);
-                                                                              if (self.progress) {
-                                                                                  self.progress(progress);
+                                                                              if (self.progressBlock) {
+                                                                                  self.progressBlock(progress);
                                                                               }
                                                                           }complete:^(UIImage *image, NSURL *url, NSError *error) {
                                                                               GQStrongify(self);
                                                                               if (image) {
                                                                                   self.image = image;
                                                                               }
-                                                                              if (self.complete) {
-                                                                                  self.complete(image,url,error);
+                                                                              if (self.completeBlock) {
+                                                                                  self.completeBlock(image,url,error);
                                                                               }
                                                                           }];
     [self setDownloadOperation:_downloadOperation];

@@ -33,11 +33,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
     __block UIImage *image = nil;
     
     BOOL isCacheToDisk = ( cacheType == GQImageDownloaderCacheTypeDisk );
-    
     BOOL isCacheToMemory = ( cacheType == GQImageDownloaderCacheTypeOnlyMemory );
     
     BOOL isExistDisk = [[GQImageCacheManager sharedManager] isImageExistDiskWithUrl:url.absoluteString];
-    
     BOOL isExistMemory = [[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString];
     
     BOOL needDownloadFromNetwork = NO;
