@@ -34,11 +34,23 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDownloaderOperationManager, sharedManager)
     
     BOOL isCacheToDisk = ( cacheType == GQImageDownloaderCacheTypeDisk );
     
+    BOOL isCacheToMemory = ( cacheType == GQImageDownloaderCacheTypeOnlyMemory );
+    
     BOOL isExistDisk = [[GQImageCacheManager sharedManager] isImageExistDiskWithUrl:url.absoluteString];
     
     BOOL isExistMemory = [[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:url.absoluteString];
     
-    if(!isExistMemory || (isCacheToDisk && !isExistDisk)) {
+    BOOL needDownloadFromNetwork = NO;
+    
+    //如果缓存类型为缓存至硬盘但是不存在于硬盘中、缓存类型为缓存至内存中但是不存在于内存中。
+    if ( ( isCacheToDisk && !isExistDisk ) || ( isCacheToMemory && !isExistMemory ) ) {
+        if (isExistMemory) { //如果此时存在于内存中就需要清理掉。
+            [[GQImageCacheManager sharedManager] removeImageFromCacheWithUrl:url.absoluteString];
+        }
+        needDownloadFromNetwork = YES;
+    }
+    
+    if(needDownloadFromNetwork) {
         id<GQImageDownloaderOperationDelegate> operation = [[GQImageDataDownloader sharedDownloadManager]
                                                             downloadWithURL:url
                                                             progress:^(CGFloat progress) {
