@@ -90,6 +90,8 @@ API：
 
 ### 1.2.2  设置图片的伸缩模式GQImageViewerScaleType
 
+该功能在configure里面进行属性配置，具体属性为：configure.scaleType，属性介绍如下:
+
 (1)、GQImageViewerScaleTypeFullyDisplay
 
 这个模式顾名思义就是让图片完全显示，不管图片大小，统一根据高度宽度等比例缩至可以完全显示，这个模式的好处有：
@@ -183,6 +185,24 @@ API:
 ```
 
 <span style="color:red">Tips: configure的优先级大于直接引用头文件设置 </span>
+
+### 1.2.5 设置网络图片的缓存机制
+
+该功能在configure里面进行属性配置，具体属性为：configure.cacheType，属性介绍如下:
+
+(1)、GQImageViewerCacheTypeNone
+
+该模式就是无任何缓存，网络图片每次都是去请求。
+
+(2)、GQImageViewerCacheTypeOnlyMemory
+
+该模式会将图片缓存在内存中，当内存警告时会自动清理已节省内存空间，生存周期仅限一次APP的生命周期。
+
+(3)、GQImageViewerCacheTypeDisk
+
+该模式会将图片缓存至硬盘中以文件形式保存起来， 更新策略是：
+    1)、在不清理硬盘缓存的情况下可以永久使用，读取一次硬盘文件后就会缓存在NSCache中，直到自动清理或者APP生命周期结束。
+    2)、在APP生命周期中清理硬盘缓存且该图片已经缓存在NSCache中，此时会将NSCache中的缓存清除并去执行下载步骤。
 
 ## 1.3 Basic usage
 
