@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GQImageViewer"
-  s.version      = "1.1.0"
+  s.version      = "1.1.1"
   s.summary      = "一款多图文浏览器，支持图文混合浏览和单图片浏览，增加底部文字，仿今日头条效果，图片原尺寸显示，不会变形，双击放大缩小，单击消失，支持多张本地及网络图片混合查看，支持链式调用，支持WebP图片浏览。"
 
   s.homepage     = "https://github.com/g763007297/ImageViewer"
@@ -20,6 +20,8 @@ Pod::Spec.new do |s|
 
   s.default_subspec = 'Core'
 
+  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
+
   s.subspec 'Core' do |core|
     core.source_files = "GQImageViewer/**/*.{h,m}"
     core.dependency "GQImageDownloader"
@@ -29,5 +31,4 @@ Pod::Spec.new do |s|
     webp.source_files = "GQImageViewer/**/*.{h,m}"
     webp.dependency 'GQImageDownloader/WebP'
   end
-
 end

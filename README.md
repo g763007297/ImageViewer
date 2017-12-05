@@ -321,6 +321,18 @@ API:
 	
 ``` 
 	
+## 1.3 常见错误解决
+
+1). Could not build Objective-C module 'GQImageViewer'
+
+该错误是因为存在编译缓存，需清理工程缓存，使用快捷键:Shift+option+Command+K
+
+2). include of non-modular header inside framework module 'GQImageViewer.types':。。。。
+
+只需要将主target下面的Build Settings中 Allow Non-modular includes in Framework Modules 选项卡设为YES即可。
+
+使用1.1.0及以上版本除了修改主target，还需要将Pods下target名称为GQImageViewer的Build Settings中 Allow Non-modular includes in Framework Modules 选项卡设为YES即可。
+
 ## Level history
 	
 (1) 0.0.1
