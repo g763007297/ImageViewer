@@ -26,8 +26,13 @@
 @property (nonatomic, strong) NSString *GQImageViewURLRequestClassName;
 
 /**
- 文字信息
+ 文字信息 可为 NSString、NSAttributedString及其子类
  */
-@property (nonatomic, copy) NSString *textSource;
+@property (nonatomic, copy) id textSource;
+
+/**
+ 文字高度
+ */
+@property (nonatomic, assign) CGFloat textHeight;
 
 @end

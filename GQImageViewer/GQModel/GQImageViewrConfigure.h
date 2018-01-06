@@ -92,27 +92,27 @@ typedef NS_ENUM(NSUInteger, GQImageViewerCacheType) {
 @property (nonatomic, assign) GQImageViewerCacheType cacheType;
 
 /**
- 文字背景颜色
+ 文字背景颜色  默认为：[[UIColor blackColor] colorWithAlphaComponent:0.3]
  */
 @property (nonatomic, strong) UIColor *textViewBgColor;
 
 /**
- 文字颜色
+ 文字颜色   默认为：[UIColor whiteColor]
  */
 @property (nonatomic, strong) UIColor *textColor;
 
 /**
- 字体大小
+ 字体大小   默认为：[UIFont systemFontOfSize:15]
  */
 @property (nonatomic, strong) UIFont *textFont;
 
 /**
- 文字最高显示多高
+ 文字最高显示多高  默认为：200
  */
 @property (nonatomic, assign) CGFloat maxTextHeight;
 
 /**
- 文本相对于父视图的缩进  距离四周的距离  UIEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right)
+ 文本相对于父视图的缩进  距离四周的距离  UIEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right)   默认为：UIEdgeInsetsZero
  */
 @property (nonatomic, assign) UIEdgeInsets textEdgeInsets;
 

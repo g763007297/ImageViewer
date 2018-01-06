@@ -10,7 +10,7 @@
 
 @implementation NSString (GQImageViewrCategory)
 
-- (CGSize)textSizeWithFont:(UIFont *)font withcSize:(CGSize)size{
+- (CGSize)stringSizeWithFont:(UIFont *)font withcSize:(CGSize)size {
     CGSize actualTitleSize;
     if ([[UIDevice currentDevice].systemVersion doubleValue] >= 7.0) {
 #pragma clang diagnostic push

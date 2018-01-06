@@ -19,7 +19,7 @@
         withUsePageControl:(BOOL)usePageControl
         withSuperViewWidth:(CGFloat)width;
 
-@property (nonatomic, readonly, strong) NSString *text;
+@property (nonatomic, readonly, strong) id text;
 @property (nonatomic, readonly, strong) GQImageViewrConfigure *configure;
 
 @end

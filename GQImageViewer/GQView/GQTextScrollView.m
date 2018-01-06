@@ -8,6 +8,7 @@
 
 #import "GQTextScrollView.h"
 #import "NSString+GQImageViewrCategory.h"
+#import "NSAttributedString+GQImageViewerCategory.h"
 #import "GQImageViewrConfigure.h"
 #import "GQImageViewerModel.h"
 
@@ -83,16 +84,27 @@ static const CGFloat maxTextHight = 200;
         _textLabel.font = _textFont;
     }
     
-    NSString *text = source[currentIndex].textSource;
-    if (![_text isEqual:text]) {
-        _text = [text copy];
-        _textLabel.text = _text;
-    }
-    
     UIColor *textColor = configure.textColor?:[UIColor whiteColor];
     if (![_textColor isEqual:textColor]) {
         _textColor = textColor;
         _textLabel.textColor = _textColor;
+    }
+    
+    id text = source[currentIndex].textSource;
+    if (![_text isEqual:text]) {
+        _text = [text copy];
+    }
+    
+    CGFloat height = 0;
+    CGSize originSize = CGSizeMake(width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT);
+    if ([_text isKindOfClass:[NSString class]]) {
+        _textLabel.text = _text;
+        height = [text stringSizeWithFont:textFont
+                                withcSize:originSize].height;
+    } else if ([_text isKindOfClass:[NSAttributedString class]]) {
+        _textLabel.attributedText = _text;
+        height = [text attributedStringSizeWithSize:originSize
+                                    withDefaultFont:textFont].height;
     }
     
     CGFloat maxHeight = configure.maxTextHeight?:maxTextHight;
@@ -113,9 +125,8 @@ static const CGFloat maxTextHight = 200;
     
     self.backgroundColor = configure.textViewBgColor?:[[UIColor blackColor] colorWithAlphaComponent:0.3];
     
-    CGFloat height = [text textSizeWithFont:textFont
-                                  withcSize:CGSizeMake(width - _textEdgeInsets.left - _textEdgeInsets.right, MAXFLOAT)].height;
     CGFloat scolleViewHeight = height + _textEdgeInsets.top + _textEdgeInsets.bottom;
+    
     if (scolleViewHeight >_maxHeight) {
         scolleViewHeight = _maxHeight;
     }

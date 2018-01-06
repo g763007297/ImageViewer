@@ -11,6 +11,6 @@
 
 @interface NSString (GQImageViewrCategory)
 
-- (CGSize)textSizeWithFont:(UIFont *)font withcSize:(CGSize)size;
+- (CGSize)stringSizeWithFont:(UIFont *)font withcSize:(CGSize)size;
 
 @end
