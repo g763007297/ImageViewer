@@ -74,7 +74,7 @@
                                  launchDirection:GQLaunchDirectionFromRect];
         [configure setRequestClassName:@"DemoURLRequest"];
         [configure setNeedPanGesture:NO];//设置是否需要滑动消失手势
-        configure.launchFromView = demoView;
+        configure.launchFromView = self->demoView;
         [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
     })
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组
@@ -146,7 +146,7 @@
                                        scaleType:GQImageViewerScaleTypeEqualWidth
                                  launchDirection:GQLaunchDirectionFromRect];
         [configure setRequestClassName:@"DemoURLRequest"];
-        configure.launchFromView = demoView;
+        configure.launchFromView = self->demoView;
         [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
     })
     .dataSouceArrayChain(imageArray,textArray)//如果仅需要图片浏览就只需要传图片即可，无需传文字数组

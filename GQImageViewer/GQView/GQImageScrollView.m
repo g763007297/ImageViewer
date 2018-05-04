@@ -148,13 +148,13 @@
     if (scale == 1) {
         
         [UIView animateWithDuration:0.3 animations:^{
-            _imageView.frame = [self imageViewCompareSize];
+            self->_imageView.frame = [self imageViewCompareSize];
         }];
     }else {
         CGFloat gapHeight = (self.frame.size.height - view.frame.size.height);
         CGFloat gapWidth = (self.frame.size.width - view.frame.size.width);
         [UIView animateWithDuration:0.3 animations:^{
-            _imageView.frame = CGRectMake((gapWidth > 0 ? gapWidth : 0) / 2, (gapHeight > 0 ? gapHeight : 0) / 2, view.frame.size.width, view.frame.size.height);
+            self->_imageView.frame = CGRectMake((gapWidth > 0 ? gapWidth : 0) / 2, (gapHeight > 0 ? gapHeight : 0) / 2, view.frame.size.width, view.frame.size.height);
         }];
     }
 }

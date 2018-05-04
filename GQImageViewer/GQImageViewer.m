@@ -341,13 +341,13 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.alpha = 1;
-                             self.frame = _superViewRect;
+                             self.frame = self->_superViewRect;
                          }completion:^(BOOL finished) {
                              [self configureTopAndBottomView];
                          }];
     }else {
         self.alpha = 1;
-        self.frame = _superViewRect;
+        self.frame = self->_superViewRect;
         [showView addSubview:self];
     }
 }

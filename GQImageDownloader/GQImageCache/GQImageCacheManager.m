@@ -166,13 +166,15 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
     
     if (cacheType == GQImageDownloaderCacheTypeDisk) {
         [self createDirectorysAtPath:[self getImageFolder]];
+        GQWeakify(self);
         dispatch_group_async(self.ioDispatchGroup, self.ioDispatchQueue, ^{
+            GQStrongify(self);
             @try {
                 NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
                 NSString *imageFilePath = [self getPathByFileName:key];
-                if (![_fileManager fileExistsAtPath:imageFilePath]) {
+                if (![self->_fileManager fileExistsAtPath:imageFilePath]) {
                     NSURL *fileURL = [NSURL fileURLWithPath:imageFilePath];
-                    [_fileManager createFileAtPath:imageFilePath contents:imageData attributes:nil];
+                    [self->_fileManager createFileAtPath:imageFilePath contents:imageData attributes:nil];
                     NSError *error = nil;
                     [fileURL setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:&error];
                 }
@@ -235,8 +237,10 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (NSUInteger)getSize {
     __block NSUInteger size = 0;
+    GQWeakify(self);
     dispatch_sync(self.ioDispatchQueue, ^{
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:[self getImageFolder]];
+        GQStrongify(self);
+        NSDirectoryEnumerator *fileEnumerator = [self->_fileManager enumeratorAtPath:[self getImageFolder]];
         for (NSString *fileName in fileEnumerator) {
             NSString *filePath = [self.getImageFolder stringByAppendingPathComponent:fileName];
             NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
@@ -248,8 +252,10 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (NSUInteger)getDiskCount {
     __block NSUInteger count = 0;
+    GQWeakify(self);
     dispatch_sync(self.ioDispatchQueue, ^{
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:[self getImageFolder]];
+        GQStrongify(self);
+        NSDirectoryEnumerator *fileEnumerator = [self->_fileManager enumeratorAtPath:[self getImageFolder]];
         count = [[fileEnumerator allObjects] count];
     });
     return count;
@@ -261,8 +267,10 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageCacheManager, sharedManager)
 
 - (void)clearDiskOnCompletion:(GQImageDownloaderNoParamsBlock)completion
 {
+    GQWeakify(self);
     dispatch_async(self.ioDispatchQueue, ^{
-        [_fileManager removeItemAtPath:[self getImageFolder] error:nil];
+        GQStrongify(self);
+        [self->_fileManager removeItemAtPath:[self getImageFolder] error:nil];
         [self createDirectorysAtPath:[self getImageFolder]];
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
