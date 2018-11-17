@@ -157,11 +157,13 @@
 /**
  删除指定的index
 
- @param index 
+ @param index
+ @param animation 是否需要animation
+ @param complete 成功回调
  */
 - (void)deleteIndex:(NSInteger)index
           animation:(BOOL)animation
-           complete:(void (^ _Nullable)(BOOL finished))complete ;
+           complete:(void (^ _Nullable)(BOOL finished))complete;
 
 /**
  *  显示GQImageViewer到指定view上

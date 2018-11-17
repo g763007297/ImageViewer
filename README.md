@@ -18,7 +18,7 @@
 
 1.在 Podfile 中添加 pod 'GQImageViewer'。
 2.执行 pod install 或 pod update。
-3.导入 GQImageViewer.h。
+3.导入 GQImageViewer.h 或者 GQImagePreviewer.h。
 
 ## 1.0 WebP图片支持
  
@@ -175,7 +175,7 @@ API:
 
 ```
 
-也可以通过configure进行设置： 
+也可以通过configure进行设置（使用GQImageViewer设置）： 
 
 ```objc
 .configureChain(^(GQImageViewrConfigure *configure) {
@@ -204,7 +204,9 @@ API:
     1)、在不清理硬盘缓存的情况下可以永久使用，读取一次硬盘文件后就会缓存在NSCache中，直到自动清理或者APP生命周期结束。
     2)、在APP生命周期中清理硬盘缓存且该图片已经缓存在NSCache中，此时会将NSCache中的缓存清除并去执行下载步骤。
 
-## 1.3 Basic usage
+## 1.3 Basic usage 
+
+### 1.3.1 使用GQImageViewer
 
 1.将GQImageViewer和GQImageDownloader文件夹加入到工程中。
 
@@ -305,6 +307,178 @@ API:
 
 ```
 
+### 1.3.2 使用GQImagePreviewer
+
+1.将GQImageViewer和GQImageDownloader文件夹加入到工程中。
+
+2.在需要使用的图片查看器的控制器中#import "GQImagePreviewer.h"。
+
+3.添加数据源代理与事件代理
+
+```objc
+
+@protocol GQImagePreviewerDelegate <NSObject>
+
+@optional
+
+/**
+ 当前选中的index
+
+ @param imageViewer
+ @param index
+ */
+- (void)imageViewer:(GQImagePreviewer *)imageViewer didSelectIndex:(NSInteger)index;
+
+/**
+ 当前单击的index
+
+ @param imageViewer
+ @param index
+ */
+- (void)imageViewer:(GQImagePreviewer *)imageViewer didSingleTapIndex:(NSInteger)index;
+
+/**
+ 当前长按的index
+
+ @param imageViewer
+ @param index
+ @param data
+ */
+- (void)imageViewer:(GQImagePreviewer *)imageViewer didLongTapIndex:(NSInteger)index data:(id)data;
+
+/**
+ 配置头部view
+
+ @param imageViewer
+ @param configureView
+ */
+- (void)imageViewer:(GQImagePreviewer *)imageViewer topViewConfigure:(UIView *)topConfigureView;
+
+/**
+ 配置底部view
+
+ @param imageViewer
+ @param configureView
+ */
+- (void)imageViewer:(GQImagePreviewer *)imageViewer bottomViewConfigure:(UIView *)bttomConfigureView;
+
+/**
+ 视图消失
+
+ @param imageViewer
+ */
+- (void)imageViewerDidDissmiss:(GQImagePreviewer *)imageViewer;
+
+@end
+
+@protocol GQImagePreviewerDataSource <NSObject>
+
+@required
+
+/**
+ 获取数据总个数
+
+ @param imageViewer
+ @return 总个数
+ */
+- (NSInteger)numberOfItemInImageViewer:(GQImagePreviewer *)imageViewer;
+
+/**
+ 获取制定index的数据
+
+ @param imageViewer
+ @param index
+ @return 数据
+ */
+- (nonnull id)imageViewer:(GQImagePreviewer *)imageViewer dataForItemAtIndex:(NSInteger)index;
+
+/**
+ 配置configure
+
+ @param imageViewer
+ @param configure
+ */
+- (void)imageViewer:(GQImagePreviewer *)imageViewer configure:(GQImageViewrConfigure *)configure;
+
+@optional
+
+/**
+ 获取指定index的文字 NSAttributedString NSString
+
+ @param imageViewer
+ @param index
+ @return 可为 NSAttributedString NSString
+ */
+- (nonnull id)imageViewer:(GQImagePreviewer *)imageViewer textForItemAtIndex:(NSInteger)index;
+
+@end
+
+```
+
+3.在需要触发查看器的地方添加以下代码（
+如果仅需要图片浏览就只需要传图片即可，无需传文字数组）:
+
+```objc
+
+    _imagePreviewer = [GQImagePreviewer imageViewerWithCurrentIndex:3];
+    _imagePreviewer.delegate = self;
+    _imagePreviewer.dataSource = self;
+    
+    [_imagePreviewer showInView:self.navigationController.view animation:YES];
+  
+```
+
+4.配置信息，通过GQImageViewrConfigure类进行配置，现支持整体背景颜色、文字背景颜色、文字颜色、字体大小、文字最高显示多高、文本相对于父视图的缩进、是否需要循环滚动、显示PageControl或label、是否需要滑动消失手势、默认图片、自定义图片浏览界面class名称、推出方向：
+
+```objc
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer configure:(GQImageViewrConfigure *)configure {
+    [configure configureWithImageViewBgColor:[UIColor blackColor]
+                             textViewBgColor:nil
+                                   textColor:[UIColor whiteColor]
+                                    textFont:[UIFont systemFontOfSize:12]
+                               maxTextHeight:100
+                              textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                   scaleType:GQImageViewerScaleTypeEqualWidth
+                             launchDirection:GQLaunchDirectionFromRect];
+    [configure setRequestClassName:@"DemoURLRequest"];
+    [configure setNeedPanGesture:YES];//设置是否需要滑动消失手势
+    configure.launchFromView = self->demoView;
+    [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
+}
+
+```
+
+5.删除指定的index数据,删除index之前需先删除数据源
+
+```objc
+
+/**
+ 删除指定的index
+
+ @param index
+ @param animation 是否需要animation
+ @param complete 成功回调
+ */
+- (void)deleteIndex:(NSInteger)index
+          animation:(BOOL)animation
+           complete:(void (^ _Nullable)(BOOL finished))complete;
+
+- (void)deleteCurrentIndex:(UIButton *)sender {
+    [sender setEnabled:NO];
+    [self->imageArray removeObjectAtIndex:_imagePreviewer.currentIndex];
+    [self->textArray removeObjectAtIndex:_imagePreviewer.currentIndex];
+    [_imagePreviewer deleteIndex:_imagePreviewer.currentIndex
+                       animation:YES
+                        complete:^(BOOL finished) {
+                            [sender setEnabled:YES];
+                        }];
+}
+
+```
+
+6.
+
   特别说明，如果是下网络图片的话，在iOS9以上的系统需要添加plist字段，否则无法拉取图片:
   
 ```objc
@@ -321,7 +495,7 @@ API:
 	
 ``` 
 	
-## 1.3 常见错误解决
+## 1.4 常见错误解决
 
 1). Could not build Objective-C module 'GQImageViewer'
 
@@ -437,8 +611,13 @@ API:
 	1.完善图片下载缓存策略，支持设置缓存类型；
 	2.抽离图片下载部分，为后面做扩展奠定基础。
 	
-(23) 1.1.1
+(23) 1.2.0
 
+	1.增加代理模式管理数据源和各种事件
+	2.完善上下滑动关闭的逻辑,代码精简
+
+(24) 1.2.1
+	
 	wait a moment
 	
 ## Support
