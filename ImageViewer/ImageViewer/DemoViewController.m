@@ -201,7 +201,7 @@
     _imagePreviewer.delegate = self;
     _imagePreviewer.dataSource = self;
     
-    [_imagePreviewer showInView:self.navigationController.view animation:YES];
+    [_imagePreviewer showInView:self.navigationController.view animation:NO];
 }
 
 - (void)deleteCurrentIndex:(UIButton *)sender {
@@ -209,7 +209,7 @@
     [self->_imageArray removeObjectAtIndex:_imagePreviewer.currentIndex];
     [self->_textArray removeObjectAtIndex:_imagePreviewer.currentIndex];
     [_imagePreviewer deleteIndex:_imagePreviewer.currentIndex
-                       animation:YES
+                       animation:NO
                         complete:^(BOOL finished) {
                             [sender setEnabled:YES];
                         }];

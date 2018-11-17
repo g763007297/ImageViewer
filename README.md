@@ -618,6 +618,10 @@ API:
 
 (24) 1.2.1
 	
+	1.修复删除指定index时不刷新底部文字和回调代理的bug
+	
+(25) 1.2.2
+	
 	wait a moment
 	
 ## Support

@@ -327,6 +327,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
         self.alpha = 1;
         self.frame = self->_superViewRect;
         [showView addSubview:self];
+        [self configureTopAndBottomView];
     }
 }
 

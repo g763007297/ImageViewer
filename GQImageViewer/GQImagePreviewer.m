@@ -203,8 +203,20 @@ NS_ASSUME_NONNULL_BEGIN
                 complete(finished);
             }
         }];
-    } else
+    } else {
         [self.collectionView reloadData];
+        if (complete) {
+            complete(YES);
+        }
+    }
+    
+    if (self.currentIndex > self.numberOfItem - 1) {
+        self.currentIndex = self.numberOfItem - 1;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:didSelectIndex:)]) {
+            [self.delegate imageViewer:self didSelectIndex:self.currentIndex];
+        }
+    }
+    [self setupTextScrollView];
 }
 
 - (void)showInView:(UIView *)showView animation:(BOOL)animation
@@ -250,6 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
         self.alpha = 1;
         self.frame = self->_superViewRect;
         [showView addSubview:self];
+        [self configureTopAndBottomView];
     }
 }
 
