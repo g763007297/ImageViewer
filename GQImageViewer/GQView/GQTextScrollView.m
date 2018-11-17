@@ -11,6 +11,7 @@
 #import "NSAttributedString+GQImageViewerCategory.h"
 #import "GQImageViewrConfigure.h"
 #import "GQImageViewerModel.h"
+#import "GQImageViewerConst.h"
 
 static NSInteger pageNumberTag = 10086;
 
@@ -143,7 +144,7 @@ static const CGFloat maxTextHight = 200;
                 break;
             case GQImageViewerShowIndexTypeLabel:{
                 scolleViewHeight = 20;
-                _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(currentIndex+1),totalCount];
+                _pageLabel.text = [NSString stringWithFormat:@"%@/%@",GQ_IntToString(currentIndex+1),GQ_IntToString(totalCount)];
                 [_pageLabel setHidden:NO];
                 [_pageControl setHidden:YES];
                 [_textLabel setHidden:YES];

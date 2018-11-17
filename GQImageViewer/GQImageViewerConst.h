@@ -71,6 +71,12 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
 #define GQStrongify(object) __typeof__(object) object = weak##_##object
 #endif
 
+#if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32
+    #define GQ_IntToString(x) [NSString stringWithFormat:@"%ld",(long)x]
+#else
+    #define GQ_IntToString(x) [NSString stringWithFormat:@"%d",x]
+#endif
+
 #pragma mark - 动态添加属性
 //动态添加属性
 #define GQ_DYNAMIC_PROPERTY_OBJECT(_getter_, _setter_, _association_, _type_) \

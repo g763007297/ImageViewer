@@ -15,6 +15,8 @@
 
 #import "UIView+GQImageViewrCategory.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GQImagePreviewer() <GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
@@ -94,7 +96,7 @@
     _isVisible = NO;
 }
 
-- (void)setDelegate:(id<GQImagePreviewerDelegate>)delegate {
+- (void)setDelegate:(_Nullable id<GQImagePreviewerDelegate>)delegate {
     _delegate = delegate;
     if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:didLongTapIndex:data:)]) {
         //长按手势
@@ -102,7 +104,7 @@
     }
 }
 
-- (void)setDataSource:(id<GQImagePreviewerDataSource>)dataSource {
+- (void)setDataSource:(_Nullable id<GQImagePreviewerDataSource>)dataSource {
     _dataSource = dataSource;
     [self setupConfigure];
 }
@@ -650,3 +652,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

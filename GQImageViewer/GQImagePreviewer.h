@@ -23,48 +23,48 @@
 /**
  当前选中的index
 
- @param imageViewer
- @param index
+ param imageViewer
+ param index
  */
 - (void)imageViewer:(GQImagePreviewer *)imageViewer didSelectIndex:(NSInteger)index;
 
 /**
  当前单击的index
 
- @param imageViewer
- @param index
+ param imageViewer
+ param index
  */
 - (void)imageViewer:(GQImagePreviewer *)imageViewer didSingleTapIndex:(NSInteger)index;
 
 /**
  当前长按的index
 
- @param imageViewer
- @param index
- @param data
+ param imageViewer
+ param index
+ param data
  */
 - (void)imageViewer:(GQImagePreviewer *)imageViewer didLongTapIndex:(NSInteger)index data:(id)data;
 
 /**
  配置头部view
 
- @param imageViewer
- @param configureView
+ param imageViewer
+ param configureView
  */
-- (void)imageViewer:(GQImagePreviewer *)imageViewer topViewConfigure:(UIView *)topConfigureView;
+- (void)imageViewer:(GQImagePreviewer *)imageViewer topViewConfigure:(nonnull UIView *)topConfigureView;
 
 /**
  配置底部view
 
- @param imageViewer
- @param configureView
+ param imageViewer
+ param configureView
  */
-- (void)imageViewer:(GQImagePreviewer *)imageViewer bottomViewConfigure:(UIView *)bttomConfigureView;
+- (void)imageViewer:(GQImagePreviewer *)imageViewer bottomViewConfigure:(nonnull UIView *)bottomConfigureView;
 
 /**
  视图消失
 
- @param imageViewer
+ param imageViewer
  */
 - (void)imageViewerDidDissmiss:(GQImagePreviewer *)imageViewer;
 
@@ -77,40 +77,42 @@
 /**
  获取数据总个数
 
- @param imageViewer
- @return 总个数
+ param imageViewer
+ return 总个数
  */
 - (NSInteger)numberOfItemInImageViewer:(GQImagePreviewer *)imageViewer;
 
 /**
  获取制定index的数据
 
- @param imageViewer
- @param index
- @return 数据
+ param imageViewer
+ param index
+ return 数据
  */
 - (nonnull id)imageViewer:(GQImagePreviewer *)imageViewer dataForItemAtIndex:(NSInteger)index;
 
 /**
  配置configure
 
- @param imageViewer
- @param configure
+ param imageViewer
+ param configure
  */
-- (void)imageViewer:(GQImagePreviewer *)imageViewer configure:(GQImageViewrConfigure *)configure;
+- (void)imageViewer:(GQImagePreviewer *)imageViewer configure:(nonnull GQImageViewrConfigure *)configure;
 
 @optional
 
 /**
  获取指定index的文字 NSAttributedString NSString
 
- @param imageViewer
- @param index
- @return 可为 NSAttributedString NSString
+ param imageViewer
+ param index
+ return 可为 NSAttributedString NSString
  */
 - (nonnull id)imageViewer:(GQImagePreviewer *)imageViewer textForItemAtIndex:(NSInteger)index;
 
 @end
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GQImagePreviewer : UIView
 
@@ -127,15 +129,15 @@
 /**
  初始化方法
 
- @return
+ return
  */
 + (instancetype)imageViewer;
 
 /**
  初始化方法
 
- @param index 指定index
- @return
+ param index 指定index
+ return
  */
 + (instancetype)imageViewerWithCurrentIndex:(NSInteger)index;
 
@@ -157,9 +159,9 @@
 /**
  删除指定的index
 
- @param index
- @param animation 是否需要animation
- @param complete 成功回调
+ param index
+ param animation 是否需要animation
+ param complete 成功回调
  */
 - (void)deleteIndex:(NSInteger)index
           animation:(BOOL)animation
@@ -178,3 +180,5 @@
 - (void)dissMissWithAnimation:(BOOL)animation;
 
 @end
+
+NS_ASSUME_NONNULL_END
