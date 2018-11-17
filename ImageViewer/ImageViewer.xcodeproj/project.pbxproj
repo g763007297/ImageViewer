@@ -53,6 +53,7 @@
 		DF0255C81C34BCCD001E65C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF0255C71C34BCCD001E65C2 /* Assets.xcassets */; };
 		DF0255D61C34BCCD001E65C2 /* ImageViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255D51C34BCCD001E65C2 /* ImageViewerTests.m */; };
 		DF0255E21C34BD89001E65C2 /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF0255E11C34BD89001E65C2 /* DemoViewController.m */; };
+		DF42CE85219EE59700B1A2CF /* GQImagePreviewer.m in Sources */ = {isa = PBXBuildFile; fileRef = DF42CE84219EE59700B1A2CF /* GQImagePreviewer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +151,9 @@
 		DF0255D71C34BCCD001E65C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF0255E01C34BD89001E65C2 /* DemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoViewController.h; sourceTree = "<group>"; };
 		DF0255E11C34BD89001E65C2 /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
+		DF42CE83219EE59700B1A2CF /* GQImagePreviewer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GQImagePreviewer.h; sourceTree = "<group>"; };
+		DF42CE84219EE59700B1A2CF /* GQImagePreviewer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GQImagePreviewer.m; sourceTree = "<group>"; };
+		DF42CE86219EE5E800B1A2CF /* GQImageViewerMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GQImageViewerMacro.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,6 +329,7 @@
 		B695216E1CE2C82F00F288AF /* GQImageViewer */ = {
 			isa = PBXGroup;
 			children = (
+				DF42CE86219EE5E800B1A2CF /* GQImageViewerMacro.h */,
 				B6032E281DEE67290060FB0E /* GQImageViewerConst.h */,
 				B6032E291DEE67290060FB0E /* GQModel */,
 				B6032E2C1DEE67290060FB0E /* GQView */,
@@ -332,6 +337,8 @@
 				B6032E1A1DEE64D50060FB0E /* GQCategory */,
 				B69521711CE2C82F00F288AF /* GQImageViewer.h */,
 				B69521721CE2C82F00F288AF /* GQImageViewer.m */,
+				DF42CE83219EE59700B1A2CF /* GQImagePreviewer.h */,
+				DF42CE84219EE59700B1A2CF /* GQImagePreviewer.m */,
 			);
 			name = GQImageViewer;
 			path = ../../GQImageViewer;
@@ -529,6 +536,7 @@
 				B6032E241DEE65B00060FB0E /* GQBaseCollectionView.m in Sources */,
 				B655AF0D1FC6CB17007D44E4 /* GQImageCacheManager.m in Sources */,
 				DF0255BD1C34BCCD001E65C2 /* AppDelegate.m in Sources */,
+				DF42CE85219EE59700B1A2CF /* GQImagePreviewer.m in Sources */,
 				DF0255BA1C34BCCD001E65C2 /* main.m in Sources */,
 				B6032E331DEE67290060FB0E /* GQImageViewerModel.m in Sources */,
 				B68C6A1A1FBFC3C90014E78C /* GQImageView.m in Sources */,

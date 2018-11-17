@@ -15,6 +15,7 @@
 #import "GQImageViewerConst.h"
 
 #import "UIImage+GQImageViewrCategory.h"
+#import "UIView+GQImageViewrCategory.h"
 
 #import "GQImageDownloader.h"
 
@@ -30,17 +31,24 @@
 
 #pragma mark -- life cycle
 
++ (void)load {
+    if (@available(iOS 11.0, *)){
+        [[self appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         _imageView = [[GQImageView alloc] initWithFrame:self.bounds];
         //让图片等比例适应图片视图的尺寸
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_imageView];
         
         self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth ;
+        
+        self.bounces = NO;
         
         //设置最大放大倍数
         self.maximumZoomScale = 3.0;
@@ -97,14 +105,14 @@
     _singleTap = [singleTap copy];
 }
 
-- (void)setImageModel:(GQImageViewerModel *)imageModel
+- (void)setImageModel:(id)imageModel
 {
     _imageModel = imageModel;
     if (!_isAddSubView) {
         [self addSubview:self.imageView];
         _isAddSubView = YES;
     }
-    id data = imageModel.imageSource;
+    id data = imageModel;
     if ([data isKindOfClass:[UIImage class]]) {
         _imageView.image = data;
     } else if ([data isKindOfClass:[NSString class]]||[data isKindOfClass:[NSURL class]]) {
@@ -115,8 +123,8 @@
         [_imageView showLoading];
         GQWeakify(self);
         [_imageView loadImage:imageUrl
-             requestClassName:imageModel.GQImageViewURLRequestClassName
-                    cacheType:(NSInteger)_cacheType
+             requestClassName:self.configure.requestClassName
+                    cacheType:(NSInteger)self.configure.scaleType
                   placeHolder:_placeholderImage
                      progress:^(CGFloat progress) {
                          GQStrongify(self);
@@ -134,6 +142,25 @@
         _imageView.image = nil;
     }
     [self layoutSubviews];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer isEqual:self.panGestureRecognizer])
+    {
+        UIView *view = [self.panGestureRecognizer view];
+        if (self.zoomScale == 1) {
+            //如果scrollview滑动到左边界并且是往左滑
+            CGPoint translation = [self.panGestureRecognizer translationInView:view];
+            CGPoint velocity = [self.panGestureRecognizer velocityInView:view];
+            CGFloat ratio = (fabs(velocity.x)/fabs(velocity.y));
+            if (self.contentOffset.y == 0 && ratio < 0.68 && translation.y > 0) {
+                return NO;
+            } else if (self.contentSize.height - self.contentOffset.y - self.height < 1 && ratio < 0.68 && translation.y < 0 ) {
+                return NO;
+            }
+        }
+    }
+    return YES;
 }
 
 #pragma mark - UIScrollView delegate
@@ -162,7 +189,7 @@
 - (CGRect)imageViewCompareSize {
     CGRect rect = [_imageView.image gq_imageSizeFullyDisplayCompareWithSize:self.bounds.size];
     
-    switch (_scaleType) {
+    switch (self.configure.scaleType) {
         case GQImageViewerScaleTypeEqualWidth:
         {
             rect = [_imageView.image gq_imageSizeWidthCompareWithSize:self.bounds.size];
@@ -181,19 +208,15 @@
 
 - (void)tapAction:(UITapGestureRecognizer *)tap
 {
-    if (tap.numberOfTapsRequired == 1)
-    {
+    if (tap.numberOfTapsRequired == 1) {
         if (self.singleTap) {
             self.singleTap();
         }
     }
-    else if(tap.numberOfTapsRequired == 2)
-    {
-        if (self.zoomScale > 1)
-        {
+    else if(tap.numberOfTapsRequired == 2) {
+        if (self.zoomScale > 1) {
             [self setZoomScale:1 animated:YES];
-        } else
-        {
+        } else {
             [self setZoomScale:3 animated:YES];
         }
     }
@@ -201,7 +224,7 @@
 
 - (GQImageView *)imageView {
     if (!_imageView) {
-        _imageView = [[NSClassFromString(_imageModel.GQImageViewClassName) alloc] initWithFrame:self.bounds];
+        _imageView = [[NSClassFromString(_configure.imageViewClassName) alloc] initWithFrame:self.bounds];
         //让图片等比例适应图片视图的尺寸
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
     }

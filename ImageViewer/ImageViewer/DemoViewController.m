@@ -11,10 +11,13 @@
 #import "UIImage+GQImageViewrCategory.h"
 #import "GQImageDataDownload.h"
 
-@interface DemoViewController (){
+#import "GQImagePreviewer.h"
+
+@interface DemoViewController ()<GQImagePreviewerDelegate, GQImagePreviewerDataSource>{
     UIView *demoView;
     NSMutableArray *imageArray;//图片数组
     NSMutableArray *textArray;//文字数组
+    GQImagePreviewer *_imagePreviewer;
 }
 
 @end
@@ -51,6 +54,11 @@
     [manualManagerbutton setFrame:CGRectMake(5, CGRectGetMaxY(self.view.frame)/2+140, CGRectGetWidth(self.view.frame)-10, 40)];
     
     [self.view addSubview:manualManagerbutton];
+    
+    UIButton *perviewerManagerbutton = [self creatButtonWithTitle:@"点击此处查看图片(使用代理控制)" withSEL:@selector(showImagePreviewer:)];
+    [perviewerManagerbutton setFrame:CGRectMake(5, CGRectGetMaxY(self.view.frame)/2+200, CGRectGetWidth(self.view.frame)-10, 40)];
+    
+    [self.view addSubview:perviewerManagerbutton];
     
     demoView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)/2-100, 64, 200, 300)];
     demoView.backgroundColor = [UIColor blackColor];
@@ -170,7 +178,7 @@
         NSLog(@"dissMiss");
     })
     .showInViewChain(self.view.window,YES);//显示GQImageViewer到指定view上
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self afterAction];
     });
@@ -186,6 +194,85 @@
 
 - (void)dissMissImageViewer:(id)sender {
     [[GQImageViewer sharedInstance] dissMissWithAnimation:YES];
+}
+
+- (void)showImagePreviewer:(id)sender {
+    _imagePreviewer = [GQImagePreviewer imageViewerWithCurrentIndex:3];
+    _imagePreviewer.delegate = self;
+    _imagePreviewer.dataSource = self;
+    
+    [_imagePreviewer showInView:self.navigationController.view animation:YES];
+}
+
+- (void)deleteCurrentIndex:(UIButton *)sender {
+    [sender setEnabled:NO];
+    [self->imageArray removeObjectAtIndex:_imagePreviewer.currentIndex];
+    [self->textArray removeObjectAtIndex:_imagePreviewer.currentIndex];
+    [_imagePreviewer deleteIndex:_imagePreviewer.currentIndex
+                       animation:YES
+                        complete:^(BOOL finished) {
+                            [sender setEnabled:YES];
+                        }];
+}
+
+#pragma mark -- GQImageViewerDataSource
+
+- (NSInteger)numberOfItemInImageViewer:(GQImagePreviewer *)imageViewer {
+    return [imageArray count];
+}
+
+- (nonnull id)imageViewer:(GQImagePreviewer *)imageViewer dataForItemAtIndex:(NSInteger)index {
+    return imageArray[index];
+}
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer configure:(GQImageViewrConfigure *)configure {
+    [configure configureWithImageViewBgColor:[UIColor blackColor]
+                             textViewBgColor:nil
+                                   textColor:[UIColor whiteColor]
+                                    textFont:[UIFont systemFontOfSize:12]
+                               maxTextHeight:100
+                              textEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)
+                                   scaleType:GQImageViewerScaleTypeEqualWidth
+                             launchDirection:GQLaunchDirectionFromRect];
+    [configure setRequestClassName:@"DemoURLRequest"];
+    [configure setNeedPanGesture:YES];//设置是否需要滑动消失手势
+    configure.launchFromView = self->demoView;
+    [configure setNeedTapAutoHiddenTopBottomView:YES];//设置是否需要自动隐藏顶部和底部视图
+}
+
+- (nonnull id)imageViewer:(GQImagePreviewer *)imageViewer textForItemAtIndex:(NSInteger)index {
+    return textArray[index];
+}
+
+#pragma mark -- GQImagePreviewerDelegate
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer topViewConfigure:(UIView *)configureView {
+    configureView.height = 80;
+    configureView.backgroundColor = [UIColor redColor];
+    [self topViewAddLabelText:@"代理模式" withTopView:configureView];
+    UIButton *button = [self creatButtonWithTitle:@"点击删除当前图片" withSEL:@selector(deleteCurrentIndex:)];
+    button.frame = CGRectMake(10, (configureView.height - 30) / 2, 100, 30);
+    [configureView addSubview:button];
+}
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer bottomViewConfigure:(UIView *)configureView {
+    configureView.height = 50;
+}
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer didSelectIndex:(NSInteger)index {
+    
+}
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer didSingleTapIndex:(NSInteger)index {
+    
+}
+
+- (void)imageViewer:(GQImagePreviewer *)imageViewer didLongTapIndex:(NSInteger)index data:(id)data {
+    
+}
+
+- (void)imageViewerDidDissmiss:(GQImagePreviewer *)imageViewer {
+    
 }
 
 #pragma mark -- 添加本地图片
@@ -274,7 +361,7 @@
 - (UIButton *)creatButtonWithTitle:(NSString *)title withSEL:(SEL)selector{
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     
     button.layer.borderColor = [UIColor orangeColor].CGColor;
     button.layer.borderWidth = 1;

@@ -13,7 +13,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _usePageControl = YES;
+        _showIndexType = GQImageViewerShowIndexTypeNone;
         _needLoopScroll = NO;
         _needPanGesture = YES;
         _needTapAutoHiddenTopBottomView = NO;

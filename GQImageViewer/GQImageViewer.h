@@ -89,7 +89,7 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
 /**
  *  单例方法
  *
- *  @return GQImageViewer
+ *  return GQImageViewer
  */
 + (GQImageViewer *)sharedInstance;
 
@@ -141,13 +141,20 @@ typedef void (^GQShowViewChain)(UIView *showView, BOOL animation);
  */
 @property (nonatomic, copy) GQLongTapIndexBlock longTapIndex;
 
-/**视图消失的block*/
+/**
+ 视图消失
+ */
 @property (nonatomic, copy) GQVoidBlock dissMiss;
 
 /**
  *  选中的图片索引
  */
 @property (nonatomic, assign) NSInteger selectIndex;
+
+/**
+ 是否正在显示
+ */
+@property (nonatomic, assign, readonly) BOOL isVisible;
 
 /**
  *  显示GQImageViewer到指定view上

@@ -80,7 +80,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self numberOfPages]*(_needLoopScroll?maxSectionNum:1);
+    return [self numberOfPages]*(self.configure.needLoopScroll?maxSectionNum:1);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -98,7 +98,7 @@
     }
 }
 
-- (GQImageViewerModel *)dataSourceInIndex:(NSInteger)index {
+- (id)dataSourceInIndex:(NSInteger)index {
     if (self.gqDataSource && [self.gqDataSource respondsToSelector:@selector(GQCollectionView:dataSourceInIndex:)]) {
         return [self.gqDataSource GQCollectionView:self dataSourceInIndex:index];
     }else {
@@ -146,7 +146,7 @@
     
     NSInteger totalPages = [self numberOfPages];
     
-    if (_needLoopScroll) {
+    if (self.configure.needLoopScroll) {
         if (row >= totalPages && totalPages != 0) {
             row = row%totalPages;
         }
@@ -156,7 +156,7 @@
         }
     }
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row+(_needLoopScroll?totalPages*maxSectionNum/2:0) inSection:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row+(self.configure.needLoopScroll?totalPages*maxSectionNum/2:0) inSection:0];
     
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     
@@ -174,14 +174,14 @@
     
     NSInteger totalPages = [self numberOfPages];
     
-    if (_needLoopScroll && totalPages != 0) {
+    if (self.configure.needLoopScroll && totalPages != 0) {
         //如果超过边界则返回中间位置
         if ((self.contentOffset.x > self.contentSize.width-self.frame.size.width)&&self.contentSize.width > 0) {
-            row = (int)(_needLoopScroll?totalPages*maxSectionNum/2:0);
+            row = (int)(self.configure.needLoopScroll?totalPages*maxSectionNum/2:0);
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
             [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         }else if (self.contentOffset.x < 0){
-            row = (int)(totalPages - 1 + (_needLoopScroll?totalPages*maxSectionNum/2:0));
+            row = (int)(totalPages - 1 + (self.configure.needLoopScroll?totalPages*maxSectionNum/2:0));
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
             [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         }

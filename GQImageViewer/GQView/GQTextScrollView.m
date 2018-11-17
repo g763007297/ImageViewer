@@ -71,10 +71,10 @@ static const CGFloat maxTextHight = 200;
 
 #pragma mark -- public method
 
-- (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
+- (CGFloat)configureSource:(id)source
              withConfigure:(GQImageViewrConfigure *)configure
           withCurrentIndex:(NSInteger)currentIndex
-        withUsePageControl:(BOOL)usePageControl
+            withTotalCount:(NSInteger)totalCount
         withSuperViewWidth:(CGFloat)width
 {
     
@@ -90,7 +90,7 @@ static const CGFloat maxTextHight = 200;
         _textLabel.textColor = _textColor;
     }
     
-    id text = source[currentIndex].textSource;
+    id text = source;
     if (![_text isEqual:text]) {
         _text = [text copy];
     }
@@ -112,10 +112,9 @@ static const CGFloat maxTextHight = 200;
         _maxHeight = maxHeight;
     }
     
-    NSInteger pageNumber = [source count];
-    if (_pageNumber != pageNumber) {
-        _pageNumber = pageNumber;
-        _pageControl.numberOfPages = pageNumber;
+    if (_pageNumber != totalCount) {
+        _pageNumber = totalCount;
+        _pageControl.numberOfPages = totalCount;
     }
     
     if (!UIEdgeInsetsEqualToEdgeInsets(configure.textEdgeInsets, UIEdgeInsetsZero)&&
@@ -138,18 +137,28 @@ static const CGFloat maxTextHight = 200;
         [_pageControl setHidden:YES];
         [_textLabel setHidden:NO];
     }else {
-        if (usePageControl) {
-            _pageControl.currentPage = currentIndex;
-            scolleViewHeight = 10;
-            [_pageLabel setHidden:YES];
-            [_pageControl setHidden:NO];
-            [_textLabel setHidden:YES];
-        }else {
-            scolleViewHeight = 20;
-            _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(currentIndex+1),pageNumber];
-            [_pageLabel setHidden:NO];
-            [_pageControl setHidden:YES];
-            [_textLabel setHidden:YES];
+        switch (configure.showIndexType) {
+            case GQImageViewerShowIndexTypeNone:
+                scolleViewHeight = 0;
+                break;
+            case GQImageViewerShowIndexTypeLabel:{
+                scolleViewHeight = 20;
+                _pageLabel.text = [NSString stringWithFormat:@"%zd/%zd",(currentIndex+1),totalCount];
+                [_pageLabel setHidden:NO];
+                [_pageControl setHidden:YES];
+                [_textLabel setHidden:YES];
+                break;
+            }
+            case GQImageViewerShowIndexTypePageControl:{
+                _pageControl.currentPage = currentIndex;
+                scolleViewHeight = 10;
+                [_pageLabel setHidden:YES];
+                [_pageControl setHidden:NO];
+                [_textLabel setHidden:YES];
+                break;
+            }
+            default:
+                break;
         }
     }
     

@@ -28,13 +28,20 @@ typedef NS_ENUM(NSUInteger, GQImageViewerCacheType) {
     GQImageViewerCacheTypeDisk,         //保存至硬盘
 };
 
+typedef enum {
+    GQImageViewerShowIndexTypeNone = 1,        // 不显示下标
+    GQImageViewerShowIndexTypePageControl,     // 以pageControl的形式显示
+    GQImageViewerShowIndexTypeLabel            // 以文字样式显示
+    
+}GQImageViewerShowIndexType;
+
 @interface GQImageViewrConfigure : GQImageViewrBaseObject
 
 /*
  *  显示PageControl传yes   默认 : YES
  *  显示label就传no
  */
-@property (nonatomic, assign) BOOL usePageControl;
+@property (nonatomic, assign) GQImageViewerShowIndexType showIndexType;
 
 /**
  是否需要循环滚动  默认 : NO
@@ -116,7 +123,7 @@ typedef NS_ENUM(NSUInteger, GQImageViewerCacheType) {
  */
 @property (nonatomic, assign) UIEdgeInsets textEdgeInsets;
 
-//如果没有使用到文字显示就使用这个方法初始化
+//如果没有使用到文字显示就使用这个方法配置
 - (instancetype)configureWithImageViewBgColor:(UIColor *)imageViewBgColor
                                     scaleType:(GQImageViewerScaleType)scaleType;
 

@@ -28,34 +28,34 @@ GQ_DYNAMIC_PROPERTY_OBJECT(downloadOperation, setDownloadOperation, OBJC_ASSOCIA
     [self setDownloadOperation:nil];
 }
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete
 {
-    [self loadImage:url
+    [self loadImage:downloadUrl
         placeHolder:nil
            progress:progress
            complete:complete];
 }
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
       placeHolder:(UIImage *)placeHolderImage
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete
 {
-    [self loadImage:url
+    [self loadImage:downloadUrl
    requestClassName:nil
         placeHolder:placeHolderImage
            progress:progress
            complete:complete];
 }
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
  requestClassName:(NSString *)className
       placeHolder:(UIImage *)placeHolderImage
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete {
-    [self loadImage:url
+    [self loadImage:downloadUrl
    requestClassName:className
           cacheType:GQImageDownloaderCacheTypeDisk
         placeHolder:placeHolderImage
@@ -63,21 +63,23 @@ GQ_DYNAMIC_PROPERTY_OBJECT(downloadOperation, setDownloadOperation, OBJC_ASSOCIA
            complete:complete];
 }
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
  requestClassName:(NSString *)className
         cacheType:(GQImageDownloaderCacheType)cacheType
       placeHolder:(UIImage *)placeHolderImage
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete {
-    if(nil == url || [@"" isEqualToString:url.absoluteString] ) {
-        return;
-    }
-    self.completeBlock = [complete copy];
-    self.progressBlock = [progress copy];
-    self.imageUrl = url;
-    [self cancelCurrentImageRequest];
     
     self.image = placeHolderImage;
+    [self cancelCurrentImageRequest];
+    if(nil == downloadUrl || [@"" isEqualToString:downloadUrl.absoluteString] ) {
+        return;
+    }
+    
+    self.completeBlock = [complete copy];
+    self.progressBlock = [progress copy];
+    self.imageUrl = downloadUrl;
+    
     GQWeakify(self);
     __strong id<GQImageDownloaderOperationDelegate> _downloadOperation = [[GQImageDownloaderOperationManager sharedManager]
                                                                           loadWithURL:self.imageUrl
@@ -89,7 +91,7 @@ GQ_DYNAMIC_PROPERTY_OBJECT(downloadOperation, setDownloadOperation, OBJC_ASSOCIA
                                                                               }
                                                                           }complete:^(UIImage *image, NSURL *url, NSError *error) {
                                                                               GQStrongify(self);
-                                                                              if (image) {
+                                                                              if (image && [url.absoluteString isEqualToString:downloadUrl.absoluteString]) {
                                                                                   self.image = image;
                                                                               }
                                                                               if (self.completeBlock) {

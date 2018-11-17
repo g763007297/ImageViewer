@@ -11,22 +11,22 @@
 
 @interface UIImageView (GQImageDownloader)
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete;
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
       placeHolder:(UIImage *)placeHolderImage
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete;
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
  requestClassName:(NSString *)className
       placeHolder:(UIImage *)placeHolderImage
          progress:(GQImageDownloaderProgressBlock)progress
          complete:(GQImageDownloaderCompleteBlock)complete;
 
-- (void)loadImage:(NSURL*)url
+- (void)loadImage:(NSURL*)downloadUrl
  requestClassName:(NSString *)className
         cacheType:(GQImageDownloaderCacheType)cacheType
       placeHolder:(UIImage *)placeHolderImage

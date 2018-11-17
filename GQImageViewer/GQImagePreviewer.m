@@ -1,19 +1,21 @@
 //
-//  ImageViewer.m
+//  GQImagePreviewer.m
 //  ImageViewer
 //
-//  Created by tusm on 15/12/31.
-//  Copyright © 2015年 tusm. All rights reserved.
+//  Created by tusm on 2018/11/16.
+//  Copyright © 2018年 tusm. All rights reserved.
 //
 
-#import "GQImageViewer.h"
+#import "GQImagePreviewer.h"
 #import "GQImageCollectionView.h"
 #import "GQTextScrollView.h"
 
 #import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
 
-@interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
+#import "UIView+GQImageViewrCategory.h"
+
+@interface GQImagePreviewer() <GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
     CGRect _initialRect;//初始化rect
@@ -21,6 +23,7 @@
     BOOL _interation;
     
 @private
+    
     /**
      *  推出方向  默认GQLaunchDirectionBottom
      */
@@ -34,23 +37,32 @@
 
 @property (nonatomic, strong) GQImageViewrConfigure *imageViewerConfigure;//配置信息
 
-@property (nonatomic, strong) GQImageCollectionView *collectionView;//collectionView
+@property (nonatomic, strong) GQImageCollectionView *collectionView;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;//滑动手势
 @property (nonatomic, strong) UILongPressGestureRecognizer *longTapGesture;//长按手势
+
+@property (nonatomic, assign) NSInteger currentIndex;
 
 @property (nonatomic, assign) BOOL isVisible;//是否正在显示
 
 @end
 
-@implementation GQImageViewer
+@implementation GQImagePreviewer
 
-GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
++ (instancetype)imageViewer {
+    GQImagePreviewer *imageViewer = [[GQImagePreviewer alloc] init];
+    return imageViewer;
+}
 
-//初始化，不可重复调用
++ (instancetype)imageViewerWithCurrentIndex:(NSInteger)index {
+    GQImagePreviewer *imageViewer = [[GQImagePreviewer alloc] init];
+    imageViewer.currentIndex = index;
+    return imageViewer;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    NSAssert(!zsharedInstance, @"init method can't call");
     self = [super initWithFrame:frame];
     if (self) {
         //添加屏幕旋转通知
@@ -67,56 +79,14 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageViewer, sharedInstance)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
-GQChainObjectDefine(selectIndexChain, SelectIndex, NSInteger, GQSelectIndexChain);
-GQChainObjectDefine(configureChain, Configure, GQConfigureBlock, GQConfigureChain);
-GQChainObjectDefine(achieveSelectIndexChain, AchieveSelectIndex, GQAchieveIndexBlock, GQAchieveIndexChain);
-GQChainObjectDefine(singleTapChain, SingleTap, GQAchieveIndexBlock, GQAchieveIndexChain);
-GQChainObjectDefine(longTapIndexChain, LongTapIndex, GQLongTapIndexBlock, GQLongTapIndexChain);
-GQChainObjectDefine(dissMissChain, DissMiss, GQVoidBlock, GQVoidChain);
-GQChainObjectDefine(topViewConfigureChain, TopViewConfigure, GQSubViewConfigureBlock, GQSubViewConfigureChain);
-GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConfigureBlock, GQSubViewConfigureChain);
-
-@synthesize dataSouceArrayChain =_dataSouceArrayChain;
-@synthesize showInViewChain = _showInViewChain;
-
-- (GQShowViewChain)showInViewChain
-{
-    if (!_showInViewChain) {
-        GQWeakify(self);
-        _showInViewChain = ^(UIView *showView, BOOL animation){
-            GQStrongify(self);
-            [self showInView:showView animation:animation];
-        };
-    }
-    return _showInViewChain;
-}
-
-- (GQDataSouceArrayChain)dataSouceArrayChain
-{
-    if (!_dataSouceArrayChain) {
-        GQWeakify(self);
-        _dataSouceArrayChain = ^(NSArray *imageArray ,NSArray *textArray){
-            GQStrongify(self);
-            [self setImageArray:imageArray textArray:textArray];
-            return self;
-        };
-    }
-    return _dataSouceArrayChain;
-}
-
 #pragma mark -- set method
 //重设初始值
 - (void)resetConfigure {
-    _selectIndex = 0;
-    _imageArray = nil;
-    _textArray = nil;
+    self.currentIndex = 0;
     _bottomBgView = nil;
     _bottomView = nil;
     _topView = nil;
-    _bottomViewConfigure = nil;
-    _configure = nil;
     _imageViewerConfigure = nil;
-    _topViewConfigure = nil;
     _collectionView = nil;
     _textScrollView = nil;
     _collectionView.gqDelegate = nil;
@@ -124,126 +94,41 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     _isVisible = NO;
 }
 
-- (void)setSelectIndex:(NSInteger)selectIndex
-{
-    _selectIndex = selectIndex;
-    
-    if (!_isVisible) return;
-    
-    NSAssert(selectIndex>=0, @"_selectIndex must be greater than zero");
-    NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
-    
-    [self setupTextScrollView];
-    [self scrollToSettingIndex];
-}
-
-- (void)setImageArray:(NSArray *)imageArray textArray:(NSArray *)textArray
-{
-    _textArray = [textArray copy];
-    _imageArray = [imageArray copy];
-    if ([_textArray count] > 0) {
-        //如果文字数组和图片数组长度不相等，主动抛出异常
-        NSAssert([_textArray count] == [_imageArray count], @"imageArray count must be equal to textArray");
-    }
-    //如果无文字，图片数组长度必须大于0
-    NSAssert([_imageArray count] > 0, @"imageArray count must be greater than zero");
-    
-    if (!_isVisible) return;
-    
-    //做选中下标容错处理，避免越界
-    if (_selectIndex > [imageArray count] - 1 && [_imageArray count] > 0) {
-        _selectIndex = [imageArray count] - 1;
-        
-        [self setupTextScrollView];
-        [self scrollToSettingIndex];
-    }
-}
-
-- (void)setBottomViewConfigure:(GQSubViewConfigureBlock)bottomViewConfigure {
-    _bottomViewConfigure = [bottomViewConfigure copy];
-    
-    if (!_bottomView) return;//如果使用autolayout布局，当_bottomView为空时会奔溃
-    
-    //返回_bottomView进行配置
-    _bottomViewConfigure(_bottomView);
-    
-    //设置了bottomView则重新配置底部文字视图
-    [self setupTextScrollView];
-}
-
-- (void)setTopViewConfigure:(GQSubViewConfigureBlock)topViewConfigure {
-    _topViewConfigure = [topViewConfigure copy];
-    
-    //如果使用autolayout布局，当_topView为空时会奔溃
-    if (!_topView) return;
-    
-    //返回_topView进行配置
-    _topViewConfigure(_topView);
-}
-
-- (void)setConfigure:(GQConfigureBlock )configure
-{
-    _configure = [configure copy];
-    _configure(self.imageViewerConfigure);
-    
-    //设置界面配置信息
-    self.backgroundColor = self.imageViewerConfigure.imageViewBgColor?:[UIColor clearColor];
-    
-    if (self.imageViewerConfigure.needPanGesture) {
-        [self.panGesture setEnabled:YES];
-    }else {
-        [self.panGesture setEnabled:NO];
-    }
-    
-    _laucnDirection = self.imageViewerConfigure.laucnDirection;
-    
-    //当_laucnDirection为GQLaunchDirectionFromRect时，必须配置launchFromView，否则会主动抛出异常
-    if (_laucnDirection == GQLaunchDirectionFromRect) {
-        NSAssert([self.imageViewerConfigure.launchFromView isKindOfClass:[UIView class]], @"launchFromView must be subClass of UIView");
-        NSAssert(self.imageViewerConfigure.launchFromView.superview, @"launchFromView must be have superview");
-    }
-    
-    //如果GQImageViewrBaseURLRequest文件丢失或者未加入当前target则会抛出此异常
-    if (!NSClassFromString(@"GQImageViewrBaseURLRequest")) {
-        NSAssert(0, @"GQImageViewrBaseURLRequest class is miss, please check!");
-    }
-    
-    //如果GQImageView文件丢失或者未加入当前target则会抛出此异常
-    if (!NSClassFromString(@"GQImageView")) {
-        NSAssert(0, @"GQImageView class is miss, please check!");
-    }
-    
-    if (![NSClassFromString(self.imageViewerConfigure.requestClassName) isSubclassOfClass:NSClassFromString(@"GQImageViewrBaseURLRequest")]) {
-        self.imageViewerConfigure.requestClassName = @"GQImageViewrBaseURLRequest";
-    }
-    
-    if (![NSClassFromString(self.imageViewerConfigure.imageViewClassName) isSubclassOfClass:NSClassFromString(@"GQImageView")]  ) {
-        self.imageViewerConfigure.imageViewClassName = @"GQImageView";
-    }
-    
-}
-
-- (void)setLongTapIndex:(GQLongTapIndexBlock)longTapIndex
-{
-    _longTapIndex = [longTapIndex copy];
-    
-    if (_longTapIndex) {
+- (void)setDelegate:(id<GQImagePreviewerDelegate>)delegate {
+    _delegate = delegate;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:didLongTapIndex:data:)]) {
         //长按手势
         [self addGestureRecognizer:self.longTapGesture];
     }
 }
 
+- (void)setDataSource:(id<GQImagePreviewerDataSource>)dataSource {
+    _dataSource = dataSource;
+    [self setupConfigure];
+}
+
 #pragma mark -- GQCollectionViewDataSource
 
 - (NSInteger)totalPagesInGQCollectionView:(GQBaseCollectionView *)collectionView {
-    return [self.imageArray count];
+    return self.numberOfItem;
 }
 
 - (id)GQCollectionView:(GQBaseCollectionView *)collectionView dataSourceInIndex:(NSInteger)index {
-    return self.imageArray[index];
+
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(imageViewer:dataForItemAtIndex:)]) {
+        id imageObject = [self.dataSource imageViewer:self dataForItemAtIndex:index];;
+        if ([imageObject isKindOfClass:[NSString class]]) {
+            imageObject = [NSURL URLWithString:imageObject];
+        }
+        return imageObject;
+    }
+    return nil;
 }
 
 - (GQImageViewrConfigure *)configureOfGQCollectionView:(GQBaseCollectionView *)collectionView {
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(imageViewer:configure:)]) {
+        [self.dataSource imageViewer:self configure:self.imageViewerConfigure];
+    }
     return self.imageViewerConfigure;
 }
 
@@ -251,8 +136,8 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 
 - (void)GQCollectionViewDidSigleTap:(GQBaseCollectionView *)collectionView withCurrentSelectIndex:(NSInteger)index
 {
-    if (_singleTap) {
-        _singleTap(_selectIndex);
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:didSingleTapIndex:)]) {
+        [self.delegate imageViewer:self didSingleTapIndex:index];
     }
     if (self.imageViewerConfigure.needTapAutoHiddenTopBottomView) {
         [self configureTopAndBottomViewHidden:!_bottomBgView.hidden];
@@ -261,41 +146,77 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     [self dissMissWithAnimation:YES];
 }
 
-- (void)GQCollectionViewDidEndScroll:(GQBaseCollectionView *)collectionView
-{
-    
-}
-
 - (void)GQCollectionViewCurrentSelectIndex:(NSInteger)index
 {
-    if (_selectIndex == index) return;
+    if (self.currentIndex == index) return;
     
-    self->_selectIndex = index;
+    self.currentIndex = index;
     
     //当collectionView停止滑动时，去配置文字视图
     [self setupTextScrollView];
     
-    if (self.achieveSelectIndex) {
-        self.achieveSelectIndex(_selectIndex);
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:didSelectIndex:)]) {
+        [self.delegate imageViewer:self didSelectIndex:self.currentIndex];
     }
 }
 
 #pragma mark -- public method
 
+- (void)scrollToIndex:(NSInteger)index animation:(BOOL)animation {
+    self.currentIndex = index;
+    
+    if (!_isVisible) return;
+    
+    NSAssert(self.currentIndex>=0, @"_selectIndex must be greater than zero");
+    NSAssert(self.numberOfItem > 0, @"imageArray count must be greater than zero");
+    
+    [self scrollToSettingIndexWithAnimation:animation];
+    [self setupTextScrollView];
+}
+
+- (void)reloadData {
+    if (self.numberOfItem <= 0) {
+        [self dissMissWithAnimation:YES];
+        return;
+    }
+    
+    [self.collectionView reloadData];
+}
+
+- (void)deleteIndex:(NSInteger)index
+          animation:(BOOL)animation
+           complete:(void (^ _Nullable)(BOOL finished))complete {
+    if (self.numberOfItem <= 0) {
+        [self dissMissWithAnimation:YES];
+        return;
+    }
+    
+    if (index == _currentIndex && animation) {
+        [self.collectionView performBatchUpdates:^{
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+            [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+        } completion:^(BOOL finished) {
+            [self.collectionView reloadData];
+            if (complete) {
+                complete(finished);
+            }
+        }];
+    } else
+        [self.collectionView reloadData];
+}
+
 - (void)showInView:(UIView *)showView animation:(BOOL)animation
 {
-    if ([_imageArray count] == 0) {
+    if (self.numberOfItem == 0) {
         return;
     }
     
     if (_isVisible) {
-        
         [self dissMissWithAnimation:NO];
         return;
     }else{
         _isVisible = YES;
     }
-    
     
     self.alpha = 0;
     
@@ -336,8 +257,8 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     GQWeakify(self);
     dispatch_block_t completionBlock = ^(){
         GQStrongify(self);
-        if (self.dissMiss) {
-            self.dissMiss();
+        if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewerDidDissmiss:)]) {
+            [self.delegate imageViewerDidDissmiss:self];
         }
         self.userInteractionEnabled = YES;
         [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -365,6 +286,46 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 
 #pragma mark -- privateMethod
 
+- (void)setupConfigure {
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(imageViewer:configure:)]) {
+        [self.dataSource imageViewer:self configure:self.imageViewerConfigure];
+        //设置界面配置信息
+        self.backgroundColor = self.imageViewerConfigure.imageViewBgColor?:[UIColor clearColor];
+        
+        if (self.imageViewerConfigure.needPanGesture) {
+            [self.panGesture setEnabled:YES];
+        }else {
+            [self.panGesture setEnabled:NO];
+        }
+        
+        _laucnDirection = self.imageViewerConfigure.laucnDirection;
+        
+        //当_laucnDirection为GQLaunchDirectionFromRect时，必须配置launchFromView，否则会主动抛出异常
+        if (_laucnDirection == GQLaunchDirectionFromRect) {
+            NSAssert([self.imageViewerConfigure.launchFromView isKindOfClass:[UIView class]], @"launchFromView must be subClass of UIView");
+            NSAssert(self.imageViewerConfigure.launchFromView.superview, @"launchFromView must be have superview");
+        }
+        
+        //如果GQImageViewrBaseURLRequest文件丢失或者未加入当前target则会抛出此异常
+        if (!NSClassFromString(@"GQImageViewrBaseURLRequest")) {
+            NSAssert(0, @"GQImageViewrBaseURLRequest class is miss, please check!");
+        }
+        
+        //如果GQImageView文件丢失或者未加入当前target则会抛出此异常
+        if (!NSClassFromString(@"GQImageView")) {
+            NSAssert(0, @"GQImageView class is miss, please check!");
+        }
+        
+        if (![NSClassFromString(self.imageViewerConfigure.requestClassName) isSubclassOfClass:NSClassFromString(@"GQImageViewrBaseURLRequest")]) {
+            self.imageViewerConfigure.requestClassName = @"GQImageViewrBaseURLRequest";
+        }
+        
+        if (![NSClassFromString(self.imageViewerConfigure.imageViewClassName) isSubclassOfClass:NSClassFromString(@"GQImageView")]  ) {
+            self.imageViewerConfigure.imageViewClassName = @"GQImageView";
+        }
+    }
+}
+
 //屏幕旋转通知
 - (void)statusBarOrientationChange:(NSNotification *)noti
 {
@@ -387,14 +348,18 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 //设置文字View
 - (void)setupTextScrollView
 {
-    CGFloat height = [_textScrollView configureSource:_textArray[_selectIndex]
+    id textDataSource = nil;
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(imageViewer:textForItemAtIndex:)]) {
+        textDataSource = [self.dataSource imageViewer:self textForItemAtIndex:self.currentIndex];
+    }
+    CGFloat height = [_textScrollView configureSource:textDataSource
                                         withConfigure:self.imageViewerConfigure
-                                     withCurrentIndex:_selectIndex
-                                       withTotalCount:[_textArray count]
+                                     withCurrentIndex:self.currentIndex
+                                       withTotalCount:self.numberOfItem
                                    withSuperViewWidth:_superViewRect.size.width];
     CGFloat bottomViewHeight = 0;
     
-    if (_bottomViewConfigure) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:bottomViewConfigure:)]) {
         bottomViewHeight = _bottomView.height;
         _bottomView.frame = CGRectMake(_bottomView.x, height, _bottomView.width, bottomViewHeight);
     }
@@ -411,17 +376,18 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     [self insertSubview:self.collectionView atIndex:0];
     [_collectionView addGestureRecognizer:self.panGesture];
     
-    [self scrollToSettingIndex];
+    [self scrollToSettingIndexWithAnimation:NO];
 }
 
 //配置头部与底部视图
 - (void)configureTopAndBottomView {
-    if (self.topViewConfigure) [self addSubview:self.topView];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:topViewConfigure:)]) {
+        [self addSubview:self.topView];
+    }
     
     [self addSubview:self.bottomBgView];
-    if (self.bottomViewConfigure) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:bottomViewConfigure:)]) {
         [self.bottomBgView addSubview:self.bottomView];
-        _bottomViewConfigure(_bottomView);
     }
     
     [_bottomBgView addSubview:self.textScrollView];
@@ -429,7 +395,9 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     [UIView animateWithDuration:GQImageViewerAnimationTimeInterval
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            if (self.topViewConfigure) self->_topViewConfigure(self->_topView);
+                            if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:topViewConfigure:)]) {
+                                [self.delegate imageViewer:self topViewConfigure:self.topView];
+                            }
                             self->_topView.alpha = 1;
                             self->_bottomBgView.alpha = 1;
                             [self setupTextScrollView];
@@ -487,37 +455,19 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     }
 }
 
-- (void)scrollToSettingIndex
+- (void)scrollToSettingIndexWithAnimation:(BOOL)animation
 {
     //滚动到指定的单元格
     if (_collectionView) {
-        if (_selectIndex > [_imageArray count] - 1) {
-            _selectIndex = [_imageArray count] - 1;
-        } else if (_selectIndex < 0) {
-            _selectIndex = 0;
+        if (self.currentIndex > self.numberOfItem - 1) {
+            self.currentIndex = self.numberOfItem - 1;
+        } else if (self.currentIndex < 0) {
+            self.currentIndex = 0;
         }
         
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectIndex+(self.imageViewerConfigure.needLoopScroll?[_imageArray count]*maxSectionNum/2:0) inSection:0];
-        [_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentIndex+(self.imageViewerConfigure.needLoopScroll?self.numberOfItem * maxSectionNum/2:0) inSection:0];
+        [_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:animation];
     }
-}
-
-//数据源转换处理
-- (NSArray *)handleImageUrlArray:(NSArray *)imageURlArray withTextArray:(NSArray *)textArray
-{
-    NSMutableArray *handleSouces = [[NSMutableArray alloc] initWithCapacity:[imageURlArray count]];
-    for (int i = 0; i <[imageURlArray count]; i++) {
-        GQImageViewerModel *model = [GQImageViewerModel new];
-        id imageObject = imageURlArray[i];
-        if ([imageObject isKindOfClass:[NSString class]]) {
-            imageObject = [NSURL URLWithString:imageObject];
-        }
-        model.imageSource = imageObject;
-        
-        [handleSouces addObject:model];
-    }
-    
-    return handleSouces;
 }
 
 #pragma mark -- 长按手势响应处理
@@ -526,30 +476,27 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
 {
     if (ges.state == UIGestureRecognizerStateBegan)
     {
-        if (_longTapIndex)
-        {
-            if ([_imageArray count] > _selectIndex)
+        if (self.delegate && [self.delegate respondsToSelector:@selector(imageViewer:didLongTapIndex:data:)]) {
+            
+            if (self.numberOfItem > self.currentIndex)
             {
-                id imageData = _imageArray[_selectIndex];
-                UIImage *image;
-                if ([imageData isKindOfClass:[NSString class]]||[imageData isKindOfClass:[NSURL class]])
-                {
-                    if ([imageData isKindOfClass:[NSURL class]])
-                    {
-                        imageData = ((NSURL *)imageData).absoluteString;
+                if (self.dataSource && [self.dataSource respondsToSelector:@selector(imageViewer:dataForItemAtIndex:)]) {
+                    id imageData = [self.dataSource imageViewer:self dataForItemAtIndex:self.currentIndex];
+                    UIImage *image = nil;
+                    if ([imageData isKindOfClass:[NSString class]]||[imageData isKindOfClass:[NSURL class]]) {
+                        if ([imageData isKindOfClass:[NSURL class]]) {
+                            imageData = ((NSURL *)imageData).absoluteString;
+                        }
+                        if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData]) {
+                            image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:imageData];
+                        }
+                    } else if ([imageData isKindOfClass:[UIImageView class]]) {
+                        image = ((UIImageView *)imageData).image;
+                    } else {
+                        image = imageData;
                     }
-                    if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData])
-                    {
-                        image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:imageData];
-                    }
-                }else if ([imageData isKindOfClass:[UIImageView class]])
-                {
-                    image = ((UIImageView *)imageData).image;
-                }else
-                {
-                    image = imageData;
+                    [self.delegate imageViewer:self didLongTapIndex:self.currentIndex data:image];
                 }
-                _longTapIndex(image,_selectIndex);
             }
         }
     }
@@ -694,5 +641,12 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
     return _panGesture;
 }
 
-@end
+- (NSInteger)numberOfItem {
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(numberOfItemInImageViewer:)]) {
+        return [self.dataSource numberOfItemInImageViewer:self];
+    }
+    
+    return 0;
+}
 
+@end

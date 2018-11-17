@@ -15,24 +15,4 @@
  */
 @property (nonatomic, strong) id imageSource;
 
-/**
- 自定义图片浏览界面class名称 必须继承GQImageView
- */
-@property (nonatomic, strong) NSString *GQImageViewClassName;
-
-/**
- 自定义请求类
- */
-@property (nonatomic, strong) NSString *GQImageViewURLRequestClassName;
-
-/**
- 文字信息 可为 NSString、NSAttributedString及其子类
- */
-@property (nonatomic, copy) id textSource;
-
-/**
- 文字高度
- */
-@property (nonatomic, assign) CGFloat textHeight;
-
 @end

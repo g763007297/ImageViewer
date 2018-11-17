@@ -16,7 +16,7 @@
 @required
 - (NSInteger)totalPagesInGQCollectionView:(GQBaseCollectionView *)collectionView;
 
-- (GQImageViewerModel *)GQCollectionView:(GQBaseCollectionView *)collectionView dataSourceInIndex:(NSInteger)index;
+- (id)GQCollectionView:(GQBaseCollectionView *)collectionView dataSourceInIndex:(NSInteger)index;
 
 - (GQImageViewrConfigure *)configureOfGQCollectionView:(GQBaseCollectionView *)collectionView;
 
@@ -39,13 +39,9 @@ static NSInteger const maxSectionNum = 100;
 
 @interface GQBaseCollectionView : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property (nonatomic, strong) UIImage *placeholderImage;
-
 @property (nonatomic, weak) id<GQCollectionViewDelegate> gqDelegate;
 
 @property (nonatomic, weak) id<GQCollectionViewDataSource> gqDataSource;
-
-@property (nonatomic, assign) BOOL needLoopScroll;
 
 //当前选中的单元格IndexPath
 @property (nonatomic, strong, readonly) NSIndexPath *selectedInexPath;
@@ -54,7 +50,7 @@ static NSInteger const maxSectionNum = 100;
 - (GQImageViewrConfigure *)configure;
 
 //获取指定页的datasource
-- (GQImageViewerModel *)dataSourceInIndex:(NSInteger)index;
+- (id)dataSourceInIndex:(NSInteger)index;
 
 //获取总页数
 - (NSInteger)numberOfPages;

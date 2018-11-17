@@ -18,12 +18,11 @@ typedef void (^GQSingleTap)(void);
 @interface GQImageVideoCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, readonly, strong) GQImageViewrConfigure *configure;
-@property (nonatomic, readonly, strong) GQImageViewerModel *data;
-@property (nonatomic, readonly, strong) UIImage *placeholderImage;
+@property (nonatomic, readonly, strong) id data;
 
 @property (nonatomic, copy) GQSingleTap sigleTap;
 
-- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data withPlaceholderImage:(UIImage *)placeholderImage;
+- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data;
 
 @end
 
@@ -31,7 +30,6 @@ typedef void (^GQSingleTap)(void);
 
 @synthesize configure = _configure;
 @synthesize data = _data;
-@synthesize placeholderImage = _placeholderImage;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -60,18 +58,16 @@ typedef void (^GQSingleTap)(void);
             weak_self.sigleTap();
         };
     }
-    photoSV.scaleType = _configure.scaleType;
-    photoSV.placeholderImage = _placeholderImage;
+    photoSV.placeholderImage = _configure.placeholderImage;
     photoSV.imageModel = _data;
-    photoSV.cacheType = _configure.cacheType;
+    photoSV.configure = _configure;
     photoSV.frame = self.bounds;
 }
 
-- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data withPlaceholderImage:(UIImage *)placeholderImage
+- (void)configureCell:(GQImageViewrConfigure *)configure model:(GQImageViewerModel *)data
 {
     _data = [data copy];
     _configure = [configure copy];
-    _placeholderImage = placeholderImage;
     [self setNeedsLayout];
 }
 
@@ -102,7 +98,7 @@ typedef void (^GQSingleTap)(void);
         };
     }
     
-    [cell configureCell:[self configure] model:[self dataSourceInIndex:indexPath.row%[self numberOfPages]] withPlaceholderImage:self.placeholderImage];
+    [cell configureCell:[self configure] model:[self dataSourceInIndex:indexPath.row%[self numberOfPages]]];
     
     return cell;
 }

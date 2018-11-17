@@ -13,10 +13,10 @@
 
 @interface GQTextScrollView : UIScrollView
 
-- (CGFloat)configureSource:(NSArray <GQImageViewerModel*>*)source
+- (CGFloat)configureSource:(id)source
              withConfigure:(GQImageViewrConfigure *)configure
           withCurrentIndex:(NSInteger)currentIndex
-        withUsePageControl:(BOOL)usePageControl
+            withTotalCount:(NSInteger)totalCount
         withSuperViewWidth:(CGFloat)width;
 
 @property (nonatomic, readonly, strong) id text;

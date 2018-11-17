@@ -96,4 +96,6 @@ static _object_name_ *z##_shared_obj_name_ = nil;                           \
 
 typedef void(^GQWebImageNoParamsBlock)(void);
 
+#define GQImageViewerAnimationTimeInterval 0.3
+
 #endif /* GQImageViewerConst_h */
