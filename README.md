@@ -4,7 +4,7 @@
 # ImageViewer
 一款多图文浏览器，支持图文混合浏览和单图片浏览，增加底部文字，仿今日头条效果;
 
-图片原尺寸显示，不会变形，双击放大缩小，支持文本配置，支持多张本地及网络图片混合查看，支持WebP图片浏览;
+图片原尺寸显示，不会变形，双击放大缩小，支持文本配置，支持多张本地及网络图片混合查看，支持WebP图片浏览，支持SDWebImage下载图片;
 
 单图片浏览时单击消失，图文混合浏览时单击控制文字的显示和隐藏;
 
@@ -16,13 +16,18 @@
 
 ## CocoaPods
 
-1.在 Podfile 中添加 pod 'GQImageViewer'。
+1.使用GQImageDownloader在 Podfile 中添加 pod 'GQImageViewer' ，
+使用SDWebImage则在 Podfile 中添加 pod 'GQImageViewer/CoreSD' 。
+
 2.执行 pod install 或 pod update。
+
 3.导入 GQImageViewer.h 或者 GQImagePreviewer.h。
 
 ## 1.0 WebP图片支持
  
-使用: pod 'GQImageViewer/WebP'
+### 1.0.1 GQImageDownloader
+
+如果使用pod管理则添加 pod 'GQImageViewer/WebP'
 
 本地Webp图片支持,使用以下两个方法进行获取：
 
@@ -41,9 +46,17 @@ GQ_WEBP=1
 
 ```
 
+### 1.0.2 SDWebImage
+
+如果使用pod管理则添加 pod 'GQImageViewer/WebPSD'
+
+具体用法请前往<a href ="https://github.com/SDWebImage/SDWebImage"> SDWebImage </a>查看
+
 ## 1.1 缓存数据
 
-详情见:GQImageCacheManager头文件
+### 1.1.1  GQImageDownloader
+
+如果使用GQImageDownloader下载图片则见:GQImageCacheManager头文件
 
 ```objc
 /**
@@ -78,6 +91,11 @@ GQ_WEBP=1
 
 ```
 
+### 1.1.2 SDWebImage
+
+如果使用SDWebImage下载图片则前往<a href ="https://github.com/SDWebImage/SDWebImage"> SDWebImage </a>查看如何清理缓存
+
+
 ## 1.2 设置配置信息
 
 ### 1.2.1 自定义显示页面
@@ -100,7 +118,7 @@ API：
 
 副作用就是：
 
-1.当长高图和长宽图多的时候会影响浏览效果，就算放大也会影响查看效果。
+2.当长高图和长宽图多的时候会影响浏览效果，就算放大也会影响查看效果。
 
 (2)、GQImageViewerScaleTypeEqualWidth
 
@@ -622,6 +640,10 @@ API:
 	
 (25) 1.2.2
 	
+	1.支持SDWebImage下载图片
+	
+(26) 1.2.3
+
 	wait a moment
 	
 ## Support
