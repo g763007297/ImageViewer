@@ -1,0 +1,13 @@
+# Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+
+inhibit_all_warnings!
+
+use_frameworks!
+
+#new 4.0以上不能使用gif
+pod 'SDWebImage', '~>3.8.2'
+
+target 'ImageViewer' do
+end

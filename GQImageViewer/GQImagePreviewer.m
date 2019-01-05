@@ -10,7 +10,8 @@
 #import "GQImageCollectionView.h"
 #import "GQTextScrollView.h"
 
-#import "GQImageCacheManager.h"
+#import "UIImage+GQImageViewrCategory.h"
+
 #import "GQImageViewerModel.h"
 
 #import "UIView+GQImageViewrCategory.h"
@@ -502,9 +503,13 @@ NS_ASSUME_NONNULL_BEGIN
                         if ([imageData isKindOfClass:[NSURL class]]) {
                             imageData = ((NSURL *)imageData).absoluteString;
                         }
+#ifdef GQ_CoreSD
+//                        image = [[SDImageCache sharedImageCache] imageFromCacheForKey:imageData];
+#else
                         if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData]) {
                             image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:imageData];
                         }
+#endif
                     } else if ([imageData isKindOfClass:[UIImageView class]]) {
                         image = ((UIImageView *)imageData).image;
                     } else {

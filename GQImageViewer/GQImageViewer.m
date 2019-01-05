@@ -10,8 +10,9 @@
 #import "GQImageCollectionView.h"
 #import "GQTextScrollView.h"
 
-#import "GQImageCacheManager.h"
 #import "GQImageViewerModel.h"
+
+#import "UIImage+GQImageViewrCategory.h"
 
 @interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
@@ -539,10 +540,21 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
                     {
                         imageData = ((NSURL *)imageData).absoluteString;
                     }
-                    if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData])
-                    {
+#ifdef GQ_CoreSD
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+                    if ([[SDImageCache sharedImageCache] respondsToSelector:@selector(imageFromCacheForKey:)]) {
+                        image = [[SDImageCache sharedImageCache] performSelector:@selector(imageFromCacheForKey:) withObject:imageData];
+                    }
+                    if ([[SDImageCache sharedImageCache] respondsToSelector:@selector(imageFromDiskCacheForKey:)]) {
+                        image = [[SDImageCache sharedImageCache] performSelector:@selector(imageFromDiskCacheForKey:) withObject:imageData];
+                    }                    
+#pragma clang diagnostic pop
+#else
+                    if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData]) {
                         image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:imageData];
                     }
+#endif
                 }else if ([imageData isKindOfClass:[UIImageView class]])
                 {
                     image = ((UIImageView *)imageData).image;

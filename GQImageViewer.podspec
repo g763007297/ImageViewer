@@ -31,4 +31,21 @@ Pod::Spec.new do |s|
     webp.source_files = "GQImageViewer/**/*.{h,m}"
     webp.dependency 'GQImageDownloader/WebP'
   end
+
+  s.subspec 'CoreSD' do |coresd|
+  	coresd.xcconfig = { 
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GQ_CoreSD'
+    }
+    coresd.source_files = "GQImageViewer/**/*.{h,m}"
+    coresd.dependency 'SDWebImage/Core'
+  end
+
+  s.subspec 'WebPSD' do |webpsd|
+  	webpsd.xcconfig = { 
+      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GQ_CoreSD'
+    }
+    webpsd.source_files = "GQImageViewer/**/*.{h,m}"
+    webpsd.dependency 'SDWebImage/WebP'
+  end
+
 end

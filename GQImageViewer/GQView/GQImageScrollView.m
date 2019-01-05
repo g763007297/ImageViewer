@@ -10,14 +10,17 @@
 #import "GQImageView.h"
 #import "GQImageViewerModel.h"
 
-#import "GQImageCacheManager.h"
-
 #import "GQImageViewerConst.h"
 
 #import "UIImage+GQImageViewrCategory.h"
 #import "UIView+GQImageViewrCategory.h"
 
-#import "GQImageDownloader.h"
+#ifdef GQ_CoreSD
+#import "UIImageView+WebCache.h"
+#else
+    #import "GQImageDownloader.h"
+    #import "GQImageCacheManager.h"
+#endif
 
 @interface GQImageScrollView(){
     BOOL            _isAddSubView;
@@ -93,8 +96,12 @@
 
 - (void)dealloc
 {
+#ifdef GQ_CoreSD
+    [_imageView sd_cancelCurrentAnimationImagesLoad];
+#else
     [[GQImageCacheManager sharedManager] clearMemoryCache];
     [_imageView cancelCurrentImageRequest];
+#endif
     _imageView = nil;
 }
 
@@ -122,9 +129,37 @@
         }
         [_imageView showLoading];
         GQWeakify(self);
+#ifdef GQ_CoreSD
+        SDWebImageOptions options = 0;
+        switch (self.configure.cacheType) {
+            case GQImageViewerCacheTypeDisk:
+                break;
+            case GQImageViewerCacheTypeNone:
+                options = SDWebImageRetryFailed;
+                break;
+            case GQImageViewerCacheTypeOnlyMemory:
+                options = SDWebImageCacheMemoryOnly;
+                break;
+            default:
+                break;
+        }
+        
+        [_imageView sd_setImageWithURL:imageUrl
+                      placeholderImage:_placeholderImage
+                               options:options
+//                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+//                                  GQStrongify(self);
+//                                  self.imageView.progress = receivedSize/expectedSize;
+//                              }
+                             completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                                  GQStrongify(self);
+                                  [self.imageView hideLoading];
+                                  [self layoutSubviews];
+                              }];
+#else
         [_imageView loadImage:imageUrl
              requestClassName:self.configure.requestClassName
-                    cacheType:(NSInteger)self.configure.scaleType
+                    cacheType:(NSInteger)self.configure.cacheType
                   placeHolder:_placeholderImage
                      progress:^(CGFloat progress) {
                          GQStrongify(self);
@@ -135,6 +170,7 @@
                          [self.imageView hideLoading];
                          [self layoutSubviews];
                      }];
+#endif
     } else if ([data isKindOfClass:[UIImageView class]]) {
         UIImageView *imageView = (UIImageView *)data;
         _imageView.image = imageView.image;

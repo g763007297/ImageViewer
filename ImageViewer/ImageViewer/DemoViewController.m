@@ -311,9 +311,9 @@
 #pragma mark -- 添加webp图片
 - (void)addWebpImage {
     
-    UIImage *image = [UIImage gq_imageWithWebPImageName:@"Rosetta"];
-    [_imageArray addObject:image];
-    [_textArray addObject:@"10.本地webp文件测试"];
+//    UIImage *image = [UIImage gq_imageWithWebPImageName:@"Rosetta"];
+//    [_imageArray addObject:image];
+//    [_textArray addObject:@"10.本地webp文件测试"];
     
     [_imageArray addObjectsFromArray:@[
                                       @"https://isparta.github.io/compare-webp/image/gif_webp/webp/1.webp",

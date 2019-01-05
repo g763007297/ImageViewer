@@ -8,7 +8,10 @@
 
 #import "GQImageDataDownload.h"
 #import "GQImageViewerConst.h"
+
+#ifndef GQ_CoreSD
 #import "GQImageDataDownloader.h"
+#endif
 
 @implementation GQImageDataDownload
 
@@ -20,7 +23,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
  param requestClass
  */
 - (void)setURLRequestClass:(Class)requestClass {
+#ifndef GQ_CoreSD
     [[GQImageDataDownloader sharedDownloadManager] setURLRequestClass:requestClass];
+#endif
 }
 
 @end
