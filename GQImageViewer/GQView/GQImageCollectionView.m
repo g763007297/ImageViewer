@@ -55,7 +55,8 @@ typedef void (^GQSingleTap)(void);
     if (self.sigleTap) {
         GQWeakify(self);
         photoSV.singleTap = ^void(){
-            weak_self.sigleTap();
+            GQStrongify(self);
+            self.sigleTap();
         };
     }
     photoSV.placeholderImage = _configure.placeholderImage;
@@ -90,11 +91,11 @@ typedef void (^GQSingleTap)(void);
     static NSString *identify = @"GQImageVideoScrollViewIdentify";
     
     GQImageVideoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
-    
     if (self.gqDelegate&&[self.gqDelegate respondsToSelector:@selector(GQCollectionViewDidSigleTap:withCurrentSelectIndex:)]) {
         GQWeakify(self);
         cell.sigleTap = ^(){
-            [weak_self.gqDelegate GQCollectionViewDidSigleTap:self withCurrentSelectIndex:weak_self.selectedInexPath.row];
+            GQStrongify(self);
+            [self.gqDelegate GQCollectionViewDidSigleTap:self withCurrentSelectIndex:self.selectedInexPath.row];
         };
     }
     
