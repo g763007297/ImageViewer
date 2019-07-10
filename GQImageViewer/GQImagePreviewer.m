@@ -16,6 +16,16 @@
 
 #import "UIView+GQImageViewrCategory.h"
 
+#ifdef GQ_CoreSD
+
+#if __has_include(<SDWebImage/SDImageCache.h>)
+#import <SDWebImage/SDImageCache.h>
+#elif __has_include("SDImageCache.h")
+#import "SDImageCache.h"
+#endif
+
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GQImagePreviewer() <GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
@@ -504,7 +514,15 @@ NS_ASSUME_NONNULL_BEGIN
                             imageData = ((NSURL *)imageData).absoluteString;
                         }
 #ifdef GQ_CoreSD
-//                        image = [[SDImageCache sharedImageCache] imageFromCacheForKey:imageData];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+                        if ([[SDImageCache sharedImageCache] respondsToSelector:@selector(imageFromCacheForKey:)]) {
+                            image = [[SDImageCache sharedImageCache] performSelector:@selector(imageFromCacheForKey:) withObject:imageData];
+                        }
+                        if ([[SDImageCache sharedImageCache] respondsToSelector:@selector(imageFromDiskCacheForKey:)]) {
+                            image = [[SDImageCache sharedImageCache] performSelector:@selector(imageFromDiskCacheForKey:) withObject:imageData];
+                        }
+#pragma clang diagnostic pop
 #else
                         if ([[GQImageCacheManager sharedManager] isImageInMemoryCacheWithUrl:imageData]) {
                             image = [[GQImageCacheManager sharedManager] getImageFromCacheWithUrl:imageData];

@@ -97,7 +97,12 @@
 - (void)dealloc
 {
 #ifdef GQ_CoreSD
-    [_imageView sd_cancelCurrentAnimationImagesLoad];
+    if ([self respondsToSelector:@selector(sd_cancelCurrentImageLoad)]) {
+        [self performSelector:@selector(sd_cancelCurrentImageLoad)];
+    }
+    if ([self respondsToSelector:@selector(sd_cancelCurrentAnimationImagesLoad)]) {
+        [self performSelector:@selector(sd_cancelCurrentAnimationImagesLoad)];
+    }
 #else
     [[GQImageCacheManager sharedManager] clearMemoryCache];
     [_imageView cancelCurrentImageRequest];
@@ -135,10 +140,10 @@
             case GQImageViewerCacheTypeDisk:
                 break;
             case GQImageViewerCacheTypeNone:
-                options = SDWebImageRetryFailed;
+                options = 1 << 0;
                 break;
             case GQImageViewerCacheTypeOnlyMemory:
-                options = SDWebImageCacheMemoryOnly;
+                options = 1 << 2;
                 break;
             default:
                 break;

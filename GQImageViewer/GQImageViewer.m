@@ -14,6 +14,16 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
+#ifdef GQ_CoreSD
+
+#if __has_include(<SDWebImage/SDImageCache.h>)
+#import <SDWebImage/SDImageCache.h>
+#elif __has_include("SDImageCache.h")
+#import "SDImageCache.h"
+#endif
+
+#endif
+
 @interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
 {
     CGRect _superViewRect;//superview的rect
