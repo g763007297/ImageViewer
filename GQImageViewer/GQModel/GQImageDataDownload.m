@@ -9,7 +9,9 @@
 #import "GQImageDataDownload.h"
 #import "GQImageViewerConst.h"
 
-#ifndef GQ_CoreSD
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h")
+
+#else
 #import "GQImageDataDownloader.h"
 #endif
 
@@ -23,7 +25,9 @@ GQOBJECT_SINGLETON_BOILERPLATE(GQImageDataDownload, sharedDownloadManager)
  param requestClass
  */
 - (void)setURLRequestClass:(Class)requestClass {
-#ifndef GQ_CoreSD
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h")
+    
+#else
     [[GQImageDataDownloader sharedDownloadManager] setURLRequestClass:requestClass];
 #endif
 }

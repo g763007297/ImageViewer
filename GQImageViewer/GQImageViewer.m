@@ -14,14 +14,10 @@
 
 #import "UIImage+GQImageViewrCategory.h"
 
-#ifdef GQ_CoreSD
-
 #if __has_include(<SDWebImage/SDImageCache.h>)
 #import <SDWebImage/SDImageCache.h>
 #elif __has_include("SDImageCache.h")
 #import "SDImageCache.h"
-#endif
-
 #endif
 
 @interface GQImageViewer()<GQCollectionViewDelegate,GQCollectionViewDataSource,UIGestureRecognizerDelegate>
@@ -550,7 +546,7 @@ GQChainObjectDefine(bottomViewConfigureChain, BottomViewConfigure, GQSubViewConf
                     {
                         imageData = ((NSURL *)imageData).absoluteString;
                     }
-#ifdef GQ_CoreSD
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h")
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
                     if ([[SDImageCache sharedImageCache] respondsToSelector:@selector(imageFromCacheForKey:)]) {

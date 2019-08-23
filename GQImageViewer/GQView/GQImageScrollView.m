@@ -15,11 +15,11 @@
 #import "UIImage+GQImageViewrCategory.h"
 #import "UIView+GQImageViewrCategory.h"
 
-#ifdef GQ_CoreSD
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h")
 #import "UIImageView+WebCache.h"
 #else
-    #import "GQImageDownloader.h"
-    #import "GQImageCacheManager.h"
+#import "GQImageDownloader.h"
+#import "GQImageCacheManager.h"
 #endif
 
 @interface GQImageScrollView(){
@@ -96,7 +96,7 @@
 
 - (void)dealloc
 {
-#ifdef GQ_CoreSD
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h")
     if ([self respondsToSelector:@selector(sd_cancelCurrentImageLoad)]) {
         [self performSelector:@selector(sd_cancelCurrentImageLoad)];
     }
@@ -134,7 +134,7 @@
         }
         [_imageView showLoading];
         GQWeakify(self);
-#ifdef GQ_CoreSD
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>) || __has_include("UIImageView+WebCache.h")
         SDWebImageOptions options = 0;
         switch (self.configure.cacheType) {
             case GQImageViewerCacheTypeDisk:

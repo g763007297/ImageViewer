@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GQImageViewer"
-  s.version      = "1.2.3"
+  s.version      = "1.2.4"
   s.summary      = "一款多图文浏览器，支持图文混合浏览和单图片浏览，增加底部文字，仿今日头条效果，图片原尺寸显示，不会变形，双击放大缩小，单击消失，支持多张本地及网络图片混合查看，支持链式调用，支持WebP图片浏览。"
 
   s.homepage     = "https://github.com/g763007297/ImageViewer"
@@ -33,17 +33,11 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'CoreSD' do |coresd|
-  	coresd.xcconfig = { 
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GQ_CoreSD'
-    }
     coresd.source_files = "GQImageViewer/**/*.{h,m}"
     coresd.dependency 'SDWebImage/Core'
   end
 
   s.subspec 'WebPSD' do |webpsd|
-  	webpsd.xcconfig = { 
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GQ_CoreSD'
-    }
     webpsd.source_files = "GQImageViewer/**/*.{h,m}"
     webpsd.dependency 'SDWebImage/WebP'
   end

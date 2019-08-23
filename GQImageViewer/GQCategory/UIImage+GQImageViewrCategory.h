@@ -7,23 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#ifdef GQ_CoreSD
-    #if __has_include(<SDWebImage/UIImageView+WebCache.h>)
-    #import <SDWebImage/UIImageView+WebCache.h>
-    #elif __has_include("UIImageView+WebCache.h")
-    #import "UIImageView+WebCache.h"
-    #endif
-#else
-    #if __has_include(<GQImageDownloader/UIImage+GQImageDownloader.h>)
-    #import <GQImageDownloader/UIImage+GQImageDownloader.h>
-    #elif __has_include("UIImage+GQImageDownloader.h")
-    #import "UIImage+GQImageDownloader.h"
-    #endif
-    #if __has_include(<GQImageDownloader/GQImageCacheManager.h>)
-    #import <GQImageDownloader/GQImageCacheManager.h>
-    #elif __has_include("GQImageCacheManager.h")
-    #import "GQImageCacheManager.h"
-    #endif
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>)
+#import <SDWebImage/UIImageView+WebCache.h>
+#elif __has_include("UIImageView+WebCache.h")
+#import "UIImageView+WebCache.h"
+#endif
+
+#if __has_include(<GQImageDownloader/UIImage+GQImageDownloader.h>)
+#import <GQImageDownloader/UIImage+GQImageDownloader.h>
+#elif __has_include("UIImage+GQImageDownloader.h")
+#import "UIImage+GQImageDownloader.h"
+#endif
+#if __has_include(<GQImageDownloader/GQImageCacheManager.h>)
+#import <GQImageDownloader/GQImageCacheManager.h>
+#elif __has_include("GQImageCacheManager.h")
+#import "GQImageCacheManager.h"
 #endif
 
 @interface UIImage (GQImageViewrCategory)
